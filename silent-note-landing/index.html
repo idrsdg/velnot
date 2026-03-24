@@ -240,6 +240,43 @@
       .email-form { flex-direction: column; }
     }
 
+    /* Download modal */
+    .dl-modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,.6); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center;
+    }
+    .dl-modal-overlay.open { display: flex; }
+    .dl-modal {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 20px;
+      padding: 40px 36px; max-width: 420px; width: 90%; text-align: center;
+      animation: popIn .2s ease;
+    }
+    @keyframes popIn { from { transform: scale(.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .dl-modal-icon { font-size: 40px; margin-bottom: 16px; }
+    .dl-modal-title { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+    .dl-modal-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+    .dl-modal-form { display: flex; flex-direction: column; gap: 10px; }
+    .dl-modal-input {
+      padding: 12px 16px; border-radius: 10px; background: var(--bg3);
+      border: 1px solid var(--border); color: var(--text); font-size: 14px;
+      outline: none; transition: border-color .2s; text-align: left;
+    }
+    .dl-modal-input:focus { border-color: var(--accent); }
+    .dl-modal-input::placeholder { color: var(--muted); }
+    .dl-modal-btn {
+      padding: 13px; border-radius: 10px; background: var(--accent); color: #fff;
+      border: none; font-size: 15px; font-weight: 700; cursor: pointer; transition: opacity .2s;
+    }
+    .dl-modal-btn:hover { opacity: .85; }
+    .dl-modal-skip {
+      font-size: 12px; color: var(--muted); cursor: pointer; margin-top: 4px;
+      background: none; border: none; text-decoration: underline;
+    }
+    .dl-modal-skip:hover { color: var(--text); }
+    .dl-modal-success { display: none; }
+    .dl-modal-success p { font-size: 14px; color: #6ee77a; margin-top: 16px; }
+
     /* Theme toggle button */
     .theme-toggle {
       width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border);
@@ -302,6 +339,28 @@
 </head>
 <body>
 
+<!-- Download Modal -->
+<div class="dl-modal-overlay" id="dlOverlay" onclick="closeDlModal(event)">
+  <div class="dl-modal">
+    <div class="dl-modal-icon">⬇️</div>
+    <div class="dl-modal-title">İndirme başlıyor</div>
+    <div class="dl-modal-sub">E-posta adresini bırak, güncellemelerden haberdar olalım.<br>İstersen adım atla.</div>
+    <div id="dlFormWrap">
+      <form class="dl-modal-form" onsubmit="handleDlSubmit(event)">
+        <input class="dl-modal-input" type="email" name="email" placeholder="e-posta@adresin.com" id="dlEmail" />
+        <button class="dl-modal-btn" type="submit">⬇ İndir</button>
+      </form>
+      <button class="dl-modal-skip" onclick="triggerDownload()">E-posta vermeden indir</button>
+    </div>
+    <div class="dl-modal-success" id="dlSuccess">
+      <p>✅ İndirme başladı! Güncelleme e-postaları için teşekkürler.</p>
+    </div>
+    <p style="margin-top:14px;font-size:11px;color:#555;line-height:1.5;">
+      🛡 Microsoft Edge uyarı verirse: <strong style="color:#888">Tut → Yine de tut</strong> seçeneğine tıklayın.<br>Uygulama açık kaynaklıdır, güvenlidir.
+    </p>
+  </div>
+</div>
+
 <!-- Nav -->
 <nav>
   <a class="logo" href="#">
@@ -317,7 +376,7 @@
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
     <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Tema değiştir">🌙</button>
-    <a class="nav-cta" href="https://idrisdag.gumroad.com/l/ydkcvn" target="_blank">Ücretsiz İndir</a>
+    <button class="nav-cta" onclick="openDlModal()" style="cursor:pointer;border:none;">Ücretsiz İndir</button>
   </div>
 </nav>
 
@@ -327,7 +386,7 @@
   <h1>Toplantılarını<br /><span>akıllıca not al.</span></h1>
   <p class="hero-sub">Toplantıya bot eklenmez, bildirim gönderilmez. Ses kaydı tamamen kendi bilgisayarında işlenir ve sadece sende kalır.</p>
   <div class="hero-btns">
-    <a class="btn-primary" href="https://idrisdag.gumroad.com/l/ydkcvn" target="_blank">⬇ Ücretsiz İndir</a>
+    <button class="btn-primary" onclick="openDlModal()" style="cursor:pointer;border:none;">⬇ Ücretsiz İndir</button>
     <a class="btn-secondary" href="#how">Nasıl çalışır?</a>
   </div>
   <div class="hero-guarantee">✅ Şu an ücretsiz · Ömür boyu güncelleme · Bot-free kayıt</div>
@@ -451,18 +510,36 @@
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-title">İndir & Kur</div>
-        <div class="step-desc">Windows için .exe'yi indir, kur. OpenAI API key'ini ayarlara gir. 2 dakika sürer.</div>
+        <div class="step-desc">Windows için .exe'yi indir ve kur. Yalnızca Windows 10/11 desteklenir.</div>
       </div>
       <div class="step">
         <div class="step-num">2</div>
+        <div class="step-title">API Key Ekle</div>
+        <div class="step-desc">OpenAI hesabın yoksa ücretsiz aç. API key oluştur, uygulamanın Ayarlar ekranına yapıştır.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
         <div class="step-title">Toplantıya gir</div>
         <div class="step-desc">Zoom, Teams ya da herhangi bir görüşmeyi aç. "Kaydı Başlat"a bas, konuşmaya devam et.</div>
       </div>
       <div class="step">
-        <div class="step-num">3</div>
+        <div class="step-num">4</div>
         <div class="step-title">Özet hazır</div>
         <div class="step-desc">"Durdur & Özetle"ye bas. Saniyeler içinde transkript, özet ve aksiyon listesi hazır.</div>
       </div>
+    </div>
+
+    <!-- API Key Rehberi -->
+    <div style="margin-top:48px; padding:28px 32px; background:rgba(99,102,241,0.05); border:1px solid rgba(99,102,241,0.2); border-radius:16px; max-width:680px; margin-left:auto; margin-right:auto;">
+      <div style="font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.06em;margin-bottom:12px;">🔑 OpenAI API Key nasıl alınır?</div>
+      <ol style="padding-left:20px;display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--muted);line-height:1.6;">
+        <li><a href="https://platform.openai.com" target="_blank" style="color:var(--accent);">platform.openai.com</a>'a git, hesap aç (ücretsiz)</li>
+        <li>Sol menüden <strong style="color:var(--text);">API Keys</strong> sekmesini aç</li>
+        <li><strong style="color:var(--text);">Create new secret key</strong> butonuna tıkla</li>
+        <li>Oluşan <code style="background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;font-size:13px;">sk-...</code> key'i kopyala</li>
+        <li>Silent Note AI'ı aç → <strong style="color:var(--text);">Ayarlar</strong> → API Key kutusuna yapıştır → Kaydet</li>
+      </ol>
+      <p style="margin-top:14px;font-size:12px;color:var(--muted);">💡 OpenAI yeni hesaplara ücretsiz kredi veriyor. Ortalama bir toplantı ~0.01$ harcar.</p>
     </div>
   </div>
 </section>
@@ -598,7 +675,7 @@
           <li>Ömür boyu ücretsiz güncelleme</li>
           <li>Erken erişim avantajı</li>
         </ul>
-        <a class="price-btn primary" href="https://idrisdag.gumroad.com/l/ydkcvn" target="_blank">Ücretsiz İndir</a>
+        <button class="price-btn primary" onclick="openDlModal()" style="cursor:pointer;border:none;">Ücretsiz İndir</button>
       </div>
     </div>
   </div>
@@ -713,7 +790,7 @@
     <h2 class="cta-title">Bir sonraki toplantını<br />akıllıca not al</h2>
     <p class="cta-sub">Şu an ücretsiz · Ömür boyu güncelleme · Bot-free kayıt</p>
     <div class="hero-btns">
-      <a class="btn-primary" href="https://idrisdag.gumroad.com/l/ydkcvn" target="_blank">⬇ Ücretsiz İndir</a>
+      <button class="btn-primary" onclick="openDlModal()" style="cursor:pointer;border:none;">⬇ Ücretsiz İndir</button>
     </div>
     <p class="hero-note" style="margin-top:16px">Windows 10/11 · OpenAI API key gereklidir · macOS yakında</p>
   </div>
@@ -730,6 +807,95 @@
 </footer>
 
 <script>
+  // ── Supabase tracking ──
+  const DL_URL = 'https://github.com/idrsdg/silentnoteai/releases/download/v1.0.3/Silent.Note.AI-1.0.0.Setup.exe';
+  const SB_URL = 'https://cahxwxoxqncsgpudsiji.supabase.co/rest/v1/events';
+  const SB_KEY = 'sb_publishable_NmaKxlUG91EZNYXUm76jyQ_Z3O1d-_k';
+
+  function track(event, email, metadata) {
+    fetch(SB_URL, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': 'Bearer ' + SB_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify({
+        event,
+        email: email || null,
+        metadata: metadata || null,
+        user_agent: navigator.userAgent,
+      })
+    }).catch(() => {});
+  }
+
+  // page_view — sayfa yüklenince
+  track('page_view', null, { referrer: document.referrer, url: location.href });
+
+  // pricing_viewed — fiyat bölümü görününce
+  const pricingObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { track('pricing_viewed'); pricingObserver.disconnect(); } });
+  }, { threshold: 0.3 });
+  document.addEventListener('DOMContentLoaded', () => {
+    const el = document.getElementById('pricing');
+    if (el) pricingObserver.observe(el);
+  });
+
+  // Gumroad link tıklamaları
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href*="gumroad"]');
+    if (a) track('gumroad_click', null, { href: a.href });
+  });
+
+  function openDlModal() {
+    document.getElementById('dlOverlay').classList.add('open');
+    track('modal_opened');
+  }
+
+  function closeDlModal(e) {
+    if (e && e.target !== document.getElementById('dlOverlay')) return;
+    const email = document.getElementById('dlEmail').value;
+    track('modal_abandoned', email || null);
+    document.getElementById('dlOverlay').classList.remove('open');
+    // Reset modal state
+    setTimeout(() => {
+      document.getElementById('dlFormWrap').style.display = '';
+      document.getElementById('dlSuccess').style.display = 'none';
+      document.getElementById('dlEmail').value = '';
+    }, 300);
+  }
+
+  function triggerDownload() {
+    track('download_no_email');
+    startFileDownload();
+    showDlSuccess('✅ İndirme başladı!');
+  }
+
+  function handleDlSubmit(e) {
+    e.preventDefault();
+    const email = document.getElementById('dlEmail').value;
+    track('download_with_email', email);
+    startFileDownload();
+    showDlSuccess('✅ İndirme başladı! Güncellemeler için teşekkürler.');
+  }
+
+  function startFileDownload() {
+    const a = document.createElement('a');
+    a.href = DL_URL;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  function showDlSuccess(msg) {
+    document.getElementById('dlFormWrap').style.display = 'none';
+    const s = document.getElementById('dlSuccess');
+    s.style.display = 'block';
+    s.querySelector('p').textContent = msg;
+    setTimeout(() => document.getElementById('dlOverlay').classList.remove('open'), 2500);
+  }
+
   // ── Theme ──
   (function () {
     const saved = localStorage.getItem('sna-theme');
@@ -762,6 +928,7 @@
     if (!isOpen) {
       answer.classList.add('open');
       btn.classList.add('active');
+      track('faq_opened', null, { question: btn.textContent.trim().replace('+','').trim() });
     }
   }
 

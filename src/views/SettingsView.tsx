@@ -64,9 +64,21 @@ export default function SettingsView({ onSaved }: { onSaved?: () => void } = {})
             {showKey ? '🙈' : '👁'}
           </button>
         </div>
-        <p style={{ fontSize: '11px', color: '#444', marginTop: '6px' }}>
-          platform.openai.com'dan alabilirsin. Key bilgisayarında şifreli saklanır.
-        </p>
+        <div style={{ marginTop: '10px', padding: '12px 14px', borderRadius: '8px', background: '#0d0d18', border: '1px solid #2a2a4a', fontSize: '12px', lineHeight: '1.8' }}>
+          <div style={{ fontWeight: 600, color: '#818cf8', marginBottom: '6px' }}>API key nasıl alınır?</div>
+          <ol style={{ paddingLeft: '16px', color: '#666' }}>
+            <li><span style={{ color: '#999' }}>platform.openai.com</span>'a git ve giriş yap</li>
+            <li>Sol menüden <strong style={{ color: '#999' }}>API Keys</strong> sekmesine tıkla</li>
+            <li><strong style={{ color: '#999' }}>Create new secret key</strong> butonuna bas</li>
+            <li>Oluşan key'i kopyala ve yukarıdaki kutuya yapıştır</li>
+          </ol>
+          <button
+            onClick={() => window.api.openExternal('https://platform.openai.com/api-keys')}
+            style={{ marginTop: '8px', padding: '5px 12px', borderRadius: '6px', border: '1px solid #3a3a6a', background: 'transparent', color: '#818cf8', fontSize: '11px', cursor: 'pointer' }}
+          >
+            platform.openai.com'u aç →
+          </button>
+        </div>
       </SettingCard>
 
       {/* AssemblyAI Key */}
