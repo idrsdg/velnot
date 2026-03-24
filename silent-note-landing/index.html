@@ -811,15 +811,8 @@
 
 <script>
   // ── Supabase tracking ──
-  // Her zaman en son release'i otomatik çek
-  let DL_URL = 'https://github.com/idrsdg/silentnoteai/releases/latest';
-  fetch('https://api.github.com/repos/idrsdg/silentnoteai/releases/latest')
-    .then(r => r.json())
-    .then(data => {
-      const exe = data.assets?.find(a => a.name.endsWith('.exe'));
-      if (exe) DL_URL = exe.browser_download_url;
-    })
-    .catch(() => {});
+  // Direkt en son .exe — GitHub latest release redirect kullanır
+  const DL_URL = 'https://github.com/idrsdg/silentnoteai/releases/latest/download/Silent.Note.AI-1.0.14.Setup.exe';
   const SB_URL = 'https://cahxwxoxqncsgpudsiji.supabase.co/rest/v1/events';
   const SB_KEY = 'sb_publishable_NmaKxlUG91EZNYXUm76jyQ_Z3O1d-_k';
 
