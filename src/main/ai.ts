@@ -24,7 +24,10 @@ export async function transcribeWithDiarization(audioData: Buffer, language?: st
     headers: { authorization: apiKey, 'content-type': 'application/octet-stream' },
     body: audioData,
   });
-  if (!uploadRes.ok) throw new Error(`AssemblyAI upload hatası: ${uploadRes.status}`);
+  if (!uploadRes.ok) {
+    const errBody = await uploadRes.text().catch(() => '');
+    throw new Error(`AssemblyAI upload hatası: ${uploadRes.status} — ${errBody}`);
+  }
   const { upload_url } = await uploadRes.json() as { upload_url: string };
 
   // 2. Request transcript with speaker diarization
@@ -40,7 +43,10 @@ export async function transcribeWithDiarization(audioData: Buffer, language?: st
       ...(lang ? { language_code: lang } : {}),
     }),
   });
-  if (!transcriptRes.ok) throw new Error(`AssemblyAI transcript isteği hatası: ${transcriptRes.status}`);
+  if (!transcriptRes.ok) {
+    const errBody = await transcriptRes.text().catch(() => '');
+    throw new Error(`AssemblyAI transcript isteği hatası: ${transcriptRes.status} — ${errBody}`);
+  }
   const { id } = await transcriptRes.json() as { id: string };
 
   // 3. Poll until complete
