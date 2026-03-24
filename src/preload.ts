@@ -25,8 +25,8 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.invoke('settings:set', key, value),
 
   // ── AI ────────────────────────────────────────────────────
-  generateSummary: (transcript: string) =>
-    ipcRenderer.invoke('ai:generateSummary', transcript),
+  generateSummary: (transcript: string, mode?: string) =>
+    ipcRenderer.invoke('ai:generateSummary', transcript, mode),
 
   transcribeAudio: (audioData: ArrayBuffer, language: string) =>
     ipcRenderer.invoke('audio:transcribe', audioData, language),

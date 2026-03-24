@@ -99,32 +99,54 @@ export async function transcribeBuffer(audioData: Buffer, language?: string): Pr
   }
 }
 
-export async function generateSummary(transcript: string): Promise<AISummary> {
-  const client = getClient();
+export type ProcessMode = 'summary' | 'action_plan' | 'meeting_notes';
 
-  const response = await client.chat.completions.create({
-    model: 'gpt-4o-mini',
-    messages: [
-      {
-        role: 'system',
-        content: `Sen bir toplantı asistanısın. Verilen transkriptten şunları üret:
+const PROMPTS: Record<ProcessMode, string> = {
+  summary: `Sen bir toplantı asistanısın. Verilen transkriptten şunları üret:
 1. Toplantı için uygun kısa bir başlık
 2. 3-5 maddelik özet (Türkçe)
-3. Action items listesi (kimin ne yapacağı, ne zaman)
+3. Boş action_items listesi
 
 JSON formatında yanıt ver:
 {
   "title": "...",
   "summary": ["madde1", "madde2", ...],
+  "action_items": []
+}`,
+
+  action_plan: `Sen bir toplantı asistanısın. Verilen transkriptten şunları üret:
+1. Toplantı için uygun kısa bir başlık
+2. Boş summary listesi
+3. Tüm aksiyon maddelerini çıkar (kimin ne yapacağı, ne zaman)
+
+JSON formatında yanıt ver:
+{
+  "title": "...",
+  "summary": [],
   "action_items": [
     { "task": "...", "owner": "...", "deadline": "..." }
   ]
 }`,
-      },
-      {
-        role: 'user',
-        content: transcript,
-      },
+
+  meeting_notes: `Sen bir toplantı asistanısın. Verilen transkriptten profesyonel bir toplantı notu üret.
+Şunları içersin: katılımcılar (varsa), ana gündem maddeleri, kararlar, sonraki adımlar.
+
+JSON formatında yanıt ver:
+{
+  "title": "...",
+  "summary": ["## Gündem\\n madde...", "## Kararlar\\n madde...", "## Sonraki Adımlar\\n madde..."],
+  "action_items": []
+}`,
+};
+
+export async function generateSummary(transcript: string, mode: ProcessMode = 'summary'): Promise<AISummary> {
+  const client = getClient();
+
+  const response = await client.chat.completions.create({
+    model: 'gpt-4o-mini',
+    messages: [
+      { role: 'system', content: PROMPTS[mode] },
+      { role: 'user', content: transcript },
     ],
     response_format: { type: 'json_object' },
   });

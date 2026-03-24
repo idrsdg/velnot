@@ -52,8 +52,8 @@ export default function App() {
           🎙
         </div>
 
-        <NavBtn icon="⏺" label="Kayıt" active={activeView === 'recording'} onClick={() => setActiveView('recording')} />
-        <NavBtn icon="📋" label="Geçmiş" active={activeView === 'history'} onClick={() => setActiveView('history')} />
+        <NavBtn icon="🎙️" label="Kayıt" active={activeView === 'recording'} onClick={() => setActiveView('recording')} />
+        <NavBtn icon="📑" label="Geçmiş" active={activeView === 'history'} onClick={() => setActiveView('history')} />
 
         <div style={{ flex: 1 }} />
 
@@ -97,10 +97,10 @@ function NavBtn({ icon, label, active, onClick }: {
       onClick={onClick}
       title={label}
       style={{
-        width: '40px', height: '40px', borderRadius: '10px', border: 'none',
+        width: '44px', height: '44px', borderRadius: '10px', border: 'none',
         background: active ? '#6366f1' : 'transparent',
         color: active ? '#fff' : '#555',
-        fontSize: '16px', cursor: 'pointer',
+        fontSize: '20px', cursor: 'pointer',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         transition: 'all 0.15s',
       }}

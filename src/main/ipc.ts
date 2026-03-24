@@ -1,7 +1,7 @@
 import { ipcMain, shell } from 'electron';
 import { getSessions, getSession, searchSessions, deleteSession, insertSession, NewSession } from './db';
 import { getSetting, setSetting } from './settings';
-import { generateSummary, transcribeBuffer, transcribeWithDiarization } from './ai';
+import { generateSummary, transcribeBuffer, transcribeWithDiarization, ProcessMode } from './ai';
 import { saveNoteAsText, NoteData } from './files';
 import { getLicenseStatus, activateLicense } from './license';
 
@@ -37,8 +37,8 @@ export function registerIpcHandlers() {
   });
 
   // ── AI ────────────────────────────────────────────────────
-  ipcMain.handle('ai:generateSummary', async (_e, transcript: string) => {
-    return generateSummary(transcript);
+  ipcMain.handle('ai:generateSummary', async (_e, transcript: string, mode: ProcessMode = 'summary') => {
+    return generateSummary(transcript, mode);
   });
 
   ipcMain.handle('audio:transcribe', async (_e, audioData: ArrayBuffer, language: string) => {
