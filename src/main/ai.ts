@@ -28,6 +28,8 @@ export async function transcribeWithDiarization(audioData: Buffer, language?: st
   const { upload_url } = await uploadRes.json() as { upload_url: string };
 
   // 2. Request transcript with speaker diarization
+  // Not: speaker_labels ile language_detection birlikte kullanılamaz (AssemblyAI 400 döner)
+  // Dil auto ise language_code göndermiyoruz — AssemblyAI varsayılan olarak algılar
   const lang = language && language !== 'auto' ? language : undefined;
   const transcriptRes = await fetch('https://api.assemblyai.com/v2/transcript', {
     method: 'POST',
@@ -35,7 +37,7 @@ export async function transcribeWithDiarization(audioData: Buffer, language?: st
     body: JSON.stringify({
       audio_url: upload_url,
       speaker_labels: true,
-      ...(lang ? { language_code: lang } : { language_detection: true }),
+      ...(lang ? { language_code: lang } : {}),
     }),
   });
   if (!transcriptRes.ok) throw new Error(`AssemblyAI transcript isteği hatası: ${transcriptRes.status}`);
