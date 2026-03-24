@@ -355,9 +355,12 @@
     <div class="dl-modal-success" id="dlSuccess">
       <p>✅ İndirme başladı! Güncelleme e-postaları için teşekkürler.</p>
     </div>
-    <p style="margin-top:14px;font-size:11px;color:#555;line-height:1.5;">
-      🛡 Microsoft Edge uyarı verirse: <strong style="color:#888">Tut → Yine de tut</strong> seçeneğine tıklayın.<br>Uygulama açık kaynaklıdır, güvenlidir.
-    </p>
+    <div style="margin-top:14px;padding:10px 14px;background:rgba(255,255,255,.03);border:1px solid #2a2a2a;border-radius:8px;font-size:11px;color:#555;line-height:1.8;">
+      <div style="color:#777;font-weight:600;margin-bottom:4px;">⚠️ Windows uyarı verirse:</div>
+      <div>• <strong style="color:#666">Edge indirme uyarısı:</strong> "Tut" → "Yine de tut"</div>
+      <div>• <strong style="color:#666">SmartScreen (Windows protected your PC):</strong> "More info" → "Run anyway"</div>
+      <div style="margin-top:6px;color:#444;">Uygulama <a href="https://github.com/idrsdg/silentnoteai" target="_blank" style="color:#555;">açık kaynaklıdır</a>, tüm kodu inceleyebilirsiniz.</div>
+    </div>
   </div>
 </div>
 
@@ -808,7 +811,15 @@
 
 <script>
   // ── Supabase tracking ──
-  const DL_URL = 'https://github.com/idrsdg/silentnoteai/releases/download/v1.0.3/Silent.Note.AI-1.0.0.Setup.exe';
+  // Her zaman en son release'i otomatik çek
+  let DL_URL = 'https://github.com/idrsdg/silentnoteai/releases/latest';
+  fetch('https://api.github.com/repos/idrsdg/silentnoteai/releases/latest')
+    .then(r => r.json())
+    .then(data => {
+      const exe = data.assets?.find(a => a.name.endsWith('.exe'));
+      if (exe) DL_URL = exe.browser_download_url;
+    })
+    .catch(() => {});
   const SB_URL = 'https://cahxwxoxqncsgpudsiji.supabase.co/rest/v1/events';
   const SB_KEY = 'sb_publishable_NmaKxlUG91EZNYXUm76jyQ_Z3O1d-_k';
 
