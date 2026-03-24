@@ -5,13 +5,18 @@ type State = 'idle' | 'recording' | 'transcribing' | 'processing' | 'done' | 'sa
 const STATUS_TEXT: Record<State, string> = {
   idle:         'Başlatmak için butona bas',
   recording:    '⏺  Kayıt yapılıyor...',
-  transcribing: '🎙  Whisper ile transkribe ediliyor...',
+  transcribing: '🎙  Transkribe ediliyor...',
   processing:   '✨  GPT ile özet hazırlanıyor...',
   done:         '✅  Tamamlandı',
   saving:       '💾  Kaydediliyor...',
 };
 
-export default function RecordingView() {
+interface Props {
+  licenseStatus?: { type: string; sessionsUsed?: number; sessionsLimit?: number; daysLeft?: number } | null;
+  onSessionSaved?: () => void;
+}
+
+export default function RecordingView({ licenseStatus, onSessionSaved }: Props = {}) {
   const [state, setState] = useState<State>('idle');
   const [elapsed, setElapsed] = useState(0);
   const [transcript, setTranscript] = useState('');
@@ -21,6 +26,7 @@ export default function RecordingView() {
   const [bars, setBars] = useState<number[]>(Array(20).fill(4));
   const [error, setError] = useState('');
   const [savedFile, setSavedFile] = useState('');
+  const [hasSysAudio, setHasSysAudio] = useState(false);
 
   const timerRef    = useRef<ReturnType<typeof setInterval> | null>(null);
   const rafRef      = useRef<number | null>(null);
@@ -28,27 +34,60 @@ export default function RecordingView() {
   const chunksRef   = useRef<Blob[]>([]);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const startedAtRef = useRef<number>(0);
+  const micStreamRef = useRef<MediaStream | null>(null);
+  const sysStreamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
     return () => {
       timerRef.current && clearInterval(timerRef.current);
       rafRef.current && cancelAnimationFrame(rafRef.current);
       audioCtxRef.current?.close();
-      recorderRef.current?.stream?.getTracks().forEach(t => t.stop());
+      micStreamRef.current?.getTracks().forEach(t => t.stop());
+      sysStreamRef.current?.getTracks().forEach(t => t.stop());
     };
   }, []);
 
   const startRecording = async () => {
     setError('');
+    setHasSysAudio(false);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // 1. Mikrofon
+      const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      micStreamRef.current = micStream;
 
-      // Gerçek ses seviyesi görselleştirmesi
+      // 2. Sistem sesi (karşı tarafın sesi) — kullanıcı ekran seçecek
+      let sysStream: MediaStream | null = null;
+      try {
+        sysStream = await navigator.mediaDevices.getDisplayMedia({
+          video: { width: 1, height: 1 } as MediaTrackConstraints,
+          audio: true,
+        });
+        // Video track'e ihtiyaç yok, hemen durdur
+        sysStream.getVideoTracks().forEach(t => t.stop());
+        if (sysStream.getAudioTracks().length > 0) {
+          sysStreamRef.current = sysStream;
+          setHasSysAudio(true);
+        }
+      } catch {
+        // Reddedildi veya desteklenmiyor — sadece mikrofon ile devam et
+      }
+
+      // 3. AudioContext — iki akışı karıştır
       const ctx = new AudioContext();
       audioCtxRef.current = ctx;
+      const dest = ctx.createMediaStreamDestination();
+
       const analyser = ctx.createAnalyser();
       analyser.fftSize = 64;
-      ctx.createMediaStreamSource(stream).connect(analyser);
+      const micSource = ctx.createMediaStreamSource(micStream);
+      micSource.connect(analyser);
+      micSource.connect(dest);
+
+      if (sysStream && sysStream.getAudioTracks().length > 0) {
+        ctx.createMediaStreamSource(sysStream).connect(dest);
+      }
+
+      // Waveform animasyonu (mikrofondan)
       const dataArr = new Uint8Array(analyser.frequencyBinCount);
       const animate = () => {
         analyser.getByteFrequencyData(dataArr);
@@ -60,8 +99,8 @@ export default function RecordingView() {
       };
       animate();
 
-      // MediaRecorder
-      const recorder = new MediaRecorder(stream);
+      // 4. Karışık akışı kaydet
+      const recorder = new MediaRecorder(dest.stream);
       chunksRef.current = [];
       recorder.ondataavailable = e => { if (e.data.size > 0) chunksRef.current.push(e.data); };
       recorderRef.current = recorder;
@@ -71,7 +110,7 @@ export default function RecordingView() {
       timerRef.current = setInterval(() => setElapsed(e => e + 1), 1000);
       setState('recording');
     } catch (e: any) {
-      setError(e?.message?.includes('Permission') || e?.name === 'NotAllowedError'
+      setError(e?.name === 'NotAllowedError'
         ? 'Mikrofon izni reddedildi. Lütfen Electron\'a mikrofon izni verin.'
         : (e?.message ?? 'Mikrofon erişimi sağlanamadı'));
     }
@@ -88,9 +127,10 @@ export default function RecordingView() {
       recorderRef.current!.onstop = () =>
         resolve(new Blob(chunksRef.current, { type: 'audio/webm' }));
       recorderRef.current!.stop();
-      recorderRef.current!.stream.getTracks().forEach(t => t.stop());
     });
 
+    micStreamRef.current?.getTracks().forEach(t => t.stop());
+    sysStreamRef.current?.getTracks().forEach(t => t.stop());
     audioCtxRef.current?.close();
 
     try {
@@ -136,6 +176,7 @@ export default function RecordingView() {
         tags: JSON.stringify([]),
       });
       reset();
+      onSessionSaved?.();
     } catch (e: any) {
       setError(e?.message ?? 'Kaydetme başarısız');
       setState('done');
@@ -158,14 +199,50 @@ export default function RecordingView() {
     `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
 
   const isProcessing = state === 'transcribing' || state === 'processing' || state === 'saving';
+  const isExpired = licenseStatus?.type === 'expired';
+  const isTrial = licenseStatus?.type === 'trial';
 
   return (
     <div style={{ padding: '28px 32px', height: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
       {/* Header */}
-      <div>
-        <h1 style={{ fontSize: '20px', fontWeight: 700 }}>Transkripsiyon</h1>
-        <p style={{ color: '#555', fontSize: '13px', marginTop: '2px' }}>Toplantını sessizce yazıya dök</p>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+        <div>
+          <h1 style={{ fontSize: '20px', fontWeight: 700 }}>Transkripsiyon</h1>
+          <p style={{ color: '#555', fontSize: '13px', marginTop: '2px' }}>Toplantını sessizce yazıya dök</p>
+        </div>
+        {isTrial && (
+          <div style={{
+            fontSize: '12px', padding: '4px 10px', borderRadius: '7px',
+            background: 'rgba(245,158,11,.1)', border: '1px solid rgba(245,158,11,.3)',
+            color: '#f59e0b', fontWeight: 600,
+          }}>
+            Trial: {licenseStatus.sessionsUsed}/{licenseStatus.sessionsLimit} toplantı · {licenseStatus.daysLeft} gün kaldı
+          </div>
+        )}
       </div>
+
+      {/* Expired paywall */}
+      {isExpired && (
+        <div style={{
+          padding: '24px', borderRadius: '14px', textAlign: 'center',
+          background: '#141414', border: '1px solid #3a2a00',
+        }}>
+          <div style={{ fontSize: '32px', marginBottom: '10px' }}>🔒</div>
+          <div style={{ fontSize: '16px', fontWeight: 700, marginBottom: '6px' }}>Trial süresi doldu</div>
+          <div style={{ fontSize: '13px', color: '#666', marginBottom: '16px' }}>
+            Kayıt yapmaya devam etmek için lisans satın al.
+          </div>
+          <button
+            onClick={() => window.api.openExternal('https://silent-note-landing.vercel.app/#pricing')}
+            style={{
+              padding: '9px 22px', borderRadius: '9px', border: 'none',
+              background: '#6366f1', color: '#fff', fontSize: '13px', fontWeight: 600, cursor: 'pointer',
+            }}
+          >
+            Lisans Al →
+          </button>
+        </div>
+      )}
 
       {/* Saved file notification */}
       {savedFile && (
@@ -181,12 +258,21 @@ export default function RecordingView() {
         </div>
       )}
 
-      {/* Recording Card */}
-      <div style={{
+      {/* Recording Card — sadece trial/licensed durumda göster */}
+      {!isExpired && <div style={{
         background: '#141414', borderRadius: '14px', padding: '28px',
         border: `1px solid ${state === 'recording' ? '#6366f1' : '#222'}`,
         transition: 'border-color 0.3s',
       }}>
+        {state === 'recording' && (
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', justifyContent: 'center' }}>
+            <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: '#1a1a2e', border: '1px solid #6366f1', color: '#a5b4fc' }}>🎙 Mikrofon</span>
+            {hasSysAudio
+              ? <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: '#0d1a0d', border: '1px solid #059669', color: '#6ee77a' }}>🔊 Sistem sesi</span>
+              : <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: '#1a1a1a', border: '1px solid #333', color: '#555' }}>🔇 Sistem sesi yok</span>
+            }
+          </div>
+        )}
         {/* Waveform */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '3px', height: '44px', marginBottom: '20px' }}>
           {bars.map((h, i) => (
@@ -225,7 +311,7 @@ export default function RecordingView() {
             </>
           )}
         </div>
-      </div>
+      </div>}
 
       {/* Results */}
       {transcript && (

@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 export default function SettingsView({ onSaved }: { onSaved?: () => void } = {}) {
   const [apiKey, setApiKey] = useState('');
   const [showKey, setShowKey] = useState(false);
+  const [assemblyKey, setAssemblyKey] = useState('');
+  const [showAssemblyKey, setShowAssemblyKey] = useState(false);
   const [language, setLanguage] = useState('tr');
   const [autoDelete, setAutoDelete] = useState(true);
   const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
@@ -10,6 +12,7 @@ export default function SettingsView({ onSaved }: { onSaved?: () => void } = {})
 
   useEffect(() => {
     window.api.getSetting('api_key').then(val => { if (val) setApiKey(val); });
+    window.api.getSetting('assemblyai_key').then(val => { if (val) setAssemblyKey(val); });
     window.api.getSetting('language').then(val => { if (val) setLanguage(val); });
     window.api.getSetting('auto_delete').then(val => { if (val !== null) setAutoDelete(val === 'true'); });
   }, []);
@@ -20,6 +23,7 @@ export default function SettingsView({ onSaved }: { onSaved?: () => void } = {})
     try {
       await Promise.all([
         window.api.setSetting('api_key', apiKey),
+        window.api.setSetting('assemblyai_key', assemblyKey),
         window.api.setSetting('language', language),
         window.api.setSetting('auto_delete', String(autoDelete)),
       ]);
@@ -62,6 +66,32 @@ export default function SettingsView({ onSaved }: { onSaved?: () => void } = {})
         </div>
         <p style={{ fontSize: '11px', color: '#444', marginTop: '6px' }}>
           platform.openai.com'dan alabilirsin. Key bilgisayarında şifreli saklanır.
+        </p>
+      </SettingCard>
+
+      {/* AssemblyAI Key */}
+      <SettingCard title="AssemblyAI API Key (İsteğe Bağlı)" desc="Konuşmacı ayrıştırma (diarization) için gerekli. assemblyai.com'dan ücretsiz alabilirsin.">
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <input
+            type={showAssemblyKey ? 'text' : 'password'}
+            value={assemblyKey}
+            onChange={e => setAssemblyKey(e.target.value)}
+            placeholder="Key'ini buraya gir..."
+            style={{
+              flex: 1, padding: '8px 12px', borderRadius: '8px',
+              background: '#0f0f0f', border: '1px solid #2a2a2a',
+              color: '#f0f0f0', fontSize: '13px', outline: 'none',
+            }}
+          />
+          <button
+            onClick={() => setShowAssemblyKey(!showAssemblyKey)}
+            style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid #2a2a2a', background: '#1a1a1a', color: '#888', cursor: 'pointer', fontSize: '13px' }}
+          >
+            {showAssemblyKey ? '🙈' : '👁'}
+          </button>
+        </div>
+        <p style={{ fontSize: '11px', color: '#444', marginTop: '6px' }}>
+          Girilirse transkripte "Konuşmacı A:", "Konuşmacı B:" etiketleri eklenir. Girilmezse Whisper kullanılır.
         </p>
       </SettingCard>
 

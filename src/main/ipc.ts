@@ -1,8 +1,9 @@
-import { ipcMain } from 'electron';
+import { ipcMain, shell } from 'electron';
 import { getSessions, getSession, searchSessions, deleteSession, insertSession, NewSession } from './db';
 import { getSetting, setSetting } from './settings';
-import { generateSummary, transcribeBuffer } from './ai';
+import { generateSummary, transcribeBuffer, transcribeWithDiarization } from './ai';
 import { saveNoteAsText, NoteData } from './files';
+import { getLicenseStatus, activateLicense } from './license';
 
 export function registerIpcHandlers() {
   // ── Database ──────────────────────────────────────────────
@@ -41,10 +42,28 @@ export function registerIpcHandlers() {
   });
 
   ipcMain.handle('audio:transcribe', async (_e, audioData: ArrayBuffer, language: string) => {
+    const assemblyKey = getSetting('assemblyai_key');
+    if (assemblyKey) {
+      return transcribeWithDiarization(Buffer.from(audioData), language || 'tr');
+    }
     return transcribeBuffer(Buffer.from(audioData), language || 'tr');
   });
 
   ipcMain.handle('file:saveNote', (_e, data: NoteData) => {
     return saveNoteAsText(data);
+  });
+
+  // ── License ───────────────────────────────────────────────
+  ipcMain.handle('license:getStatus', () => {
+    return getLicenseStatus();
+  });
+
+  ipcMain.handle('license:activate', async (_e, key: string) => {
+    return activateLicense(key);
+  });
+
+  // ── Shell ─────────────────────────────────────────────────
+  ipcMain.handle('shell:openExternal', (_e, url: string) => {
+    shell.openExternal(url);
   });
 }

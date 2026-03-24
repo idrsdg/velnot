@@ -1,8 +1,9 @@
 {
-  "name": "silent-note-ai-app",
-  "productName": "silent-note-ai-app",
+  "name": "silent-note-ai",
+  "productName": "Silent Note AI",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "Toplantılarını gizlice kaydet, AI ile özetle",
+  "repository": "https://github.com/idrsdg/silentnoteai",
   "main": ".vite/build/main.js",
   "private": true,
   "scripts": {
@@ -48,6 +49,7 @@
     "electron-squirrel-startup": "^1.0.1",
     "openai": "^6.32.0",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "update-electron-app": "^3.1.2"
   }
 }

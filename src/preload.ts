@@ -34,6 +34,17 @@ contextBridge.exposeInMainWorld('api', {
   saveNote: (data: object) =>
     ipcRenderer.invoke('file:saveNote', data),
 
+  // ── License ───────────────────────────────────────────────
+  getLicenseStatus: () =>
+    ipcRenderer.invoke('license:getStatus'),
+
+  activateLicense: (key: string) =>
+    ipcRenderer.invoke('license:activate', key),
+
+  // ── Shell ─────────────────────────────────────────────────
+  openExternal: (url: string) =>
+    ipcRenderer.invoke('shell:openExternal', url),
+
   // ── Recording events (main → renderer) ───────────────────
   onTranscriptChunk: (cb: (chunk: string) => void) => {
     const handler = (_: Electron.IpcRendererEvent, chunk: string) => cb(chunk);

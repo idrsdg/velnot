@@ -2,21 +2,31 @@ import React, { useState, useEffect } from 'react';
 import RecordingView from './views/RecordingView';
 import HistoryView from './views/HistoryView';
 import SettingsView from './views/SettingsView';
+import LicenseView from './views/LicenseView';
 
-type View = 'recording' | 'history' | 'settings';
+type View = 'recording' | 'history' | 'settings' | 'license';
 
 export default function App() {
   const [activeView, setActiveView] = useState<View>('recording');
   const [onboarding, setOnboarding] = useState(false);
+  const [licenseStatus, setLicenseStatus] = useState<{ type: string; sessionsUsed?: number; sessionsLimit?: number; daysLeft?: number } | null>(null);
+
+  const refreshLicense = async () => {
+    const status = await window.api.getLicenseStatus();
+    setLicenseStatus(status);
+    if (status.type === 'expired') setActiveView('license');
+  };
 
   useEffect(() => {
     window.api.getSetting('api_key').then(key => {
-      if (!key) {
-        setActiveView('settings');
-        setOnboarding(true);
-      }
+      if (!key) { setActiveView('settings'); setOnboarding(true); }
     });
+    refreshLicense();
   }, []);
+
+  const trialBadge = licenseStatus?.type === 'trial'
+    ? `${licenseStatus.sessionsUsed}/${licenseStatus.sessionsLimit}`
+    : null;
 
   return (
     <div style={{ display: 'flex', height: '100vh', background: '#0f0f0f', color: '#f0f0f0' }}>
@@ -47,6 +57,26 @@ export default function App() {
 
         <div style={{ flex: 1 }} />
 
+        {/* Trial badge */}
+        {trialBadge && (
+          <div
+            title={`${licenseStatus?.daysLeft} gün kaldı`}
+            onClick={() => setActiveView('license')}
+            style={{
+              fontSize: '10px', fontWeight: 700, color: '#f59e0b',
+              background: 'rgba(245,158,11,.1)', border: '1px solid rgba(245,158,11,.3)',
+              borderRadius: '6px', padding: '3px 5px', cursor: 'pointer',
+              marginBottom: '4px',
+            }}
+          >
+            {trialBadge}
+          </div>
+        )}
+
+        {licenseStatus?.type === 'expired' && (
+          <NavBtn icon="🔑" label="Lisans" active={activeView === 'license'} onClick={() => setActiveView('license')} />
+        )}
+
         <NavBtn icon="⚙️" label="Ayarlar" active={activeView === 'settings'} onClick={() => setActiveView('settings')} />
       </aside>
 
@@ -59,9 +89,20 @@ export default function App() {
             </div>
           </div>
         )}
-        {activeView === 'recording' && <RecordingView />}
+        {activeView === 'recording' && (
+          <RecordingView
+            licenseStatus={licenseStatus}
+            onSessionSaved={refreshLicense}
+          />
+        )}
         {activeView === 'history' && <HistoryView />}
         {activeView === 'settings' && <SettingsView onSaved={() => setOnboarding(false)} />}
+        {activeView === 'license' && (
+          <LicenseView onActivated={() => {
+            refreshLicense();
+            setActiveView('recording');
+          }} />
+        )}
       </main>
     </div>
   );

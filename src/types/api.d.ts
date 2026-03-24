@@ -23,6 +23,13 @@ export interface AISummaryResult {
   action_items: ActionItem[];
 }
 
+export interface LicenseStatus {
+  type: 'trial' | 'licensed' | 'expired';
+  sessionsUsed?: number;
+  sessionsLimit?: number;
+  daysLeft?: number;
+}
+
 declare global {
   interface Window {
     api: {
@@ -48,6 +55,13 @@ declare global {
         action_items: { task: string; owner: string; deadline: string }[];
         transcript: string;
       }) => Promise<string>; // returns file path
+
+      // License
+      getLicenseStatus: () => Promise<LicenseStatus>;
+      activateLicense: (key: string) => Promise<{ success: boolean; error?: string }>;
+
+      // Shell
+      openExternal: (url: string) => Promise<void>;
 
       // Recording events
       onTranscriptChunk: (cb: (chunk: string) => void) => () => void;

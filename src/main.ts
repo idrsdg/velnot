@@ -2,6 +2,7 @@ import { app, BrowserWindow, session, Tray, Menu, nativeImage } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import { registerIpcHandlers } from './main/ipc';
+import { updateElectronApp } from 'update-electron-app';
 
 if (started) app.quit();
 
@@ -72,9 +73,14 @@ const createWindow = () => {
   }
 };
 
+// Otomatik güncelleme — GitHub Releases üzerinden
+if (app.isPackaged) {
+  updateElectronApp();
+}
+
 app.on('ready', () => {
   session.defaultSession.setPermissionRequestHandler((_wc, permission, callback) => {
-    callback(permission === 'media');
+    callback(permission === 'media' || permission === 'display-capture');
   });
   registerIpcHandlers();
   createWindow();

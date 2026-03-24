@@ -4,6 +4,64 @@ import os from 'node:os';
 import path from 'node:path';
 import { getSetting } from './settings';
 
+// ── AssemblyAI diarization ──────────────────────────────────────────────────
+
+interface AssemblyUtterance { speaker: string; text: string; }
+interface AssemblyPollResult {
+  status: string;
+  utterances?: AssemblyUtterance[];
+  text?: string;
+  error?: string;
+}
+
+export async function transcribeWithDiarization(audioData: Buffer, language?: string): Promise<string> {
+  const apiKey = getSetting('assemblyai_key');
+  if (!apiKey) throw new Error('AssemblyAI API key ayarlanmamış. Lütfen Ayarlar\'dan ekleyin.');
+
+  // 1. Upload audio
+  const uploadRes = await fetch('https://api.assemblyai.com/v2/upload', {
+    method: 'POST',
+    headers: { authorization: apiKey, 'content-type': 'application/octet-stream' },
+    body: audioData,
+  });
+  if (!uploadRes.ok) throw new Error(`AssemblyAI upload hatası: ${uploadRes.status}`);
+  const { upload_url } = await uploadRes.json() as { upload_url: string };
+
+  // 2. Request transcript with speaker diarization
+  const lang = language && language !== 'auto' ? language : undefined;
+  const transcriptRes = await fetch('https://api.assemblyai.com/v2/transcript', {
+    method: 'POST',
+    headers: { authorization: apiKey, 'content-type': 'application/json' },
+    body: JSON.stringify({
+      audio_url: upload_url,
+      speaker_labels: true,
+      ...(lang ? { language_code: lang } : { language_detection: true }),
+    }),
+  });
+  if (!transcriptRes.ok) throw new Error(`AssemblyAI transcript isteği hatası: ${transcriptRes.status}`);
+  const { id } = await transcriptRes.json() as { id: string };
+
+  // 3. Poll until complete
+  for (let i = 0; i < 120; i++) {
+    await new Promise(r => setTimeout(r, 3000));
+    const poll = await fetch(`https://api.assemblyai.com/v2/transcript/${id}`, {
+      headers: { authorization: apiKey },
+    });
+    const data = await poll.json() as AssemblyPollResult;
+
+    if (data.status === 'completed') {
+      if (data.utterances?.length) {
+        return data.utterances
+          .map(u => `Konuşmacı ${u.speaker}: ${u.text}`)
+          .join('\n');
+      }
+      return data.text ?? '';
+    }
+    if (data.status === 'error') throw new Error(`AssemblyAI hatası: ${data.error}`);
+  }
+  throw new Error('AssemblyAI zaman aşımı.');
+}
+
 export interface AISummary {
   title: string;
   summary: string[];
