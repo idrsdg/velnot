@@ -2,6 +2,7 @@ import { app, BrowserWindow, session, Tray, Menu, nativeImage } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import { registerIpcHandlers } from './main/ipc';
+import { initDb } from './main/db';
 import { updateElectronApp } from 'update-electron-app';
 
 if (started) app.quit();
@@ -86,7 +87,8 @@ if (app.isPackaged) {
   updateElectronApp();
 }
 
-app.on('ready', () => {
+app.on('ready', async () => {
+  await initDb();
   session.defaultSession.setPermissionRequestHandler((_wc, permission, callback) => {
     callback(permission === 'media' || permission === 'display-capture');
   });

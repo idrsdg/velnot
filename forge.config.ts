@@ -13,7 +13,7 @@ const config: ForgeConfig = {
     asar: true,
     executableName: 'silent-note-ai',
     icon: './assets/icon',
-    extraResource: ['./assets/icon.ico'],
+    extraResource: ['./assets/icon.ico', './node_modules/sql.js/dist/sql-wasm.wasm'],
   },
   rebuildConfig: {},
   makers: [
