@@ -4,7 +4,8 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   build: {
     rollupOptions: {
-      external: ['sql.js'],
+      // sql.js is pure JS — let Vite bundle it directly
+      // No external modules needed
     },
   },
 });
