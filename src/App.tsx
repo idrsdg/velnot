@@ -57,25 +57,6 @@ export default function App() {
 
         <div style={{ flex: 1 }} />
 
-        {/* Trial badge */}
-        {trialBadge && (
-          <div
-            title={`${licenseStatus?.daysLeft} gün kaldı`}
-            onClick={() => setActiveView('license')}
-            style={{
-              fontSize: '10px', fontWeight: 700, color: '#f59e0b',
-              background: 'rgba(245,158,11,.1)', border: '1px solid rgba(245,158,11,.3)',
-              borderRadius: '6px', padding: '3px 5px', cursor: 'pointer',
-              marginBottom: '4px',
-            }}
-          >
-            {trialBadge}
-          </div>
-        )}
-
-        {licenseStatus?.type === 'expired' && (
-          <NavBtn icon="🔑" label="Lisans" active={activeView === 'license'} onClick={() => setActiveView('license')} />
-        )}
 
         <NavBtn icon="⚙️" label="Ayarlar" active={activeView === 'settings'} onClick={() => setActiveView('settings')} />
       </aside>
