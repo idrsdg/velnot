@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useT } from '../LanguageContext';
 
-export default function SettingsView({ onSaved }: { onSaved?: () => void } = {}) {
+interface LicenseStatus {
+  type: string;
+  sessionsUsed?: number;
+  sessionsLimit?: number;
+  daysLeft?: number;
+}
+
+export default function SettingsView({ onSaved, licenseStatus, onGetLicense }: { onSaved?: () => void; licenseStatus?: LicenseStatus | null; onGetLicense?: () => void } = {}) {
   const { t } = useT();
   const [apiKey, setApiKey] = useState('');
   const [showKey, setShowKey] = useState(false);
@@ -44,6 +51,9 @@ export default function SettingsView({ onSaved }: { onSaved?: () => void } = {})
         <h1 style={{ fontSize: '20px', fontWeight: 700 }}>{t.settings.title}</h1>
         <p style={{ color: '#555', fontSize: '13px', marginTop: '2px' }}>{t.settings.subtitle}</p>
       </div>
+
+      {/* Plan Status */}
+      {licenseStatus && <PlanCard status={licenseStatus} t={t} onGetLicense={onGetLicense} />}
 
       {/* OpenAI API Key */}
       <SettingCard title={t.settings.openaiKey.title} desc={t.settings.openaiKey.desc}>
@@ -183,6 +193,90 @@ export default function SettingsView({ onSaved }: { onSaved?: () => void } = {})
         <div style={{ fontWeight: 600, marginBottom: '4px', color: '#6ee77a' }}>{t.settings.privacy.title}</div>
         {t.settings.privacy.text}
       </div>
+    </div>
+  );
+}
+
+const CHECKOUT_URL_YEARLY = 'https://velnot.lemonsqueezy.com/checkout/buy/bdbef23a-5149-479e-89dc-050cf7b5635e';
+
+function PlanCard({ status, t, onGetLicense }: { status: { type: string; sessionsUsed?: number; sessionsLimit?: number; daysLeft?: number }; t: any; onGetLicense?: () => void }) {
+  const isTrial = status.type === 'trial';
+  const isExpired = status.type === 'expired';
+  const isActive = !isTrial && !isExpired;
+
+  const planLabel = isTrial
+    ? t.settings.plan.trial
+    : isExpired
+    ? t.settings.plan.expired
+    : status.type === 'monthly'
+    ? t.settings.plan.monthly
+    : status.type === 'yearly'
+    ? t.settings.plan.yearly
+    : status.type === 'lifetime'
+    ? t.settings.plan.lifetime
+    : t.settings.plan.active;
+
+  const badgeColor = isExpired ? '#ef4444' : isTrial ? '#f97316' : '#22c55e';
+  const bgColor = isExpired ? 'rgba(239,68,68,0.08)' : isTrial ? 'rgba(249,115,22,0.08)' : 'rgba(34,197,94,0.08)';
+  const borderColor = isExpired ? '#3a1a1a' : isTrial ? '#3a2010' : '#1a3a1a';
+
+  return (
+    <div style={{ marginBottom: '20px', padding: '18px 20px', background: bgColor, borderRadius: '12px', border: `1px solid ${borderColor}` }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+        <div style={{ fontSize: '14px', fontWeight: 600, color: '#e5e5e5' }}>{t.settings.plan.title}</div>
+        <span style={{ padding: '3px 10px', borderRadius: '20px', background: badgeColor, color: '#fff', fontSize: '11px', fontWeight: 700 }}>
+          {planLabel}
+        </span>
+      </div>
+
+      {isTrial && (
+        <div style={{ fontSize: '12px', color: '#aaa', marginBottom: '12px', lineHeight: '1.6' }}>
+          {status.sessionsUsed !== undefined && status.sessionsLimit !== undefined && (
+            <div>{t.settings.plan.sessionsUsed(status.sessionsUsed, status.sessionsLimit)}</div>
+          )}
+          {status.daysLeft !== undefined && (
+            <div>{t.settings.plan.daysLeft(status.daysLeft)}</div>
+          )}
+        </div>
+      )}
+
+      {isExpired && (
+        <div style={{ fontSize: '12px', color: '#f87171', marginBottom: '12px' }}>
+          {t.license.expired}
+        </div>
+      )}
+
+      {isActive && (
+        <div style={{ fontSize: '12px', color: '#86efac', marginBottom: '12px' }}>
+          ✓ {t.settings.plan.active}
+        </div>
+      )}
+
+      {(isTrial || isExpired) && (
+        <button
+          onClick={onGetLicense}
+          style={{
+            padding: '7px 16px', borderRadius: '8px', border: 'none',
+            background: '#f97316', color: '#fff', fontSize: '12px', fontWeight: 600,
+            cursor: 'pointer',
+          }}
+        >
+          {t.settings.plan.upgrade}
+        </button>
+      )}
+
+      {isActive && (
+        <button
+          onClick={() => window.api.openExternal(CHECKOUT_URL_YEARLY)}
+          style={{
+            padding: '7px 16px', borderRadius: '8px', border: '1px solid #1a3a1a',
+            background: 'transparent', color: '#86efac', fontSize: '12px', fontWeight: 600,
+            cursor: 'pointer',
+          }}
+        >
+          {t.settings.plan.manage}
+        </button>
+      )}
     </div>
   );
 }

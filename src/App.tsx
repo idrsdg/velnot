@@ -28,6 +28,14 @@ function AppInner() {
     refreshLicense();
   }, []);
 
+  useEffect(() => {
+    return window.api.onMenuNavigate((view: string) => {
+      if (view === 'recording' || view === 'history' || view === 'settings' || view === 'license') {
+        setActiveView(view as View);
+      }
+    });
+  }, []);
+
   // close lang menu on outside click
   useEffect(() => {
     if (!showLangMenu) return;
@@ -124,7 +132,7 @@ function AppInner() {
           <RecordingView licenseStatus={licenseStatus} onSessionSaved={refreshLicense} onGetLicense={() => setActiveView('license')} />
         )}
         {activeView === 'history' && <HistoryView />}
-        {activeView === 'settings' && <SettingsView onSaved={() => setOnboarding(false)} />}
+        {activeView === 'settings' && <SettingsView onSaved={() => setOnboarding(false)} licenseStatus={licenseStatus} onGetLicense={() => setActiveView('license')} />}
         {activeView === 'license' && (
           <LicenseView onActivated={() => { refreshLicense(); setActiveView('recording'); }} />
         )}

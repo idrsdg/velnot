@@ -91,6 +91,10 @@ declare global {
 
       // Recording events
       onTranscriptChunk: (cb: (chunk: string) => void) => () => void;
+
+      // Menu
+      setMenuLanguage: (lang: string) => void;
+      onMenuNavigate: (cb: (view: string) => void) => () => void;
     };
   }
 }

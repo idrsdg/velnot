@@ -4,6 +4,8 @@ import fs from 'node:fs';
 import started from 'electron-squirrel-startup';
 import { registerIpcHandlers } from './main/ipc';
 import { initDb } from './main/db';
+import { getSetting } from './main/settings';
+import { buildAppMenu } from './main/menu';
 import { updateElectronApp } from 'update-electron-app';
 
 if (started) app.quit();
@@ -114,6 +116,8 @@ app.on('ready', async () => {
     callback(permission === 'media' || permission === 'display-capture');
   });
   registerIpcHandlers();
+  const uiLang = getSetting('ui_language') || 'en';
+  buildAppMenu(uiLang);
   createWindow();
   createTray();
 });

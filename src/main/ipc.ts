@@ -1,4 +1,5 @@
 import { ipcMain, shell, BrowserWindow } from 'electron';
+import { buildAppMenu } from './menu';
 import { getSessions, getSession, searchSessions, deleteSession, insertSession, updateSession, NewSession, Session } from './db';
 import { getSetting, setSetting } from './settings';
 import { generateSummary, transcribeBuffer, transcribeWithDiarization, transcribeChunk, ProcessMode } from './ai';
@@ -92,5 +93,10 @@ export function registerIpcHandlers() {
   // ── Shell ─────────────────────────────────────────────────
   ipcMain.handle('shell:openExternal', (_e, url: string) => {
     shell.openExternal(url);
+  });
+
+  // ── Menu language rebuild ─────────────────────────────────
+  ipcMain.on('menu:setLanguage', (_e, lang: string) => {
+    buildAppMenu(lang);
   });
 }

@@ -25,6 +25,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const setLang = (l: Lang) => {
     setLangState(l);
     window.api.setSetting('ui_language', l);
+    window.api.setMenuLanguage(l);
   };
 
   return (

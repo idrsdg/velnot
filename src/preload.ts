@@ -65,4 +65,13 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.on('transcript:chunk', handler);
     return () => ipcRenderer.removeListener('transcript:chunk', handler);
   },
+
+  // ── Menu ──────────────────────────────────────────────────
+  setMenuLanguage: (lang: string) => ipcRenderer.send('menu:setLanguage', lang),
+
+  onMenuNavigate: (cb: (view: string) => void) => {
+    const handler = (_: Electron.IpcRendererEvent, view: string) => cb(view);
+    ipcRenderer.on('menu:navigate', handler);
+    return () => ipcRenderer.removeListener('menu:navigate', handler);
+  },
 });
