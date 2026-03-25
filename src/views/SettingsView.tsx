@@ -47,8 +47,8 @@ export default function SettingsView({ onSaved }: { onSaved?: () => void } = {})
 
       {/* OpenAI API Key */}
       <SettingCard title={t.settings.openaiKey.title} desc={t.settings.openaiKey.desc}>
-        <div style={{ marginBottom: '10px', padding: '12px 14px', borderRadius: '8px', background: '#0d0d18', border: '1px solid #2a2a4a', fontSize: '12px', lineHeight: '1.8' }}>
-          <div style={{ fontWeight: 600, color: '#818cf8', marginBottom: '6px' }}>{t.settings.openaiKey.howTo}</div>
+        <div style={{ marginBottom: '10px', padding: '12px 14px', borderRadius: '8px', background: '#0e0a07', border: '1px solid #2a1a0a', fontSize: '12px', lineHeight: '1.8' }}>
+          <div style={{ fontWeight: 600, color: '#fb923c', marginBottom: '6px' }}>{t.settings.openaiKey.howTo}</div>
           <ol style={{ paddingLeft: '16px', color: '#666' }}>
             {t.settings.openaiKey.steps.map((step, i) => (
               <li key={i}><span style={{ color: '#999' }}>{step}</span></li>
@@ -56,7 +56,7 @@ export default function SettingsView({ onSaved }: { onSaved?: () => void } = {})
           </ol>
           <button
             onClick={() => window.api.openExternal('https://platform.openai.com/api-keys')}
-            style={{ marginTop: '8px', padding: '5px 12px', borderRadius: '6px', border: '1px solid #3a3a6a', background: 'transparent', color: '#818cf8', fontSize: '11px', cursor: 'pointer' }}
+            style={{ marginTop: '8px', padding: '5px 12px', borderRadius: '6px', border: '1px solid #3a2010', background: 'transparent', color: '#fb923c', fontSize: '11px', cursor: 'pointer' }}
           >
             {t.settings.openaiKey.open}
           </button>
@@ -69,7 +69,7 @@ export default function SettingsView({ onSaved }: { onSaved?: () => void } = {})
             placeholder="sk-..."
             style={{
               flex: 1, padding: '8px 12px', borderRadius: '8px',
-              background: '#0f0f0f', border: '1px solid #2a2a2a',
+              background: '#0e0a07', border: '1px solid #2a2a2a',
               color: '#f0f0f0', fontSize: '13px', outline: 'none',
             }}
           />
@@ -92,7 +92,7 @@ export default function SettingsView({ onSaved }: { onSaved?: () => void } = {})
             placeholder={t.settings.assemblyKey.placeholder}
             style={{
               flex: 1, padding: '8px 12px', borderRadius: '8px',
-              background: '#0f0f0f', border: '1px solid #2a2a2a',
+              background: '#0e0a07', border: '1px solid #2a2a2a',
               color: '#f0f0f0', fontSize: '13px', outline: 'none',
             }}
           />
@@ -115,7 +115,7 @@ export default function SettingsView({ onSaved }: { onSaved?: () => void } = {})
           onChange={e => setLanguage(e.target.value)}
           style={{
             padding: '8px 12px', borderRadius: '8px',
-            background: '#0f0f0f', border: '1px solid #2a2a2a',
+            background: '#0e0a07', border: '1px solid #2a2a2a',
             color: '#f0f0f0', fontSize: '13px', outline: 'none', cursor: 'pointer',
           }}
         >
@@ -138,7 +138,7 @@ export default function SettingsView({ onSaved }: { onSaved?: () => void } = {})
           onClick={() => setAutoDelete(!autoDelete)}
           style={{
             width: '44px', height: '24px', borderRadius: '12px',
-            background: autoDelete ? '#6366f1' : '#333',
+            background: autoDelete ? '#f97316' : '#333',
             cursor: 'pointer', position: 'relative', transition: 'background 0.2s',
           }}
         >
@@ -164,7 +164,7 @@ export default function SettingsView({ onSaved }: { onSaved?: () => void } = {})
         disabled={status === 'saving'}
         style={{
           marginTop: '8px', padding: '10px 24px', borderRadius: '9px', border: 'none',
-          background: status === 'saved' ? '#059669' : '#6366f1', color: '#fff',
+          background: status === 'saved' ? '#059669' : '#f97316', color: '#fff',
           fontSize: '14px', fontWeight: 600,
           cursor: status === 'saving' ? 'not-allowed' : 'pointer',
           opacity: status === 'saving' ? 0.6 : 1,
@@ -189,7 +189,7 @@ export default function SettingsView({ onSaved }: { onSaved?: () => void } = {})
 
 function SettingCard({ title, desc, children }: { title: string; desc: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: '20px', padding: '18px 20px', background: '#141414', borderRadius: '12px', border: '1px solid #222' }}>
+    <div style={{ marginBottom: '20px', padding: '18px 20px', background: '#150f09', borderRadius: '12px', border: '1px solid #222' }}>
       <div style={{ marginBottom: '10px' }}>
         <div style={{ fontSize: '14px', fontWeight: 600, color: '#e5e5e5', marginBottom: '2px' }}>{title}</div>
         <div style={{ fontSize: '12px', color: '#555' }}>{desc}</div>

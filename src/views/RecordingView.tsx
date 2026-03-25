@@ -272,12 +272,12 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
       </div>
 
       {isExpired && (
-        <div style={{ padding: '24px', borderRadius: '14px', textAlign: 'center', background: '#141414', border: '1px solid #3a2a00' }}>
+        <div style={{ padding: '24px', borderRadius: '14px', textAlign: 'center', background: '#150f09', border: '1px solid #3a2a00' }}>
           <div style={{ fontSize: '32px', marginBottom: '10px' }}>🔒</div>
           <div style={{ fontSize: '16px', fontWeight: 700, marginBottom: '6px' }}>{t.record.trialEnded}</div>
           <button
-            onClick={() => window.api.openExternal('https://velnot.lemonsqueezy.com/checkout/buy/3c35056c-2075-4429-8193-e4cab81cd49a')}
-            style={{ padding: '9px 22px', borderRadius: '9px', border: 'none', background: '#6366f1', color: '#fff', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
+            onClick={() => window.api.openExternal('https://velnot.lemonsqueezy.com/checkout/buy/ccf62ba2-72b4-413f-919a-03dd1a2c1991')}
+            style={{ padding: '9px 22px', borderRadius: '9px', border: 'none', background: '#f97316', color: '#fff', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
           >
             {t.record.getLicense}
           </button>
@@ -292,13 +292,13 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
 
       {!isExpired && (
         <div style={{
-          background: '#141414', borderRadius: '14px', padding: '28px',
-          border: `1px solid ${state === 'recording' ? '#6366f1' : '#222'}`,
+          background: '#150f09', borderRadius: '14px', padding: '28px',
+          border: `1px solid ${state === 'recording' ? '#f97316' : '#222'}`,
           transition: 'border-color 0.3s',
         }}>
           {state === 'recording' && (
             <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', justifyContent: 'center' }}>
-              <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: '#1a1a2e', border: '1px solid #6366f1', color: '#a5b4fc' }}>{t.record.mic}</span>
+              <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: '#1a0e05', border: '1px solid #f97316', color: '#fdba74' }}>{t.record.mic}</span>
               {hasSysAudio
                 ? <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: '#0d1a0d', border: '1px solid #059669', color: '#6ee77a' }}>{t.record.sysAudio}</span>
                 : <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: '#1a1a1a', border: '1px solid #333', color: '#555' }}>{t.record.noSysAudio}</span>
@@ -309,13 +309,13 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
           {/* Waveform */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '3px', height: '44px', marginBottom: '20px' }}>
             {bars.map((h, i) => (
-              <div key={i} style={{ width: '3px', height: `${h}px`, borderRadius: '2px', background: state === 'recording' ? '#6366f1' : '#2a2a2a' }} />
+              <div key={i} style={{ width: '3px', height: `${h}px`, borderRadius: '2px', background: state === 'recording' ? '#f97316' : '#2a2a2a' }} />
             ))}
           </div>
 
           {/* Timer */}
           <div style={{ textAlign: 'center', marginBottom: '22px' }}>
-            <div style={{ fontSize: '38px', fontWeight: 700, fontVariantNumeric: 'tabular-nums', color: state === 'recording' ? '#a5b4fc' : '#333', letterSpacing: '-1px' }}>
+            <div style={{ fontSize: '38px', fontWeight: 700, fontVariantNumeric: 'tabular-nums', color: state === 'recording' ? '#fdba74' : '#333', letterSpacing: '-1px' }}>
               {fmt(elapsed)}
             </div>
             <div style={{ fontSize: '12px', color: '#444', marginTop: '6px' }}>
@@ -325,15 +325,15 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
 
           {/* Live transcript preview during recording */}
           {state === 'recording' && liveTranscript && (
-            <div style={{ marginBottom: '16px', padding: '12px 14px', borderRadius: '8px', background: '#0f0f1a', border: '1px solid #2a2a4a', fontSize: '12px', color: '#818cf8', lineHeight: '1.6', maxHeight: '80px', overflowY: 'auto' }}>
+            <div style={{ marginBottom: '16px', padding: '12px 14px', borderRadius: '8px', background: '#120a04', border: '1px solid #2a1a0a', fontSize: '12px', color: '#fb923c', lineHeight: '1.6', maxHeight: '80px', overflowY: 'auto' }}>
               {liveTranscript}
-              <span style={{ display: 'inline-block', width: '2px', height: '13px', background: '#818cf8', marginLeft: '2px', animation: 'blink 1s step-end infinite', verticalAlign: 'text-bottom' }} />
+              <span style={{ display: 'inline-block', width: '2px', height: '13px', background: '#fb923c', marginLeft: '2px', animation: 'blink 1s step-end infinite', verticalAlign: 'text-bottom' }} />
             </div>
           )}
 
           {/* Buttons */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
-            {state === 'idle' && <Btn color="#6366f1" onClick={startRecording}>{t.record.start}</Btn>}
+            {state === 'idle' && <Btn color="#f97316" onClick={startRecording}>{t.record.start}</Btn>}
             {state === 'recording' && <Btn color="#ef4444" onClick={stopRecording}>{t.record.stop}</Btn>}
             {isProcessing && <Btn color="#333" onClick={() => {}} disabled>{t.record.processing}</Btn>}
             {(state === 'done' || (state === 'transcribed' && error)) && (
@@ -352,8 +352,8 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
             </div>
           </Card>
 
-          <div style={{ background: '#141414', borderRadius: '14px', padding: '20px', border: '1px solid #2a2a4a' }}>
-            <div style={{ fontSize: '12px', color: '#818cf8', fontWeight: 600, marginBottom: '14px', letterSpacing: '0.06em' }}>
+          <div style={{ background: '#150f09', borderRadius: '14px', padding: '20px', border: '1px solid #2a1a0a' }}>
+            <div style={{ fontSize: '12px', color: '#fb923c', fontWeight: 600, marginBottom: '14px', letterSpacing: '0.06em' }}>
               {t.record.transcriptReady}
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
@@ -363,12 +363,12 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
                   onClick={() => processTranscript(m.key)}
                   style={{
                     padding: '14px 10px', borderRadius: '10px', border: '1px solid #2a2a2a',
-                    background: '#0f0f0f', color: '#e5e5e5', cursor: 'pointer',
+                    background: '#0e0a07', color: '#e5e5e5', cursor: 'pointer',
                     display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px',
                     transition: 'border-color 0.15s, background 0.15s',
                   }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#6366f1'; (e.currentTarget as HTMLButtonElement).style.background = '#111'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#2a2a2a'; (e.currentTarget as HTMLButtonElement).style.background = '#0f0f0f'; }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#f97316'; (e.currentTarget as HTMLButtonElement).style.background = '#111'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#2a2a2a'; (e.currentTarget as HTMLButtonElement).style.background = '#0e0a07'; }}
                 >
                   <span style={{ fontSize: '22px' }}>{m.icon}</span>
                   <span style={{ fontSize: '13px', fontWeight: 600 }}>{t.record.modes[m.key].label}</span>
@@ -400,7 +400,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
 
             {/* Audio player */}
             {audioSrc && (
-              <div style={{ background: '#141414', borderRadius: '10px', padding: '12px 14px', border: '1px solid #222' }}>
+              <div style={{ background: '#150f09', borderRadius: '10px', padding: '12px 14px', border: '1px solid #222' }}>
                 <div style={{ fontSize: '11px', color: '#555', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '8px' }}>
                   Ses Kaydı
                 </div>
@@ -408,14 +408,14 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
                   ref={audioRef}
                   src={audioSrc}
                   controls
-                  style={{ width: '100%', height: '32px', accentColor: '#6366f1' }}
+                  style={{ width: '100%', height: '32px', accentColor: '#f97316' }}
                 />
               </div>
             )}
 
             {/* Utterances for seeking */}
             {utterances.length > 0 && audioRef.current && (
-              <div style={{ background: '#141414', borderRadius: '10px', padding: '12px 14px', border: '1px solid #222', maxHeight: '160px', overflowY: 'auto' }}>
+              <div style={{ background: '#150f09', borderRadius: '10px', padding: '12px 14px', border: '1px solid #222', maxHeight: '160px', overflowY: 'auto' }}>
                 <div style={{ fontSize: '11px', color: '#555', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '8px' }}>
                   Konuşmacılar
                 </div>
@@ -424,10 +424,10 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
                     key={i}
                     onClick={() => { if (audioRef.current) audioRef.current.currentTime = u.start / 1000; }}
                     style={{ fontSize: '12px', color: '#aaa', padding: '4px 0', cursor: 'pointer', lineHeight: '1.5', borderBottom: '1px solid #1a1a1a' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = '#a5b4fc')}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#fdba74')}
                     onMouseLeave={e => (e.currentTarget.style.color = '#aaa')}
                   >
-                    <span style={{ color: '#6366f1', fontWeight: 600 }}>{u.speaker}:</span> {u.text}
+                    <span style={{ color: '#f97316', fontWeight: 600 }}>{u.speaker}:</span> {u.text}
                   </div>
                 ))}
               </div>
@@ -443,7 +443,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
                 <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '7px' }}>
                   {summary.map((item, i) => (
                     <li key={i} style={{ fontSize: '13px', color: '#ccc', display: 'flex', gap: '8px', lineHeight: '1.5' }}>
-                      <span style={{ color: '#6366f1', flexShrink: 0, marginTop: '2px' }}>•</span>
+                      <span style={{ color: '#f97316', flexShrink: 0, marginTop: '2px' }}>•</span>
                       {item}
                     </li>
                   ))}
@@ -454,9 +454,9 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
               <Card title={t.record.results.actions}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {actions.map((a, i) => (
-                    <div key={i} style={{ background: '#0f0f0f', borderRadius: '8px', padding: '10px 12px', border: '1px solid #1e1e1e', fontSize: '12px' }}>
+                    <div key={i} style={{ background: '#0e0a07', borderRadius: '8px', padding: '10px 12px', border: '1px solid #1e1e1e', fontSize: '12px' }}>
                       <div style={{ color: '#e5e5e5', marginBottom: '4px', fontWeight: 500 }}>{a.task}</div>
-                      <span style={{ color: '#8b5cf6' }}>{a.owner}</span>
+                      <span style={{ color: '#ec4899' }}>{a.owner}</span>
                       <span style={{ color: '#444' }}> · </span>
                       <span style={{ color: '#555' }}>{a.deadline}</span>
                     </div>
@@ -496,7 +496,7 @@ function Btn({ children, color, onClick, disabled }: {
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ background: '#141414', borderRadius: '12px', padding: '18px 20px', border: '1px solid #222' }}>
+    <div style={{ background: '#150f09', borderRadius: '12px', padding: '18px 20px', border: '1px solid #222' }}>
       <div style={{ fontSize: '11px', fontWeight: 600, color: '#555', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '12px' }}>
         {title}
       </div>

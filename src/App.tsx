@@ -39,17 +39,17 @@ function AppInner() {
   const isTrial = licenseStatus?.type === 'trial';
 
   return (
-    <div style={{ display: 'flex', height: '100vh', background: '#0f0f0f', color: '#f0f0f0' }}>
+    <div style={{ display: 'flex', height: '100vh', background: '#0e0a07', color: '#f5f0eb' }}>
       {/* Sidebar */}
       <aside style={{
-        width: '60px', background: '#141414', borderRight: '1px solid #222',
+        width: '60px', background: '#150f09', borderRight: '1px solid #2a1e14',
         display: 'flex', flexDirection: 'column', alignItems: 'center',
         padding: '16px 0', gap: '6px', flexShrink: 0,
       }}>
         {/* Logo */}
         <div style={{
           width: '36px', height: '36px', borderRadius: '10px',
-          background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+          background: 'linear-gradient(135deg, #f97316, #ec4899)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           marginBottom: '20px', fontSize: '18px', flexShrink: 0,
         }}>
@@ -68,8 +68,8 @@ function AppInner() {
             title={t.nav.language}
             style={{
               width: '44px', height: '44px', borderRadius: '10px', border: 'none',
-              background: showLangMenu ? '#6366f1' : 'transparent',
-              color: showLangMenu ? '#fff' : '#555',
+              background: showLangMenu ? '#f97316' : 'transparent',
+              color: showLangMenu ? '#fff' : '#6a5040',
               fontSize: '18px', cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               transition: 'all 0.15s',
@@ -83,9 +83,9 @@ function AppInner() {
               onClick={e => e.stopPropagation()}
               style={{
                 position: 'absolute', bottom: '0', left: '52px',
-                background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: '10px',
+                background: '#1e1509', border: '1px solid #2a1e14', borderRadius: '10px',
                 padding: '6px', minWidth: '148px', zIndex: 100,
-                boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
               }}
             >
               {LANGUAGES.map(l => (
@@ -95,8 +95,8 @@ function AppInner() {
                   style={{
                     display: 'flex', alignItems: 'center', gap: '8px',
                     width: '100%', padding: '7px 10px', borderRadius: '7px', border: 'none',
-                    background: lang === l.code ? 'rgba(99,102,241,0.2)' : 'transparent',
-                    color: lang === l.code ? '#a5b4fc' : '#ccc',
+                    background: lang === l.code ? 'rgba(249,115,22,0.2)' : 'transparent',
+                    color: lang === l.code ? '#fdba74' : '#c4b09a',
                     fontSize: '13px', cursor: 'pointer', textAlign: 'left',
                   }}
                 >
@@ -114,7 +114,7 @@ function AppInner() {
       {/* Main content */}
       <main style={{ flex: 1, overflow: 'auto' }}>
         {onboarding && activeView === 'settings' && (
-          <div style={{ padding: '20px 32px 0', background: '#0d1117', borderBottom: '1px solid #1e2a1e' }}>
+          <div style={{ padding: '20px 32px 0', background: '#0e0a07', borderBottom: '1px solid #2a1e14' }}>
             <div style={{ padding: '12px 16px', borderRadius: '8px', background: '#0d1a0d', border: '1px solid #1e3a1e', color: '#6ee77a', fontSize: '13px' }}>
               {t.onboarding.welcome}
             </div>
@@ -150,8 +150,8 @@ function NavBtn({ icon, label, active, onClick }: {
       title={label}
       style={{
         width: '44px', height: '44px', borderRadius: '10px', border: 'none',
-        background: active ? '#6366f1' : 'transparent',
-        color: active ? '#fff' : '#555',
+        background: active ? '#f97316' : 'transparent',
+        color: active ? '#fff' : '#6a5040',
         fontSize: '20px', cursor: 'pointer',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         transition: 'all 0.15s',
