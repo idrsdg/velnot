@@ -2,8 +2,8 @@ import os from 'node:os';
 import { getSetting, setSetting } from './settings';
 import { getSessions } from './db';
 
-export const TRIAL_SESSION_LIMIT = 999999;
-export const TRIAL_DAY_LIMIT = 999999;
+export const TRIAL_SESSION_LIMIT = 3;
+export const TRIAL_DAY_LIMIT = 7;
 
 export interface LicenseStatus {
   type: 'trial' | 'licensed' | 'expired';
