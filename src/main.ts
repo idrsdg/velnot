@@ -1,11 +1,17 @@
-import { app, BrowserWindow, session, Tray, Menu, nativeImage } from 'electron';
+import { app, BrowserWindow, session, Tray, Menu, nativeImage, protocol, net } from 'electron';
 import path from 'node:path';
+import fs from 'node:fs';
 import started from 'electron-squirrel-startup';
 import { registerIpcHandlers } from './main/ipc';
 import { initDb } from './main/db';
 import { updateElectronApp } from 'update-electron-app';
 
 if (started) app.quit();
+
+// Register velnot:// custom protocol to serve local audio files
+protocol.registerSchemesAsPrivileged([
+  { scheme: 'velnot', privileges: { secure: true, standard: true, stream: true } },
+]);
 
 let mainWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;
@@ -93,6 +99,17 @@ if (app.isPackaged) {
 
 app.on('ready', async () => {
   await initDb();
+
+  // Serve local .webm audio files via velnot://{sessionId}
+  protocol.handle('velnot', (request) => {
+    const sessionId = new URL(request.url).hostname;
+    const filePath = path.join(app.getPath('userData'), 'sessions', `${sessionId}.webm`);
+    if (!fs.existsSync(filePath)) {
+      return new Response('Not found', { status: 404 });
+    }
+    return net.fetch(`file://${filePath}`);
+  });
+
   session.defaultSession.setPermissionRequestHandler((_wc, permission, callback) => {
     callback(permission === 'media' || permission === 'display-capture');
   });

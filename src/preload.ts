@@ -34,8 +34,19 @@ contextBridge.exposeInMainWorld('api', {
   transcribeAudio: (audioData: ArrayBuffer, language: string) =>
     ipcRenderer.invoke('audio:transcribe', audioData, language),
 
+  transcribeChunk: (audioData: ArrayBuffer, language: string) =>
+    ipcRenderer.invoke('audio:transcribeChunk', audioData, language),
+
+  // ── Audio Storage ─────────────────────────────────────────
+  saveAudio: (sessionId: string, audioData: ArrayBuffer) =>
+    ipcRenderer.invoke('audio:save', sessionId, audioData),
+
+  // ── Files ─────────────────────────────────────────────────
   saveNote: (data: object) =>
     ipcRenderer.invoke('file:saveNote', data),
+
+  exportSession: (data: object, format: string) =>
+    ipcRenderer.invoke('file:exportSession', data, format),
 
   // ── License ───────────────────────────────────────────────
   getLicenseStatus: () =>

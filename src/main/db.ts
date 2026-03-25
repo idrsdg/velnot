@@ -24,6 +24,9 @@ export interface Session {
   action_items: string;  // JSON string: {task,owner,deadline}[]
   tags: string;          // JSON string: string[]
   created_at: number;
+  audio_path?: string;   // path to {id}.webm
+  utterances?: string;   // JSON: {speaker,text,start,end}[]
+  speaker_map?: string;  // JSON: Record<string,string> e.g. {"A":"Ahmet"}
 }
 
 export type NewSession = Omit<Session, 'id' | 'created_at'>;
@@ -92,4 +95,7 @@ export function deleteSession(id: string): void {
   try {
     fs.unlinkSync(path.join(getSessionsDir(), `${id}.json`));
   } catch { /* zaten silinmiş */ }
+  try {
+    fs.unlinkSync(path.join(getSessionsDir(), `${id}.webm`));
+  } catch { /* ses dosyası yoksa sessiz geç */ }
 }

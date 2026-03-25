@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useT, localizeError } from '../LanguageContext';
+import { Utterance } from '../types/api';
 
 type State = 'idle' | 'recording' | 'transcribing' | 'transcribed' | 'analyzing' | 'done';
 type ProcessMode = 'summary' | 'action_plan' | 'meeting_notes';
@@ -14,6 +15,8 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
   const [state, setState] = useState<State>('idle');
   const [elapsed, setElapsed] = useState(0);
   const [transcript, setTranscript] = useState('');
+  const [liveTranscript, setLiveTranscript] = useState('');
+  const [utterances, setUtterances] = useState<Utterance[]>([]);
   const [title, setTitle] = useState('');
   const [summary, setSummary] = useState<string[]>([]);
   const [actions, setActions] = useState<{ task: string; owner: string; deadline: string }[]>([]);
@@ -21,8 +24,12 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
   const [error, setError] = useState('');
   const [hasSysAudio, setHasSysAudio] = useState(false);
   const [activeMode, setActiveMode] = useState<ProcessMode | null>(null);
+  const [savedSessionId, setSavedSessionId] = useState<string | null>(null);
+  const [editTranscript, setEditTranscript] = useState('');
+  const [editSaving, setEditSaving] = useState(false);
 
   const timerRef    = useRef<ReturnType<typeof setInterval> | null>(null);
+  const liveTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const rafRef      = useRef<number | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef   = useRef<Blob[]>([]);
@@ -31,10 +38,13 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
   const endedAtRef   = useRef<number>(0);
   const micStreamRef = useRef<MediaStream | null>(null);
   const sysStreamRef = useRef<MediaStream | null>(null);
+  const audioBlobRef = useRef<Blob | null>(null);
+  const audioRef     = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     return () => {
       timerRef.current && clearInterval(timerRef.current);
+      liveTimerRef.current && clearInterval(liveTimerRef.current);
       rafRef.current && cancelAnimationFrame(rafRef.current);
       audioCtxRef.current?.close();
       micStreamRef.current?.getTracks().forEach(tr => tr.stop());
@@ -45,6 +55,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
   const startRecording = async () => {
     setError('');
     setHasSysAudio(false);
+    setLiveTranscript('');
     try {
       const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
       micStreamRef.current = micStream;
@@ -98,6 +109,18 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
       startedAtRef.current = Date.now();
       timerRef.current = setInterval(() => setElapsed(s => s + 1), 1000);
       setState('recording');
+
+      // Real-time transcription every 30 seconds (cumulative chunks)
+      const lang = (await window.api.getSetting('language')) ?? 'tr';
+      liveTimerRef.current = setInterval(async () => {
+        if (chunksRef.current.length === 0) return;
+        try {
+          const snapshot = new Blob([...chunksRef.current], { type: 'audio/webm' });
+          const buf = await snapshot.arrayBuffer();
+          const partial = await window.api.transcribeChunk(buf, lang);
+          if (partial) setLiveTranscript(partial);
+        } catch { /* silent — live transcript is best-effort */ }
+      }, 30000);
     } catch (e: any) {
       setError(localizeError(e?.message ?? '', t));
     }
@@ -105,6 +128,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
 
   const stopRecording = async () => {
     timerRef.current && clearInterval(timerRef.current);
+    liveTimerRef.current && clearInterval(liveTimerRef.current);
     rafRef.current && cancelAnimationFrame(rafRef.current);
     setBars(Array(20).fill(4));
     endedAtRef.current = Date.now();
@@ -115,6 +139,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
         resolve(new Blob(chunksRef.current, { type: 'audio/webm' }));
       recorderRef.current!.stop();
     });
+    audioBlobRef.current = audioBlob;
 
     micStreamRef.current?.getTracks().forEach(tr => tr.stop());
     sysStreamRef.current?.getTracks().forEach(tr => tr.stop());
@@ -123,8 +148,10 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
     try {
       const lang = (await window.api.getSetting('language')) ?? 'tr';
       const arrayBuffer = await audioBlob.arrayBuffer();
-      const text = await window.api.transcribeAudio(arrayBuffer, lang);
-      setTranscript(text);
+      const result = await window.api.transcribeAudio(arrayBuffer, lang);
+      setTranscript(result.transcript);
+      setUtterances(result.utterances ?? []);
+      setLiveTranscript('');
       setState('transcribed');
     } catch (e: any) {
       setError(localizeError(e?.message ?? '', t));
@@ -142,7 +169,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
       setActions(result.action_items);
       setState('done');
 
-      await window.api.saveSession({
+      const saved = await window.api.saveSession({
         title: result.title || 'Untitled',
         started_at: startedAtRef.current,
         ended_at: endedAtRef.current,
@@ -151,7 +178,20 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
         summary: JSON.stringify(result.summary),
         action_items: JSON.stringify(result.action_items),
         tags: JSON.stringify([mode]),
-      });
+        utterances: utterances.length > 0 ? JSON.stringify(utterances) : undefined,
+      } as any);
+
+      setSavedSessionId(saved.id);
+      setEditTranscript(transcript);
+
+      // Save audio file linked to session
+      if (audioBlobRef.current) {
+        try {
+          const audioBuf = await audioBlobRef.current.arrayBuffer();
+          await window.api.saveAudio(saved.id, audioBuf);
+        } catch { /* audio save failure is non-fatal */ }
+      }
+
       onSessionSaved?.();
     } catch (e: any) {
       setError(localizeError(e?.message ?? '', t));
@@ -159,16 +199,35 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
     }
   };
 
+  const handleTranscriptBlur = async () => {
+    if (!savedSessionId || editTranscript === transcript) return;
+    setEditSaving(true);
+    try {
+      const session = await window.api.getSession(savedSessionId);
+      if (session) {
+        await window.api.updateSession({ ...session, transcript: editTranscript });
+        setTranscript(editTranscript);
+      }
+    } finally {
+      setEditSaving(false);
+    }
+  };
+
   const reset = () => {
     setState('idle');
     setElapsed(0);
     setTranscript('');
+    setLiveTranscript('');
+    setUtterances([]);
     setTitle('');
     setSummary([]);
     setActions([]);
     setError('');
     setActiveMode(null);
     setBars(Array(20).fill(4));
+    setSavedSessionId(null);
+    setEditTranscript('');
+    audioBlobRef.current = null;
   };
 
   const fmt = (s: number) =>
@@ -190,8 +249,11 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
       ? t.record.results.actionPlan
       : t.record.results.summary;
 
+  // Audio src for saved session
+  const audioSrc = savedSessionId ? `velnot://${savedSessionId}` : null;
+
   return (
-    <div style={{ padding: '28px 32px', height: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div style={{ padding: '28px 32px', height: '100%', display: 'flex', flexDirection: 'column', gap: '20px', overflowY: 'auto' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
@@ -261,6 +323,14 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
             </div>
           </div>
 
+          {/* Live transcript preview during recording */}
+          {state === 'recording' && liveTranscript && (
+            <div style={{ marginBottom: '16px', padding: '12px 14px', borderRadius: '8px', background: '#0f0f1a', border: '1px solid #2a2a4a', fontSize: '12px', color: '#818cf8', lineHeight: '1.6', maxHeight: '80px', overflowY: 'auto' }}>
+              {liveTranscript}
+              <span style={{ display: 'inline-block', width: '2px', height: '13px', background: '#818cf8', marginLeft: '2px', animation: 'blink 1s step-end infinite', verticalAlign: 'text-bottom' }} />
+            </div>
+          )}
+
           {/* Buttons */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
             {state === 'idle' && <Btn color="#6366f1" onClick={startRecording}>{t.record.start}</Btn>}
@@ -276,14 +346,12 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
       {/* Transcript + mode selection */}
       {state === 'transcribed' && !error && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', flex: 1, minHeight: 0 }}>
-          {/* Full transcript */}
           <Card title={t.record.results.transcript}>
             <div style={{ fontSize: '13px', lineHeight: '1.75', color: '#bbb', overflowY: 'auto', maxHeight: '240px', whiteSpace: 'pre-wrap' }}>
               {transcript}
             </div>
           </Card>
 
-          {/* Mode buttons */}
           <div style={{ background: '#141414', borderRadius: '14px', padding: '20px', border: '1px solid #2a2a4a' }}>
             <div style={{ fontSize: '12px', color: '#818cf8', fontWeight: 600, marginBottom: '14px', letterSpacing: '0.06em' }}>
               {t.record.transcriptReady}
@@ -315,11 +383,56 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
       {/* Results */}
       {transcript && (state === 'done' || state === 'analyzing') && (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', flex: 1, minHeight: 0 }}>
-          <Card title={t.record.results.transcript}>
-            <div style={{ fontSize: '13px', lineHeight: '1.75', color: '#bbb', overflowY: 'auto', maxHeight: '320px', whiteSpace: 'pre-wrap' }}>
-              {transcript}
-            </div>
-          </Card>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <Card title={t.record.results.transcript}>
+              <textarea
+                value={editTranscript}
+                onChange={e => setEditTranscript(e.target.value)}
+                onBlur={handleTranscriptBlur}
+                style={{
+                  width: '100%', minHeight: '200px', fontSize: '13px', lineHeight: '1.75',
+                  color: '#bbb', background: 'transparent', border: 'none',
+                  outline: 'none', resize: 'vertical', fontFamily: 'inherit',
+                }}
+              />
+              {editSaving && <div style={{ fontSize: '11px', color: '#555', marginTop: '4px' }}>Kaydediliyor...</div>}
+            </Card>
+
+            {/* Audio player */}
+            {audioSrc && (
+              <div style={{ background: '#141414', borderRadius: '10px', padding: '12px 14px', border: '1px solid #222' }}>
+                <div style={{ fontSize: '11px', color: '#555', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '8px' }}>
+                  Ses Kaydı
+                </div>
+                <audio
+                  ref={audioRef}
+                  src={audioSrc}
+                  controls
+                  style={{ width: '100%', height: '32px', accentColor: '#6366f1' }}
+                />
+              </div>
+            )}
+
+            {/* Utterances for seeking */}
+            {utterances.length > 0 && audioRef.current && (
+              <div style={{ background: '#141414', borderRadius: '10px', padding: '12px 14px', border: '1px solid #222', maxHeight: '160px', overflowY: 'auto' }}>
+                <div style={{ fontSize: '11px', color: '#555', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '8px' }}>
+                  Konuşmacılar
+                </div>
+                {utterances.map((u, i) => (
+                  <div
+                    key={i}
+                    onClick={() => { if (audioRef.current) audioRef.current.currentTime = u.start / 1000; }}
+                    style={{ fontSize: '12px', color: '#aaa', padding: '4px 0', cursor: 'pointer', lineHeight: '1.5', borderBottom: '1px solid #1a1a1a' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#a5b4fc')}
+                    onMouseLeave={e => (e.currentTarget.style.color = '#aaa')}
+                  >
+                    <span style={{ color: '#6366f1', fontWeight: 600 }}>{u.speaker}:</span> {u.text}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {title && (
@@ -359,6 +472,10 @@ export default function RecordingView({ licenseStatus, onSessionSaved }: Props =
           </div>
         </div>
       )}
+
+      <style>{`
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+      `}</style>
     </div>
   );
 }

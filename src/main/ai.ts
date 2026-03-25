@@ -6,7 +6,14 @@ import { getSetting } from './settings';
 
 // ── AssemblyAI diarization ──────────────────────────────────────────────────
 
-interface AssemblyUtterance { speaker: string; text: string; }
+export interface Utterance { speaker: string; text: string; start: number; end: number; }
+
+export interface DiarizationResult {
+  transcript: string;
+  utterances: Utterance[];
+}
+
+interface AssemblyUtterance { speaker: string; text: string; start: number; end: number; }
 interface AssemblyPollResult {
   status: string;
   utterances?: AssemblyUtterance[];
@@ -14,7 +21,7 @@ interface AssemblyPollResult {
   error?: string;
 }
 
-export async function transcribeWithDiarization(audioData: Buffer, language?: string): Promise<string> {
+export async function transcribeWithDiarization(audioData: Buffer, language?: string): Promise<DiarizationResult> {
   const apiKey = getSetting('assemblyai_key');
   if (!apiKey) throw new Error('AssemblyAI API key ayarlanmamış. Lütfen Ayarlar\'dan ekleyin.');
 
@@ -32,7 +39,6 @@ export async function transcribeWithDiarization(audioData: Buffer, language?: st
 
   // 2. Request transcript with speaker diarization
   // Not: speaker_labels ile language_detection birlikte kullanılamaz (AssemblyAI 400 döner)
-  // Dil auto ise language_code göndermiyoruz — AssemblyAI varsayılan olarak algılar
   const lang = language && language !== 'auto' ? language : undefined;
   const transcriptRes = await fetch('https://api.assemblyai.com/v2/transcript', {
     method: 'POST',
@@ -60,11 +66,16 @@ export async function transcribeWithDiarization(audioData: Buffer, language?: st
 
     if (data.status === 'completed') {
       if (data.utterances?.length) {
-        return data.utterances
-          .map(u => `Konuşmacı ${u.speaker}: ${u.text}`)
-          .join('\n');
+        const utterances: Utterance[] = data.utterances.map(u => ({
+          speaker: u.speaker,
+          text: u.text,
+          start: u.start,
+          end: u.end,
+        }));
+        const transcript = utterances.map(u => `Konuşmacı ${u.speaker}: ${u.text}`).join('\n');
+        return { transcript, utterances };
       }
-      return data.text ?? '';
+      return { transcript: data.text ?? '', utterances: [] };
     }
     if (data.status === 'error') throw new Error(`AssemblyAI hatası: ${data.error}`);
   }
@@ -83,9 +94,26 @@ function getClient(): OpenAI {
   return new OpenAI({ apiKey });
 }
 
-export async function transcribeBuffer(audioData: Buffer, language?: string): Promise<string> {
+export async function transcribeBuffer(audioData: Buffer, language?: string): Promise<DiarizationResult> {
   const client = getClient();
   const tmpPath = path.join(os.tmpdir(), `sna_${Date.now()}.webm`);
+  fs.writeFileSync(tmpPath, audioData);
+  try {
+    const response = await client.audio.transcriptions.create({
+      file: fs.createReadStream(tmpPath),
+      model: 'whisper-1',
+      ...(language && language !== 'auto' ? { language } : {}),
+    });
+    return { transcript: response.text, utterances: [] };
+  } finally {
+    try { fs.unlinkSync(tmpPath); } catch {}
+  }
+}
+
+// Chunk transcription for real-time preview (always Whisper, no diarization)
+export async function transcribeChunk(audioData: Buffer, language?: string): Promise<string> {
+  const client = getClient();
+  const tmpPath = path.join(os.tmpdir(), `sna_chunk_${Date.now()}.webm`);
   fs.writeFileSync(tmpPath, audioData);
   try {
     const response = await client.audio.transcriptions.create({

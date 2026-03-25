@@ -1,8 +1,9 @@
-import { ipcMain, shell } from 'electron';
+import { ipcMain, shell, BrowserWindow } from 'electron';
 import { getSessions, getSession, searchSessions, deleteSession, insertSession, updateSession, NewSession, Session } from './db';
 import { getSetting, setSetting } from './settings';
-import { generateSummary, transcribeBuffer, transcribeWithDiarization, ProcessMode } from './ai';
-import { saveNoteAsText, NoteData } from './files';
+import { generateSummary, transcribeBuffer, transcribeWithDiarization, transcribeChunk, ProcessMode } from './ai';
+import { saveNoteAsText, saveNoteAsMarkdown, saveNoteAsDocx, saveNoteAsPdf, NoteData } from './files';
+import { saveSessionAudio } from './audio';
 import { getLicenseStatus, activateLicense } from './license';
 
 export function registerIpcHandlers() {
@@ -53,7 +54,29 @@ export function registerIpcHandlers() {
     return transcribeBuffer(Buffer.from(audioData), language || 'tr');
   });
 
+  // Real-time chunk transcription (always Whisper, no diarization overhead)
+  ipcMain.handle('audio:transcribeChunk', async (_e, audioData: ArrayBuffer, language: string) => {
+    return transcribeChunk(Buffer.from(audioData), language || 'tr');
+  });
+
+  // ── Audio Storage ─────────────────────────────────────────
+  ipcMain.handle('audio:save', (_e, sessionId: string, audioData: ArrayBuffer) => {
+    return saveSessionAudio(sessionId, Buffer.from(audioData));
+  });
+
+  // ── Files ─────────────────────────────────────────────────
   ipcMain.handle('file:saveNote', (_e, data: NoteData) => {
+    return saveNoteAsText(data);
+  });
+
+  ipcMain.handle('file:exportSession', async (_e, data: NoteData, format: 'txt' | 'md' | 'pdf' | 'docx') => {
+    if (format === 'md') return saveNoteAsMarkdown(data);
+    if (format === 'docx') return saveNoteAsDocx(data);
+    if (format === 'pdf') {
+      const win = BrowserWindow.getFocusedWindow();
+      if (!win) throw new Error('No focused window for PDF export');
+      return saveNoteAsPdf(data, win);
+    }
     return saveNoteAsText(data);
   });
 

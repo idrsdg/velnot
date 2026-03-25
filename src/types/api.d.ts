@@ -9,6 +9,21 @@ export interface SessionData {
   action_items: string;  // JSON string: {task,owner,deadline}[]
   tags: string;          // JSON string: string[]
   created_at: number;
+  audio_path?: string;   // path to {id}.webm
+  utterances?: string;   // JSON: {speaker,text,start,end}[]
+  speaker_map?: string;  // JSON: Record<string,string>
+}
+
+export interface Utterance {
+  speaker: string;
+  text: string;
+  start: number; // ms
+  end: number;   // ms
+}
+
+export interface DiarizationResult {
+  transcript: string;
+  utterances: Utterance[];
 }
 
 export interface ActionItem {
@@ -47,7 +62,11 @@ declare global {
 
       // AI
       generateSummary: (transcript: string, mode?: string) => Promise<AISummaryResult>;
-      transcribeAudio: (audioData: ArrayBuffer, language: string) => Promise<string>;
+      transcribeAudio: (audioData: ArrayBuffer, language: string) => Promise<DiarizationResult>;
+      transcribeChunk: (audioData: ArrayBuffer, language: string) => Promise<string>;
+
+      // Audio
+      saveAudio: (sessionId: string, audioData: ArrayBuffer) => Promise<string>; // returns audio path
 
       // Files
       saveNote: (data: {
@@ -56,6 +75,12 @@ declare global {
         action_items: { task: string; owner: string; deadline: string }[];
         transcript: string;
       }) => Promise<string>; // returns file path
+      exportSession: (data: {
+        title: string; date: number; duration_sec: number;
+        summary: string[];
+        action_items: { task: string; owner: string; deadline: string }[];
+        transcript: string;
+      }, format: 'txt' | 'md' | 'pdf' | 'docx') => Promise<string>; // returns file path
 
       // License
       getLicenseStatus: () => Promise<LicenseStatus>;

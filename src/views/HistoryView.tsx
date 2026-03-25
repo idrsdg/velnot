@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useT } from '../LanguageContext';
-import { SessionData, ActionItem } from '../types/api';
+import { SessionData, ActionItem, Utterance } from '../types/api';
 
 function formatDate(ts: number, lang: string): string {
   const locale = lang === 'zh' ? 'zh-CN' : lang === 'ar' ? 'ar-SA' : lang === 'hi' ? 'hi-IN' : lang === 'es' ? 'es-ES' : lang === 'tr' ? 'tr-TR' : lang === 'fr' ? 'fr-FR' : lang === 'pt' ? 'pt-PT' : lang === 'de' ? 'de-DE' : 'en-US';
@@ -17,6 +17,25 @@ function formatDuration(sec: number): string {
   return s > 0 ? `${m}m ${s}s` : `${m}m`;
 }
 
+function extractSpeakers(utterances: Utterance[]): string[] {
+  const seen = new Set<string>();
+  utterances.forEach(u => seen.add(u.speaker));
+  return Array.from(seen).sort();
+}
+
+function applyMap(text: string, map: Record<string, string>): string {
+  let result = text;
+  Object.entries(map).forEach(([code, name]) => {
+    if (name.trim()) {
+      result = result.replace(new RegExp(`Konuşmacı ${code}:`, 'g'), `${name}:`);
+      result = result.replace(new RegExp(`Speaker ${code}:`, 'g'), `${name}:`);
+    }
+  });
+  return result;
+}
+
+export type ExportFormat = 'txt' | 'md' | 'pdf' | 'docx';
+
 export default function HistoryView() {
   const { t, lang } = useT();
   const [sessions, setSessions] = useState<SessionData[]>([]);
@@ -29,6 +48,17 @@ export default function HistoryView() {
   const [editTranscript, setEditTranscript] = useState('');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+
+  // Speaker naming
+  const [speakerMap, setSpeakerMap] = useState<Record<string, string>>({});
+
+  // Export
+  const [exportFormat, setExportFormat] = useState<ExportFormat>('txt');
+  const [exporting, setExporting] = useState(false);
+  const [exportPath, setExportPath] = useState('');
+
+  // Audio ref
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const load = useCallback(async (q = '') => {
     setLoading(true);
@@ -57,6 +87,15 @@ export default function HistoryView() {
       setEditTitle(selectedSession.title || '');
       setEditTranscript(selectedSession.transcript || '');
       setSaved(false);
+      setExportPath('');
+
+      // Load speaker map
+      try {
+        const map = selectedSession.speaker_map ? JSON.parse(selectedSession.speaker_map) : {};
+        setSpeakerMap(map);
+      } catch {
+        setSpeakerMap({});
+      }
     }
   }, [selected, selectedSession?.id]);
 
@@ -66,7 +105,7 @@ export default function HistoryView() {
     if (selected === id) setSelected(null);
   };
 
-  const handleSave = async () => {
+  const doSave = async (overrides?: Partial<SessionData>) => {
     if (!selectedSession) return;
     setSaving(true);
     try {
@@ -74,6 +113,7 @@ export default function HistoryView() {
         ...selectedSession,
         title: editTitle,
         transcript: editTranscript,
+        ...overrides,
       };
       await window.api.updateSession(updated);
       setSessions(prev => prev.map(s => s.id === updated.id ? updated : s));
@@ -81,6 +121,50 @@ export default function HistoryView() {
       setTimeout(() => setSaved(false), 2000);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleSave = () => doSave();
+
+  // Auto-save on blur
+  const handleTitleBlur = () => doSave();
+  const handleTranscriptBlur = () => doSave();
+
+  // Speaker map change
+  const handleSpeakerNameChange = (code: string, name: string) => {
+    setSpeakerMap(prev => ({ ...prev, [code]: name }));
+  };
+
+  const handleSpeakerNameBlur = async () => {
+    if (!selectedSession) return;
+    const updatedSession: SessionData = {
+      ...selectedSession,
+      title: editTitle,
+      transcript: editTranscript,
+      speaker_map: JSON.stringify(speakerMap),
+    };
+    await window.api.updateSession(updatedSession);
+    setSessions(prev => prev.map(s => s.id === updatedSession.id ? updatedSession : s));
+  };
+
+  const handleExport = async () => {
+    if (!selectedSession) return;
+    setExporting(true);
+    setExportPath('');
+    try {
+      const summaryArr: string[] = JSON.parse(selectedSession.summary || '[]');
+      const actionsArr: ActionItem[] = JSON.parse(selectedSession.action_items || '[]');
+      const filePath = await window.api.exportSession({
+        title: editTitle,
+        date: selectedSession.created_at,
+        duration_sec: selectedSession.duration_sec,
+        summary: summaryArr,
+        action_items: actionsArr,
+        transcript: editTranscript,
+      }, exportFormat);
+      setExportPath(filePath);
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -152,6 +236,18 @@ export default function HistoryView() {
       {selectedSession && (() => {
         const summaryArr: string[] = JSON.parse(selectedSession.summary || '[]');
         const actionsArr: ActionItem[] = JSON.parse(selectedSession.action_items || '[]');
+        const utterances: Utterance[] = (() => {
+          try { return selectedSession.utterances ? JSON.parse(selectedSession.utterances) : []; }
+          catch { return []; }
+        })();
+        const speakers = extractSpeakers(utterances);
+        const audioSrc = `velnot://${selectedSession.id}`;
+
+        // Display transcript with speaker name mapping applied
+        const displayTranscript = Object.keys(speakerMap).length > 0
+          ? applyMap(editTranscript, speakerMap)
+          : editTranscript;
+
         return (
           <div style={{ flex: 1, overflowY: 'auto', padding: '28px', display: 'flex', flexDirection: 'column' }}>
             {/* Editable title */}
@@ -159,6 +255,7 @@ export default function HistoryView() {
               <input
                 value={editTitle}
                 onChange={e => { setEditTitle(e.target.value); setSaved(false); }}
+                onBlur={handleTitleBlur}
                 style={{
                   width: '100%', fontSize: '18px', fontWeight: 700,
                   background: 'transparent', border: 'none', borderBottom: '1px solid #2a2a2a',
@@ -169,6 +266,66 @@ export default function HistoryView() {
             <div style={{ fontSize: '12px', color: '#555', marginBottom: '24px' }}>
               {formatDate(selectedSession.created_at, lang)} · {formatDuration(selectedSession.duration_sec)}
             </div>
+
+            {/* Audio player */}
+            <Section title="Ses Kaydı">
+              <audio
+                ref={audioRef}
+                src={audioSrc}
+                controls
+                style={{ width: '100%', height: '32px', accentColor: '#6366f1' }}
+                onError={() => {/* silently hide if no audio */}}
+              />
+            </Section>
+
+            {/* Utterances for timestamp seek */}
+            {utterances.length > 0 && (
+              <Section title="Konuşmacı Zaman Çizelgesi">
+                <div style={{ maxHeight: '160px', overflowY: 'auto' }}>
+                  {utterances.map((u, i) => {
+                    const displayName = speakerMap[u.speaker]?.trim() || u.speaker;
+                    return (
+                      <div
+                        key={i}
+                        onClick={() => { if (audioRef.current) audioRef.current.currentTime = u.start / 1000; }}
+                        style={{ fontSize: '12px', color: '#aaa', padding: '5px 0', cursor: 'pointer', lineHeight: '1.5', borderBottom: '1px solid #1a1a1a', display: 'flex', gap: '8px' }}
+                        onMouseEnter={e => (e.currentTarget.style.color = '#a5b4fc')}
+                        onMouseLeave={e => (e.currentTarget.style.color = '#aaa')}
+                      >
+                        <span style={{ color: '#6366f1', fontWeight: 600, flexShrink: 0 }}>{displayName}:</span>
+                        <span>{u.text}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </Section>
+            )}
+
+            {/* Speaker naming (only if diarization utterances exist) */}
+            {speakers.length > 0 && (
+              <Section title="Konuşmacı İsimleri">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {speakers.map(code => (
+                    <div key={code} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{ fontSize: '12px', color: '#6366f1', fontWeight: 600, minWidth: '80px' }}>
+                        Konuşmacı {code}
+                      </span>
+                      <input
+                        value={speakerMap[code] ?? ''}
+                        placeholder="İsim girin..."
+                        onChange={e => handleSpeakerNameChange(code, e.target.value)}
+                        onBlur={handleSpeakerNameBlur}
+                        style={{
+                          flex: 1, padding: '5px 10px', borderRadius: '6px',
+                          background: '#1a1a1a', border: '1px solid #2a2a2a',
+                          color: '#f0f0f0', fontSize: '12px', outline: 'none',
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </Section>
+            )}
 
             {summaryArr.length > 0 && (
               <Section title={t.history.summary}>
@@ -201,14 +358,52 @@ export default function HistoryView() {
             {/* Editable transcript */}
             <Section title={t.history.transcript}>
               <textarea
-                value={editTranscript}
-                onChange={e => { setEditTranscript(e.target.value); setSaved(false); }}
+                value={speakers.length > 0 ? displayTranscript : editTranscript}
+                onChange={e => { setEditTranscript(speakers.length > 0 ? e.target.value : e.target.value); setSaved(false); }}
+                onBlur={handleTranscriptBlur}
                 style={{
                   width: '100%', minHeight: '200px', fontSize: '13px', lineHeight: '1.75',
                   color: '#aaa', background: 'transparent', border: 'none',
                   outline: 'none', resize: 'vertical', fontFamily: 'inherit',
                 }}
               />
+            </Section>
+
+            {/* Export section */}
+            <Section title="Dışa Aktar">
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                {(['txt', 'md', 'pdf', 'docx'] as ExportFormat[]).map(fmt => (
+                  <button
+                    key={fmt}
+                    onClick={() => setExportFormat(fmt)}
+                    style={{
+                      padding: '5px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 600,
+                      border: `1px solid ${exportFormat === fmt ? '#6366f1' : '#2a2a2a'}`,
+                      background: exportFormat === fmt ? 'rgba(99,102,241,0.15)' : 'transparent',
+                      color: exportFormat === fmt ? '#a5b4fc' : '#666',
+                      cursor: 'pointer', textTransform: 'uppercase',
+                    }}
+                  >
+                    {fmt}
+                  </button>
+                ))}
+                <button
+                  onClick={handleExport}
+                  disabled={exporting}
+                  style={{
+                    padding: '5px 14px', borderRadius: '6px', fontSize: '12px', fontWeight: 600,
+                    border: 'none', background: '#6366f1', color: '#fff',
+                    cursor: exporting ? 'not-allowed' : 'pointer', opacity: exporting ? 0.6 : 1,
+                  }}
+                >
+                  {exporting ? '...' : 'İndir'}
+                </button>
+              </div>
+              {exportPath && (
+                <div style={{ fontSize: '11px', color: '#4a7c59', marginTop: '8px', wordBreak: 'break-all' }}>
+                  ✅ {exportPath}
+                </div>
+              )}
             </Section>
 
             {/* Action buttons — bottom */}
