@@ -240,6 +240,17 @@
       .email-form { flex-direction: column; }
     }
 
+    /* Lang selector */
+    #langContainer { position: relative; }
+    #langBtn { padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; font-size: 13px; white-space: nowrap; }
+    #langBtn:hover { color: var(--text); border-color: #444; }
+    #langMenu { display: none; position: absolute; right: 0; top: calc(100% + 6px); background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 6px; min-width: 150px; z-index: 200; }
+    #langMenu button { display: flex; align-items: center; gap: 8px; width: 100%; padding: 7px 10px; background: none; border: none; color: #ccc; cursor: pointer; font-size: 13px; border-radius: 6px; }
+    #langMenu button:hover { background: #2a2a2a; color: #fff; }
+    [data-theme="light"] #langMenu { background: #fff; border-color: #ddd; }
+    [data-theme="light"] #langMenu button { color: #333; }
+    [data-theme="light"] #langMenu button:hover { background: #f5f5f5; }
+
     /* Download modal */
     .dl-modal-overlay {
       display: none; position: fixed; inset: 0; z-index: 200;
@@ -343,14 +354,14 @@
 <div class="dl-modal-overlay" id="dlOverlay" onclick="closeDlModal(event)">
   <div class="dl-modal">
     <div class="dl-modal-icon">⬇️</div>
-    <div class="dl-modal-title">İndirme başlıyor</div>
-    <div class="dl-modal-sub">E-posta adresini bırak, güncellemelerden haberdar olalım.<br>İstersen adım atla.</div>
+    <div class="dl-modal-title" data-i18n="modal.title">İndirme başlıyor</div>
+    <div class="dl-modal-sub" data-i18n-html="modal.sub">E-posta adresini bırak, güncellemelerden haberdar olalım.<br>İstersen adım atla.</div>
     <div id="dlFormWrap">
       <form class="dl-modal-form" onsubmit="handleDlSubmit(event)">
         <input class="dl-modal-input" type="email" name="email" placeholder="e-posta@adresin.com" id="dlEmail" />
-        <button class="dl-modal-btn" type="submit">⬇ İndir</button>
+        <button class="dl-modal-btn" type="submit" data-i18n="modal.btn">⬇ İndir</button>
       </form>
-      <button class="dl-modal-skip" onclick="triggerDownload()">E-posta vermeden indir</button>
+      <button class="dl-modal-skip" onclick="triggerDownload()" data-i18n="modal.skip">E-posta vermeden indir</button>
     </div>
     <div class="dl-modal-success" id="dlSuccess">
       <p>✅ İndirme başladı! Güncelleme e-postaları için teşekkürler.</p>
@@ -371,29 +382,33 @@
     Silent Note AI
   </a>
   <div class="nav-links">
-    <a href="#features">Özellikler</a>
-    <a href="#how">Nasıl Çalışır</a>
-    <a href="#pricing">Fiyat</a>
-    <a href="#faq">SSS</a>
-    <a href="#privacy">Gizlilik</a>
+    <a href="#features" data-i18n="nav.features">Özellikler</a>
+    <a href="#how" data-i18n="nav.how">Nasıl Çalışır</a>
+    <a href="#pricing" data-i18n="nav.pricing">Fiyat</a>
+    <a href="#faq" data-i18n="nav.faq">SSS</a>
+    <a href="#privacy" data-i18n="nav.privacy">Gizlilik</a>
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
+    <div id="langContainer">
+      <button id="langBtn">🌐 TR</button>
+      <div id="langMenu"></div>
+    </div>
     <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Tema değiştir">🌙</button>
-    <button class="nav-cta" onclick="openDlModal()" style="cursor:pointer;border:none;">Ücretsiz İndir</button>
+    <button class="nav-cta" onclick="openDlModal()" style="cursor:pointer;border:none;" data-i18n="nav.download">Ücretsiz İndir</button>
   </div>
 </nav>
 
 <!-- Hero -->
 <section class="hero">
-  <div class="badge">🚀 Windows için şimdi mevcut</div>
-  <h1>Toplantılarını<br /><span>akıllıca not al.</span></h1>
-  <p class="hero-sub">Toplantıya bot eklenmez, bildirim gönderilmez. Ses kaydı tamamen kendi bilgisayarında işlenir ve sadece sende kalır.</p>
+  <div class="badge" data-i18n="hero.badge">🚀 Windows için şimdi mevcut</div>
+  <h1 data-i18n-html="hero.h1">Toplantılarını<br /><span>akıllıca not al.</span></h1>
+  <p class="hero-sub" data-i18n="hero.sub">Toplantıya bot eklenmez, bildirim gönderilmez. Ses kaydı tamamen kendi bilgisayarında işlenir ve sadece sende kalır.</p>
   <div class="hero-btns">
-    <button class="btn-primary" onclick="openDlModal()" style="cursor:pointer;border:none;">⬇ Ücretsiz İndir</button>
-    <a class="btn-secondary" href="#how">Nasıl çalışır?</a>
+    <button class="btn-primary" onclick="openDlModal()" style="cursor:pointer;border:none;" data-i18n="hero.dlBtn">⬇ Ücretsiz İndir</button>
+    <a class="btn-secondary" href="#how" data-i18n="hero.howBtn">Nasıl çalışır?</a>
   </div>
-  <div class="hero-guarantee">✅ Şu an ücretsiz · Ömür boyu güncelleme · Bot-free kayıt</div>
-  <p class="hero-note">Kendi OpenAI key'inle çalışır · Verileriniz buluta gitmez</p>
+  <div class="hero-guarantee" data-i18n="hero.guarantee">✅ Şu an ücretsiz · Ömür boyu güncelleme · Bot-free kayıt</div>
+  <p class="hero-note" data-i18n="hero.note">Kendi OpenAI key'inle çalışır · Verileriniz buluta gitmez</p>
 
   <!-- App Preview -->
   <div class="app-preview" style="margin-top: 56px; width: 100%;">
@@ -416,19 +431,19 @@
             <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
           </div>
           <div class="app-timer">24:17</div>
-          <div class="app-status">⏺ Kayıt yapılıyor...</div>
-          <button class="app-stop-btn">⏹ Durdur & Özetle</button>
+          <div class="app-status" data-i18n="mock.status">⏺ Kayıt yapılıyor...</div>
+          <button class="app-stop-btn" data-i18n="mock.stop">⏹ Durdur & Özetle</button>
         </div>
         <div class="app-results">
           <div class="app-mini-card">
-            <div class="app-mini-title">Transkript</div>
+            <div class="app-mini-title" data-i18n="mock.transcript">Transkript</div>
             <div class="app-mini-line" style="width:90%"></div>
             <div class="app-mini-line" style="width:75%"></div>
             <div class="app-mini-line" style="width:85%"></div>
             <div class="app-mini-line" style="width:60%"></div>
           </div>
           <div class="app-mini-card">
-            <div class="app-mini-title">Özet</div>
+            <div class="app-mini-title" data-i18n="mock.summary">Özet</div>
             <div class="app-mini-line" style="width:85%"></div>
             <div class="app-mini-line" style="width:70%"></div>
             <div class="app-mini-line" style="width:80%"></div>
@@ -444,19 +459,19 @@
   <div class="stats-grid">
     <div>
       <div class="stat-number">50+</div>
-      <div class="stat-label">Dil desteği</div>
+      <div class="stat-label" data-i18n="stats.langs">Dil desteği</div>
     </div>
     <div>
       <div class="stat-number">&lt;60s</div>
-      <div class="stat-label">İşleme süresi</div>
+      <div class="stat-label" data-i18n="stats.processing">İşleme süresi</div>
     </div>
     <div>
       <div class="stat-number">%100</div>
-      <div class="stat-label">Lokal depolama</div>
+      <div class="stat-label" data-i18n="stats.local">Lokal depolama</div>
     </div>
     <div>
       <div class="stat-number">$29</div>
-      <div class="stat-label">Tek seferlik, ömür boyu</div>
+      <div class="stat-label" data-i18n="stats.price">Tek seferlik, ömür boyu</div>
     </div>
   </div>
 </div>
@@ -464,40 +479,40 @@
 <!-- Features -->
 <section id="features">
   <div class="container">
-    <div class="section-label">Özellikler</div>
-    <h2 class="section-title">İhtiyacın olan her şey, fazlası yok</h2>
-    <p class="section-sub">Toplantılarına odaklan. Notları biz halledelim.</p>
+    <div class="section-label" data-i18n="features.label">Özellikler</div>
+    <h2 class="section-title" data-i18n="features.title">İhtiyacın olan her şey, fazlası yok</h2>
+    <p class="section-sub" data-i18n="features.sub">Toplantılarına odaklan. Notları biz halledelim.</p>
 
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon">🤖</div>
-        <div class="feature-title">Bot-free kayıt</div>
-        <div class="feature-desc">Toplantıya ekstra bir kullanıcı ya da bot eklenmez. Bilgisayarının ses çıkışını kaydeder — tıpkı ekran kaydı gibi.</div>
+        <div class="feature-title" data-i18n="feat.1.title">Bot-free kayıt</div>
+        <div class="feature-desc" data-i18n="feat.1.desc">Toplantıya ekstra bir kullanıcı ya da bot eklenmez. Bilgisayarının ses çıkışını kaydeder — tıpkı ekran kaydı gibi.</div>
       </div>
       <div class="feature-card">
         <div class="feature-icon">🎙</div>
-        <div class="feature-title">Otomatik transkripsiyon</div>
-        <div class="feature-desc">OpenAI Whisper ile 50+ dil destekli, yüksek doğruluklu ses-metin dönüşümü.</div>
+        <div class="feature-title" data-i18n="feat.2.title">Otomatik transkripsiyon</div>
+        <div class="feature-desc" data-i18n="feat.2.desc">OpenAI Whisper ile 99 dil destekli, yüksek doğruluklu ses-metin dönüşümü.</div>
       </div>
       <div class="feature-card">
         <div class="feature-icon">✨</div>
-        <div class="feature-title">AI özet ve aksiyonlar</div>
-        <div class="feature-desc">GPT-4o-mini toplantıyı 3-5 maddede özetler, "kim ne yapacak" listesini çıkarır.</div>
+        <div class="feature-title" data-i18n="feat.3.title">AI özet ve aksiyonlar</div>
+        <div class="feature-desc" data-i18n="feat.3.desc">GPT-4o-mini toplantıyı 3-5 maddede özetler, "kim ne yapacak" listesini çıkarır.</div>
       </div>
       <div class="feature-card">
         <div class="feature-icon">💾</div>
-        <div class="feature-title">Lokal depolama</div>
-        <div class="feature-desc">Tüm transkriptler ve özetler sadece senin bilgisayarında. Hiçbir sunucuya gitmiyor.</div>
+        <div class="feature-title" data-i18n="feat.4.title">Lokal depolama</div>
+        <div class="feature-desc" data-i18n="feat.4.desc">Tüm transkriptler ve özetler sadece senin bilgisayarında. Hiçbir sunucuya gitmiyor.</div>
       </div>
       <div class="feature-card">
         <div class="feature-icon">👥</div>
-        <div class="feature-title">Konuşmacı ayrıştırma</div>
-        <div class="feature-desc">AssemblyAI ile "Konuşmacı A / Konuşmacı B" etiketleri — kim ne dedi, net görünür.</div>
+        <div class="feature-title" data-i18n="feat.5.title">Konuşmacı ayrıştırma</div>
+        <div class="feature-desc" data-i18n="feat.5.desc">AssemblyAI ile "Konuşmacı A / Konuşmacı B" etiketleri — kim ne dedi, net görünür.</div>
       </div>
       <div class="feature-card">
         <div class="feature-icon">🔍</div>
-        <div class="feature-title">Tam metin arama</div>
-        <div class="feature-desc">Geçmiş toplantılarda anında arama. "O toplantıda ne kararlaştırmıştık?" sorusu bitti.</div>
+        <div class="feature-title" data-i18n="feat.6.title">Tam metin arama</div>
+        <div class="feature-desc" data-i18n="feat.6.desc">Geçmiş toplantılarda anında arama. "O toplantıda ne kararlaştırmıştık?" sorusu bitti.</div>
       </div>
     </div>
   </div>
@@ -506,43 +521,43 @@
 <!-- How it works -->
 <section id="how" style="background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
   <div class="container">
-    <div class="section-label">Nasıl Çalışır</div>
-    <h2 class="section-title">3 adımda hazır</h2>
+    <div class="section-label" data-i18n="how.label">Nasıl Çalışır</div>
+    <h2 class="section-title" data-i18n="how.title">3 adımda hazır</h2>
 
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
-        <div class="step-title">İndir & Kur</div>
-        <div class="step-desc">Windows için .exe'yi indir ve kur. Yalnızca Windows 10/11 desteklenir.</div>
+        <div class="step-title" data-i18n="how.step1.title">İndir & Kur</div>
+        <div class="step-desc" data-i18n="how.step1.desc">Windows için .exe'yi indir ve kur. Yalnızca Windows 10/11 desteklenir.</div>
       </div>
       <div class="step">
         <div class="step-num">2</div>
-        <div class="step-title">API Key Ekle</div>
-        <div class="step-desc">OpenAI hesabın yoksa ücretsiz aç. API key oluştur, uygulamanın Ayarlar ekranına yapıştır.</div>
+        <div class="step-title" data-i18n="how.step2.title">API Key Ekle</div>
+        <div class="step-desc" data-i18n="how.step2.desc">OpenAI hesabın yoksa ücretsiz aç. API key oluştur, uygulamanın Ayarlar ekranına yapıştır.</div>
       </div>
       <div class="step">
         <div class="step-num">3</div>
-        <div class="step-title">Toplantıya gir</div>
-        <div class="step-desc">Zoom, Teams ya da herhangi bir görüşmeyi aç. "Kaydı Başlat"a bas, konuşmaya devam et.</div>
+        <div class="step-title" data-i18n="how.step3.title">Toplantıya gir</div>
+        <div class="step-desc" data-i18n="how.step3.desc">Zoom, Teams ya da herhangi bir görüşmeyi aç. "Kaydı Başlat"a bas, konuşmaya devam et.</div>
       </div>
       <div class="step">
         <div class="step-num">4</div>
-        <div class="step-title">Özet hazır</div>
-        <div class="step-desc">"Durdur & Özetle"ye bas. Saniyeler içinde transkript, özet ve aksiyon listesi hazır.</div>
+        <div class="step-title" data-i18n="how.step4.title">Özet hazır</div>
+        <div class="step-desc" data-i18n="how.step4.desc">"Durdur & Özetle"ye bas. Saniyeler içinde transkript, özet ve aksiyon listesi hazır.</div>
       </div>
     </div>
 
     <!-- API Key Rehberi -->
     <div style="margin-top:48px; padding:28px 32px; background:rgba(99,102,241,0.05); border:1px solid rgba(99,102,241,0.2); border-radius:16px; max-width:680px; margin-left:auto; margin-right:auto;">
-      <div style="font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.06em;margin-bottom:12px;">🔑 OpenAI API Key nasıl alınır?</div>
+      <div style="font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.06em;margin-bottom:12px;" data-i18n="api.title">🔑 OpenAI API Key nasıl alınır?</div>
       <ol style="padding-left:20px;display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--muted);line-height:1.6;">
-        <li><a href="https://platform.openai.com" target="_blank" style="color:var(--accent);">platform.openai.com</a>'a git, hesap aç (ücretsiz)</li>
-        <li>Sol menüden <strong style="color:var(--text);">API Keys</strong> sekmesini aç</li>
-        <li><strong style="color:var(--text);">Create new secret key</strong> butonuna tıkla</li>
-        <li>Oluşan <code style="background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;font-size:13px;">sk-...</code> key'i kopyala</li>
-        <li>Silent Note AI'ı aç → <strong style="color:var(--text);">Ayarlar</strong> → API Key kutusuna yapıştır → Kaydet</li>
+        <li data-i18n-html="api.step1"><a href="https://platform.openai.com" target="_blank" style="color:var(--accent);">platform.openai.com</a>'a git, hesap aç (ücretsiz)</li>
+        <li data-i18n-html="api.step2">Sol menüden <strong style="color:var(--text);">API Keys</strong> sekmesini aç</li>
+        <li data-i18n-html="api.step3"><strong style="color:var(--text);">Create new secret key</strong> butonuna tıkla</li>
+        <li data-i18n-html="api.step4">Oluşan <code style="background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;font-size:13px;">sk-...</code> key'i kopyala</li>
+        <li data-i18n-html="api.step5">Silent Note AI'ı aç → <strong style="color:var(--text);">Ayarlar</strong> → API Key kutusuna yapıştır → Kaydet</li>
       </ol>
-      <p style="margin-top:14px;font-size:12px;color:var(--muted);">💡 OpenAI yeni hesaplara ücretsiz kredi veriyor. Ortalama bir toplantı ~0.01$ harcar.</p>
+      <p style="margin-top:14px;font-size:12px;color:var(--muted);" data-i18n="api.tip">💡 OpenAI yeni hesaplara ücretsiz kredi veriyor. Ortalama bir toplantı ~0.01$ harcar.</p>
     </div>
   </div>
 </section>
@@ -550,8 +565,8 @@
 <!-- Comparison -->
 <section>
   <div class="container">
-    <div class="section-label">Karşılaştırma</div>
-    <h2 class="section-title">Neden Silent Note AI?</h2>
+    <div class="section-label" data-i18n="compare.label">Karşılaştırma</div>
+    <h2 class="section-title" data-i18n="compare.title">Neden Silent Note AI?</h2>
 
     <table class="compare-table">
       <thead>
@@ -565,46 +580,46 @@
       </thead>
       <tbody>
         <tr>
-          <td>Toplantıya bot eklenir mi?</td>
-          <td class="yes us">❌ Eklenmez</td>
-          <td class="no">✅ Bot kullanıcı girer</td>
-          <td class="no">✅ Bot kullanıcı girer</td>
-          <td class="no">✅ Bot kullanıcı girer</td>
+          <td data-i18n="compare.row1">Toplantıya bot eklenir mi?</td>
+          <td class="yes us" data-i18n="compare.sna1">❌ Eklenmez</td>
+          <td class="no" data-i18n="comp.botYes">✅ Bot kullanıcı girer</td>
+          <td class="no" data-i18n="comp.botYes">✅ Bot kullanıcı girer</td>
+          <td class="no" data-i18n="comp.botYes">✅ Bot kullanıcı girer</td>
         </tr>
         <tr>
-          <td>Veriler nerede?</td>
-          <td class="us">💻 Sadece sende</td>
-          <td class="no">☁️ Bulut</td>
-          <td class="no">☁️ Bulut</td>
-          <td class="no">☁️ Bulut</td>
+          <td data-i18n="compare.row2">Veriler nerede?</td>
+          <td class="us" data-i18n="compare.sna2">💻 Sadece sende</td>
+          <td class="no" data-i18n="comp.cloud">☁️ Bulut</td>
+          <td class="no" data-i18n="comp.cloud">☁️ Bulut</td>
+          <td class="no" data-i18n="comp.cloud">☁️ Bulut</td>
         </tr>
         <tr>
-          <td>Lokal çalışma</td>
-          <td class="yes us">✅ Evet</td>
+          <td data-i18n="compare.row3">Lokal çalışma</td>
+          <td class="yes us" data-i18n="compare.sna3">✅ Evet</td>
           <td class="no">❌</td>
           <td class="no">❌</td>
           <td class="no">❌</td>
         </tr>
         <tr>
-          <td>API maliyeti</td>
-          <td class="us">Kendi key'in</td>
-          <td>$16.99/ay</td>
-          <td>$18/ay</td>
-          <td>Ücretsiz*</td>
+          <td data-i18n="compare.row4">API maliyeti</td>
+          <td class="us" data-i18n="compare.sna4">Kendi key'in</td>
+          <td data-i18n="comp.otterPrice">$16.99/ay</td>
+          <td data-i18n="comp.ffPrice">$18/ay</td>
+          <td data-i18n="comp.fathomPrice">Ücretsiz*</td>
         </tr>
         <tr>
-          <td>Türkçe desteği</td>
-          <td class="yes us">✅ Tam</td>
-          <td>⚠️ Kısmi</td>
-          <td>⚠️ Kısmi</td>
+          <td data-i18n="compare.row5">Türkçe desteği</td>
+          <td class="yes us" data-i18n="compare.sna5">✅ Tam</td>
+          <td data-i18n="comp.partial">⚠️ Kısmi</td>
+          <td data-i18n="comp.partial">⚠️ Kısmi</td>
           <td class="no">❌</td>
         </tr>
         <tr>
-          <td>Tek seferlik ödeme</td>
-          <td class="yes us">✅ $29 lifetime</td>
-          <td class="no">❌ Abonelik</td>
-          <td class="no">❌ Abonelik</td>
-          <td class="no">❌ Abonelik</td>
+          <td data-i18n="comp.row6">Tek seferlik ödeme</td>
+          <td class="yes us" data-i18n="compare.pricing">✅ $4.99/ay'dan</td>
+          <td class="no" data-i18n="comp.subNo">❌ Abonelik</td>
+          <td class="no" data-i18n="comp.subNo">❌ Abonelik</td>
+          <td class="no" data-i18n="comp.subNo">❌ Abonelik</td>
         </tr>
       </tbody>
     </table>
@@ -614,40 +629,40 @@
 <!-- Testimonials -->
 <section style="background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
   <div class="container">
-    <div class="section-label">Kullanıcılar</div>
-    <h2 class="section-title">İlk kullananlar ne diyor?</h2>
+    <div class="section-label" data-i18n="users.label">Kullanıcılar</div>
+    <h2 class="section-title" data-i18n="users.title">İlk kullananlar ne diyor?</h2>
 
     <div class="testimonials-grid">
       <div class="testimonial-card">
         <div class="testimonial-stars">★★★★★</div>
-        <p class="testimonial-text">"Zoom toplantılarımda artık not almak zorunda kalmıyorum. Durdur & Özetle'ye basıyorum, 30 saniyede her şey hazır. Rakip uygulamalarda bot girince herkes sormaya başlıyordu — burada kimse fark etmiyor."</p>
+        <p class="testimonial-text" data-i18n="users.t1">"Zoom toplantılarımda artık not almak zorunda kalmıyorum. Durdur & Özetle'ye basıyorum, 30 saniyede her şey hazır. Rakip uygulamalarda bot girince herkes sormaya başlıyordu — burada kimse fark etmiyor."</p>
         <div class="testimonial-author">
           <div class="testimonial-avatar">M</div>
           <div>
             <div class="testimonial-name">Mehmet Y.</div>
-            <div class="testimonial-role">Proje Yöneticisi</div>
+            <div class="testimonial-role" data-i18n="users.t1role">Proje Yöneticisi</div>
           </div>
         </div>
       </div>
       <div class="testimonial-card">
         <div class="testimonial-stars">★★★★★</div>
-        <p class="testimonial-text">"Müşteri görüşmelerinde çok işe yarıyor. Transkript + özet + aksiyon listesi tek seferde geliyor. Aylık abonelik yerine tek seferlik $29 vermek çok daha mantıklı."</p>
+        <p class="testimonial-text" data-i18n="users.t2">"Müşteri görüşmelerinde çok işe yarıyor. Transkript + özet + aksiyon listesi tek seferde geliyor. Aylık abonelik yerine tek seferlik $29 vermek çok daha mantıklı."</p>
         <div class="testimonial-author">
           <div class="testimonial-avatar">A</div>
           <div>
             <div class="testimonial-name">Ayşe K.</div>
-            <div class="testimonial-role">Satış Danışmanı</div>
+            <div class="testimonial-role" data-i18n="users.t2role">Satış Danışmanı</div>
           </div>
         </div>
       </div>
       <div class="testimonial-card">
         <div class="testimonial-stars">★★★★★</div>
-        <p class="testimonial-text">"Türkçe desteği mükemmel. Diğer araçlarda Türkçe transkript kalitesi berbattı. Whisper ile neredeyse hatasız. Verilerimin buluta gitmemesi de benim için kritikti."</p>
+        <p class="testimonial-text" data-i18n="users.t3">"Türkçe desteği mükemmel. Diğer araçlarda Türkçe transkript kalitesi berbattı. Whisper ile neredeyse hatasız. Verilerimin buluta gitmemesi de benim için kritikti."</p>
         <div class="testimonial-author">
           <div class="testimonial-avatar">E</div>
           <div>
             <div class="testimonial-name">Emre S.</div>
-            <div class="testimonial-role">Yazılım Geliştirici</div>
+            <div class="testimonial-role" data-i18n="users.t3role">Yazılım Geliştirici</div>
           </div>
         </div>
       </div>
@@ -658,59 +673,81 @@
 <!-- Pricing -->
 <section id="pricing">
   <div class="container">
-    <div class="section-label">Fiyat</div>
-    <h2 class="section-title">Bir kez öde, sonsuza kadar kullan</h2>
-    <p class="section-sub">Kendi OpenAI key'ini kullanırsın — API maliyeti sana aittir, uygulama ücreti sabit.</p>
+    <div class="section-label" data-i18n="pricing.label">Fiyat</div>
+    <h2 class="section-title" data-i18n="pricing.title">Sana uygun planı seç</h2>
+    <p class="section-sub" data-i18n="pricing.sub">Kendi OpenAI key'ini kullanırsın — API maliyeti sana aittir, uygulama ücreti sabit.</p>
 
-    <div class="pricing-grid" style="max-width:680px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+    <div class="pricing-grid" style="max-width:900px;grid-template-columns:repeat(3,1fr)">
+      <!-- Monthly -->
       <div class="price-card">
-        <div class="price-badge" style="background:rgba(5,150,105,.12);color:#6ee77a">🎉 Early Access</div>
-        <div class="price-name">Ücretsiz</div>
-        <div class="price-amount">$0</div>
-        <div class="price-note" style="color:#6ee77a">Şu an tamamen ücretsiz</div>
+        <div class="price-name" data-i18n="plan.monthly.name">Aylık</div>
+        <div class="price-amount">$4.99<span data-i18n="plan.monthly.period">/ay</span></div>
+        <div class="price-note" data-i18n="plan.monthly.note">aylık ödeme · 3 cihaz</div>
         <ul class="price-features">
-          <li>Sınırsız toplantı kaydı</li>
-          <li>Whisper transkripsiyon (50+ dil)</li>
-          <li>GPT-4o-mini özet & aksiyonlar</li>
-          <li>Konuşmacı ayrıştırma</li>
-          <li>Lokal arşiv</li>
-          <li>Otomatik güncelleme</li>
+          <li data-i18n="plan.feat1">Sınırsız toplantı kaydı</li>
+          <li data-i18n="plan.feat2">Whisper transkripsiyon (99 dil)</li>
+          <li data-i18n="plan.feat3">GPT-4o-mini özet & aksiyonlar</li>
+          <li data-i18n="plan.feat4">Konuşmacı ayrıştırma</li>
+          <li data-i18n="plan.feat5">Lokal arşiv</li>
+          <li data-i18n="plan.feat6">Otomatik güncelleme</li>
         </ul>
-        <button class="price-btn primary" onclick="openDlModal()" style="cursor:pointer;border:none;">Ücretsiz İndir</button>
+        <a class="price-btn" href="MONTHLY_CHECKOUT_URL" target="_blank" style="text-decoration:none;display:block;text-align:center;background:#1e1e1e;border:1px solid #333;color:#fff;" data-i18n="plan.buy.cta">Satın Al →</a>
       </div>
+      <!-- Yearly (featured) -->
       <div class="price-card featured">
-        <div class="price-badge">⚡ Lifetime</div>
-        <div class="price-name">Lifetime Lisans</div>
-        <div class="price-amount">$29</div>
-        <div class="price-note">tek seferlik ödeme · 3 cihaz</div>
+        <div class="price-badge" data-i18n="plan.yearly.badge">⭐ En Popüler</div>
+        <div class="price-name" data-i18n="plan.yearly.name">Yıllık</div>
+        <div class="price-amount">$39.99<span data-i18n="plan.yearly.period">/yıl</span></div>
+        <div class="price-note" data-i18n="plan.yearly.note">yıllık ödeme · %33 tasarruf</div>
         <ul class="price-features">
-          <li>Ücretsiz plandaki her şey</li>
-          <li>Ömür boyu ücretsiz güncelleme</li>
-          <li>Öncelikli destek</li>
-          <li>Gelecek özellikler dahil</li>
+          <li data-i18n="plan.feat1">Sınırsız toplantı kaydı</li>
+          <li data-i18n="plan.feat2">Whisper transkripsiyon (99 dil)</li>
+          <li data-i18n="plan.feat3">GPT-4o-mini özet & aksiyonlar</li>
+          <li data-i18n="plan.feat4">Konuşmacı ayrıştırma</li>
+          <li data-i18n="plan.feat5">Lokal arşiv</li>
+          <li data-i18n="plan.feat6">Otomatik güncelleme</li>
         </ul>
-        <a class="price-btn primary" href="https://silentnoteai.lemonsqueezy.com/checkout/buy/3c35056c-2075-4429-8193-e4cab81cd49a" target="_blank" style="text-decoration:none;display:block;text-align:center;" onclick="track('ls_checkout_click')">Satın Al →</a>
+        <a class="price-btn primary" href="YEARLY_CHECKOUT_URL" target="_blank" style="text-decoration:none;display:block;text-align:center;" data-i18n="plan.buy.cta">Satın Al →</a>
+      </div>
+      <!-- Lifetime -->
+      <div class="price-card">
+        <div class="price-badge" style="background:rgba(139,92,246,.15);color:#a78bfa">⚡ Lifetime</div>
+        <div class="price-name" data-i18n="plan.lifetime.name">Lifetime</div>
+        <div class="price-amount">$159.99</div>
+        <div class="price-note" data-i18n="plan.lifetime.note">tek seferlik ödeme · 3 cihaz</div>
+        <ul class="price-features">
+          <li data-i18n="plan.feat1">Sınırsız toplantı kaydı</li>
+          <li data-i18n="plan.feat2">Whisper transkripsiyon (99 dil)</li>
+          <li data-i18n="plan.feat3">GPT-4o-mini özet & aksiyonlar</li>
+          <li data-i18n="plan.feat4">Konuşmacı ayrıştırma</li>
+          <li data-i18n="plan.feat5">Lokal arşiv</li>
+          <li data-i18n="plan.lifetime.feat7">Ömür boyu ücretsiz güncelleme</li>
+          <li data-i18n="plan.lifetime.feat8">Öncelikli destek</li>
+          <li data-i18n="plan.lifetime.feat9">Gelecek özellikler dahil</li>
+        </ul>
+        <a class="price-btn primary" href="https://silentnoteai.lemonsqueezy.com/checkout/buy/3c35056c-2075-4429-8193-e4cab81cd49a" target="_blank" style="text-decoration:none;display:block;text-align:center;" onclick="track('ls_checkout_click')" data-i18n="plan.buy.cta">Satın Al →</a>
       </div>
     </div>
+    <p class="price-guarantee" data-i18n="pricing.guarantee">Lisans key satın alma sonrası anında e-posta ile gönderilir.</p>
   </div>
 </section>
 
 <!-- Privacy -->
 <section id="privacy" style="background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
   <div class="container">
-    <div class="section-label">Gizlilik</div>
-    <h2 class="section-title">Verilerinin kontrolü sende</h2>
+    <div class="section-label" data-i18n="privacy.label">Gizlilik</div>
+    <h2 class="section-title" data-i18n="privacy.title">Verilerinin kontrolü sende</h2>
 
     <div class="privacy-box">
       <div class="privacy-icon">🔒</div>
       <div>
-        <div class="privacy-title">Verilerinin tam kontrolü sende</div>
+        <div class="privacy-title" data-i18n="privacy.boxTitle">Verilerinin tam kontrolü sende</div>
         <div class="privacy-items">
-          <div class="privacy-item">Transkripsiyon tamamlandıktan sonra ses dosyası otomatik silinir</div>
-          <div class="privacy-item">Tüm transkript ve özetler sadece kendi bilgisayarında (lokal SQLite) saklanır</div>
-          <div class="privacy-item">OpenAI API key'in işletim sistemi şifreleme katmanında (safeStorage) korunur</div>
-          <div class="privacy-item">Kullanım analitikleri veya telemetri toplanmaz</div>
-          <div class="privacy-item">İnternet bağlantısı yalnızca OpenAI Whisper ve GPT API çağrıları için kullanılır</div>
+          <div class="privacy-item" data-i18n="privacy.item1">Transkripsiyon tamamlandıktan sonra ses dosyası otomatik silinir</div>
+          <div class="privacy-item" data-i18n="privacy.item2">Tüm transkript ve özetler sadece kendi bilgisayarında (lokal SQLite) saklanır</div>
+          <div class="privacy-item" data-i18n="privacy.item3">OpenAI API key'in işletim sistemi şifreleme katmanında (safeStorage) korunur</div>
+          <div class="privacy-item" data-i18n="privacy.item4">Kullanım analitikleri veya telemetri toplanmaz</div>
+          <div class="privacy-item" data-i18n="privacy.item5">İnternet bağlantısı yalnızca OpenAI Whisper ve GPT API çağrıları için kullanılır</div>
         </div>
       </div>
     </div>
@@ -720,13 +757,13 @@
 <!-- FAQ -->
 <section id="faq">
   <div class="container">
-    <div class="section-label">Sık Sorulan Sorular</div>
-    <h2 class="section-title">Aklındaki sorular</h2>
+    <div class="section-label" data-i18n="faq.label">Sık Sorulan Sorular</div>
+    <h2 class="section-title" data-i18n="faq.title">Aklındaki sorular</h2>
 
     <div class="faq-list">
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          Toplantı katılımcılarına bildirim gidiyor mu?
+          <span data-i18n="faq.q1">Toplantı katılımcılarına bildirim gidiyor mu?</span>
           <span class="faq-icon">+</span>
         </button>
         <div class="faq-answer">
@@ -735,7 +772,7 @@
       </div>
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          OpenAI API key nasıl alırım?
+          <span data-i18n="faq.q2">OpenAI API key nasıl alırım?</span>
           <span class="faq-icon">+</span>
         </button>
         <div class="faq-answer">
@@ -744,7 +781,7 @@
       </div>
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          Verilerim nerede saklanıyor?
+          <span data-i18n="faq.q3">Verilerim nerede saklanıyor?</span>
           <span class="faq-icon">+</span>
         </button>
         <div class="faq-answer">
@@ -753,7 +790,7 @@
       </div>
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          Mac ve Linux desteği ne zaman gelecek?
+          <span data-i18n="faq.q4">Mac ve Linux desteği ne zaman gelecek?</span>
           <span class="faq-icon">+</span>
         </button>
         <div class="faq-answer">
@@ -762,7 +799,7 @@
       </div>
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          Zoom, Teams, Google Meet çalışıyor mu?
+          <span data-i18n="faq.q5">Zoom, Teams, Google Meet çalışıyor mu?</span>
           <span class="faq-icon">+</span>
         </button>
         <div class="faq-answer">
@@ -771,11 +808,11 @@
       </div>
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          Satın alma işlemi nasıl çalışıyor?
+          <span data-i18n="faq.q6">Satın alma işlemi nasıl çalışıyor?</span>
           <span class="faq-icon">+</span>
         </button>
         <div class="faq-answer">
-          <p>Ödeme yapıldıktan sonra Gumroad üzerinden uygulamayı hemen indirebilirsin. Satın almadan önce tüm özellikleri bu sayfada inceleyebilir, sorularını <a href="mailto:idrisdag96@gmail.com" style="color:var(--accent)">e-posta ile</a> iletebilirsin. Satın alma işlemleri kesindir.</p>
+          <p>Ödeme yapıldıktan sonra Lemon Squeezy üzerinden lisans key'in e-posta ile gönderilir. Uygulamayı bu sayfadan indirip lisans key'ini girerek aktivasyon yapabilirsin. Sorularını <a href="mailto:idrisdag96@gmail.com" style="color:var(--accent)">e-posta ile</a> iletebilirsin.</p>
         </div>
       </div>
     </div>
@@ -787,13 +824,13 @@
   <div class="container">
     <div class="email-box">
       <div style="font-size: 32px; margin-bottom: 12px;">🍎</div>
-      <div class="email-box-title">macOS sürümü geliyor</div>
-      <div class="email-box-sub">E-posta adresini bırak, macOS desteği hazır olduğunda ilk sen haber al.</div>
+      <div class="email-box-title" data-i18n="macos.title">macOS sürümü geliyor</div>
+      <div class="email-box-sub" data-i18n="macos.sub">E-posta adresini bırak, macOS desteği hazır olduğunda ilk sen haber al.</div>
       <form class="email-form" onsubmit="handleEmailSubmit(event)">
-        <input class="email-input" type="email" placeholder="e-posta@adresin.com" required id="waitlistEmail" />
-        <button class="email-submit" type="submit">Haber Ver</button>
+        <input class="email-input" type="email" placeholder="your@email.com" required id="waitlistEmail" />
+        <button class="email-submit" type="submit" data-i18n="macos.btn">Haber Ver</button>
       </form>
-      <p id="emailSuccess" style="display:none; margin-top:12px; font-size:13px; color:#6ee77a;">✅ Kayıt oldu! macOS hazır olunca haberdar edeceğiz.</p>
+      <p id="emailSuccess" data-i18n="macos.success" style="display:none; margin-top:12px; font-size:13px; color:#6ee77a;">✅ Kayıt oldu! macOS hazır olunca haberdar edeceğiz.</p>
     </div>
   </div>
 </section>
@@ -801,29 +838,29 @@
 <!-- Download CTA -->
 <section class="cta-section" id="download">
   <div class="container">
-    <h2 class="cta-title">Bir sonraki toplantını<br />akıllıca not al</h2>
-    <p class="cta-sub">Şu an ücretsiz · Ömür boyu güncelleme · Bot-free kayıt</p>
+    <h2 class="cta-title" data-i18n-html="cta.title">Bir sonraki toplantını<br>akıllıca not al</h2>
+    <p class="cta-sub" data-i18n="cta.sub">Şu an ücretsiz · Ömür boyu güncelleme · Bot-free kayıt</p>
     <div class="hero-btns">
-      <button class="btn-primary" onclick="openDlModal()" style="cursor:pointer;border:none;">⬇ Ücretsiz İndir</button>
+      <button class="btn-primary" onclick="openDlModal()" style="cursor:pointer;border:none;" data-i18n="hero.dlBtn">⬇ Ücretsiz İndir</button>
     </div>
-    <p class="hero-note" style="margin-top:16px">Windows 10/11 · OpenAI API key gereklidir · macOS yakında</p>
+    <p class="hero-note" style="margin-top:16px" data-i18n="cta.note">Windows 10/11 · OpenAI API key gereklidir · macOS yakında</p>
   </div>
 </section>
 
 <!-- Footer -->
 <footer>
-  <div>© 2026 Silent Note AI. Tüm hakları saklıdır.</div>
+  <div data-i18n="footer.rights">© 2026 Silent Note AI. Tüm hakları saklıdır.</div>
   <div style="display:flex;gap:24px;flex-wrap:wrap;">
     <a href="mailto:idrisdag96@gmail.com">idrisdag96@gmail.com</a>
     <a href="https://github.com/idrsdg/silentnoteai" target="_blank">GitHub</a>
-    <a href="https://silentnoteai.lemonsqueezy.com/checkout/buy/3c35056c-2075-4429-8193-e4cab81cd49a" target="_blank">Satın Al</a>
+    <a href="#pricing" data-i18n="footer.buy">Satın Al</a>
   </div>
 </footer>
 
 <script>
   // ── Supabase tracking ──
   // Direkt en son .exe — GitHub latest release redirect kullanır
-  const DL_URL = 'https://github.com/idrsdg/silentnoteai/releases/latest/download/Silent.Note.AI-1.0.16.Setup.exe';
+  const DL_URL = 'https://github.com/idrsdg/silentnoteai/releases/latest/download/Silent.Note.AI-1.0.21.Setup.exe';
   const SB_URL = 'https://cahxwxoxqncsgpudsiji.supabase.co/rest/v1/events';
   const SB_KEY = 'sb_publishable_NmaKxlUG91EZNYXUm76jyQ_Z3O1d-_k';
 
@@ -957,6 +994,300 @@
     document.getElementById('emailSuccess').style.display = 'block';
     e.target.style.display = 'none';
   }
+
+  // ── i18n ──
+  const LANGS = [
+    { code: 'tr', label: 'Türkçe',    flag: '🇹🇷' },
+    { code: 'en', label: 'English',   flag: '🇺🇸' },
+    { code: 'es', label: 'Español',   flag: '🇪🇸' },
+    { code: 'fr', label: 'Français',  flag: '🇫🇷' },
+    { code: 'de', label: 'Deutsch',   flag: '🇩🇪' },
+    { code: 'pt', label: 'Português', flag: '🇧🇷' },
+    { code: 'zh', label: '中文',      flag: '🇨🇳' },
+    { code: 'ar', label: 'العربية',  flag: '🇸🇦' },
+    { code: 'hi', label: 'हिन्दी',   flag: '🇮🇳' },
+  ];
+
+  const T = {
+    tr: {
+      nav: { features: 'Özellikler', how: 'Nasıl Çalışır', pricing: 'Fiyat', faq: 'SSS', privacy: 'Gizlilik', download: 'Ücretsiz İndir' },
+      hero: { badge: '🚀 Windows için şimdi mevcut', h1: 'Toplantılarını<br><span>akıllıca not al.</span>', sub: 'Toplantıya bot eklenmez, bildirim gönderilmez. Ses kaydı tamamen kendi bilgisayarında işlenir ve sadece sende kalır.' },
+      features: { label: 'Özellikler', title: 'İhtiyacın olan her şey, fazlası yok', sub: 'Toplantılarına odaklan. Notları biz halledelim.' },
+      feat: { '1': { title: 'Bot-free kayıt', desc: 'Toplantıya ekstra bir kullanıcı ya da bot eklenmez. Bilgisayarının ses çıkışını kaydeder — tıpkı ekran kaydı gibi.' }, '2': { title: 'Otomatik transkripsiyon', desc: 'OpenAI Whisper ile 99 dil destekli, yüksek doğruluklu ses-metin dönüşümü.' }, '3': { title: 'AI özet ve aksiyonlar', desc: 'GPT-4o-mini toplantıyı 3-5 maddede özetler, "kim ne yapacak" listesini çıkarır.' }, '4': { title: 'Lokal depolama', desc: 'Tüm transkriptler ve özetler sadece senin bilgisayarında. Hiçbir sunucuya gitmiyor.' }, '5': { title: 'Konuşmacı ayrıştırma', desc: 'AssemblyAI ile "Konuşmacı A / Konuşmacı B" etiketleri — kim ne dedi, net görünür.' }, '6': { title: 'Tam metin arama', desc: 'Geçmiş toplantılarda anında arama. "O toplantıda ne kararlaştırmıştık?" sorusu bitti.' } },
+      compare: { pricing: '✅ $4.99/ay\'dan', label: 'Karşılaştırma', title: 'Neden Silent Note AI?', row1: 'Toplantıya bot eklenir mi?', sna1: '❌ Eklenmez', row2: 'Veriler nerede?', sna2: '💻 Sadece sende', row3: 'Lokal çalışma', sna3: '✅ Evet', row4: 'API maliyeti', sna4: 'Kendi key\'in', row5: 'Türkçe desteği', sna5: '✅ Tam' },
+      pricing: { label: 'Fiyat', title: 'Sana uygun planı seç', sub: 'Kendi OpenAI key\'ini kullanırsın — API maliyeti sana aittir, uygulama ücreti sabit.', guarantee: 'Lisans key satın alma sonrası anında e-posta ile gönderilir.' },
+      plan: { monthly: { name: 'Aylık', period: '/ay', note: 'aylık ödeme · 3 cihaz' }, yearly: { badge: '⭐ En Popüler', name: 'Yıllık', period: '/yıl', note: 'yıllık ödeme · %33 tasarruf' }, lifetime: { name: 'Lifetime', note: 'tek seferlik ödeme · 3 cihaz', feat7: 'Ömür boyu ücretsiz güncelleme', feat8: 'Öncelikli destek', feat9: 'Gelecek özellikler dahil' }, feat1: 'Sınırsız toplantı kaydı', feat2: 'Whisper transkripsiyon (99 dil)', feat3: 'GPT-4o-mini özet & aksiyonlar', feat4: 'Konuşmacı ayrıştırma', feat5: 'Lokal arşiv', feat6: 'Otomatik güncelleme', buy: { cta: 'Satın Al →' } },
+      privacy: { label: 'Gizlilik', title: 'Verilerinin kontrolü sende', boxTitle: 'Verilerinin tam kontrolü sende', item1: 'Transkripsiyon tamamlandıktan sonra ses dosyası otomatik silinir', item2: 'Tüm transkript ve özetler sadece kendi bilgisayarında (lokal SQLite) saklanır', item3: 'OpenAI API key\'in işletim sistemi şifreleme katmanında (safeStorage) korunur', item4: 'Kullanım analitikleri veya telemetri toplanmaz', item5: 'İnternet bağlantısı yalnızca OpenAI Whisper ve GPT API çağrıları için kullanılır' },
+      faq: { label: 'Sık Sorulan Sorular', title: 'Aklındaki sorular', q1: 'Toplantı katılımcılarına bildirim gidiyor mu?', q2: 'OpenAI API key nasıl alırım?', q3: 'Verilerim nerede saklanıyor?', q4: 'Mac ve Linux desteği ne zaman gelecek?', q5: 'Zoom, Teams, Google Meet çalışıyor mu?', q6: 'Satın alma işlemi nasıl çalışıyor?' },
+      stats: { langs: 'Dil desteği', processing: 'İşleme süresi', local: 'Lokal depolama', price: 'Tek seferlik, ömür boyu' },
+      how: { label: 'Nasıl Çalışır', title: '3 adımda hazır', step1: { title: 'İndir & Kur', desc: 'Windows için .exe\'yi indir ve kur. Yalnızca Windows 10/11 desteklenir.' }, step2: { title: 'API Key Ekle', desc: 'OpenAI hesabın yoksa ücretsiz aç. API key oluştur, uygulamanın Ayarlar ekranına yapıştır.' }, step3: { title: 'Toplantıya gir', desc: 'Zoom, Teams ya da herhangi bir görüşmeyi aç. "Kaydı Başlat"a bas, konuşmaya devam et.' }, step4: { title: 'Özet hazır', desc: '"Durdur & Özetle"ye bas. Saniyeler içinde transkript, özet ve aksiyon listesi hazır.' } },
+      users: { label: 'Kullanıcılar', title: 'İlk kullananlar ne diyor?' },
+      macos: { title: 'macOS sürümü geliyor', sub: 'E-posta adresini bırak, macOS desteği hazır olduğunda ilk sen haber al.', btn: 'Haber Ver', success: '✅ Kayıt oldu! macOS hazır olunca haberdar edeceğiz.' },
+      cta: { title: 'Bir sonraki toplantını<br>akıllıca not al', sub: 'Şu an ücretsiz · Ömür boyu güncelleme · Bot-free kayıt', note: 'Windows 10/11 · OpenAI API key gereklidir · macOS yakında' },
+      modal: { title: 'İndirme başlıyor', sub: 'E-posta adresini bırak, güncellemelerden haberdar olalım.<br>İstersen adımı atla.', btn: '⬇ İndir', skip: 'E-posta vermeden indir' },
+      hero: { badge: '🚀 Windows için şimdi mevcut', h1: 'Toplantılarını<br><span>akıllıca not al.</span>', sub: 'Toplantıya bot eklenmez, bildirim gönderilmez. Ses kaydı tamamen kendi bilgisayarında işlenir ve sadece sende kalır.', dlBtn: '⬇ Ücretsiz İndir', howBtn: 'Nasıl çalışır?', guarantee: '✅ Şu an ücretsiz · Ömür boyu güncelleme · Bot-free kayıt', note: 'Kendi OpenAI key\'inle çalışır · Verileriniz buluta gitmez' },
+      footer: { rights: '© 2026 Silent Note AI. Tüm hakları saklıdır.', buy: 'Satın Al' },
+      mock: { status: '⏺ Kayıt yapılıyor...', stop: '⏹ Durdur & Özetle', transcript: 'Transkript', summary: 'Özet' },
+      api: { title: '🔑 OpenAI API Key nasıl alınır?', step1: '<a href="https://platform.openai.com" target="_blank" style="color:var(--accent);">platform.openai.com</a>\'a git, hesap aç (ücretsiz)', step2: 'Sol menüden <strong style="color:var(--text);">API Keys</strong> sekmesini aç', step3: '<strong style="color:var(--text);">Create new secret key</strong> butonuna tıkla', step4: 'Oluşan <code style="background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;font-size:13px;">sk-...</code> key\'i kopyala', step5: 'Silent Note AI\'ı aç → <strong style="color:var(--text);">Ayarlar</strong> → API Key kutusuna yapıştır → Kaydet', tip: '💡 OpenAI yeni hesaplara ücretsiz kredi veriyor. Ortalama bir toplantı ~0.01$ harcar.' },
+      comp: { row6: 'Tek seferlik ödeme', botYes: '✅ Bot kullanıcı girer', cloud: '☁️ Bulut', otterPrice: '$16.99/ay', ffPrice: '$18/ay', fathomPrice: 'Ücretsiz*', partial: '⚠️ Kısmi', subNo: '❌ Abonelik' },
+      users: { label: 'Kullanıcılar', title: 'İlk kullananlar ne diyor?', t1: '"Zoom toplantılarımda artık not almak zorunda kalmıyorum. Durdur & Özetle\'ye basıyorum, 30 saniyede her şey hazır. Rakip uygulamalarda bot girince herkes sormaya başlıyordu — burada kimse fark etmiyor."', t1role: 'Proje Yöneticisi', t2: '"Müşteri görüşmelerinde çok işe yarıyor. Transkript + özet + aksiyon listesi tek seferde geliyor. Aylık abonelik yerine tek seferlik $29 vermek çok daha mantıklı."', t2role: 'Satış Danışmanı', t3: '"Türkçe desteği mükemmel. Diğer araçlarda Türkçe transkript kalitesi berbattı. Whisper ile neredeyse hatasız. Verilerimin buluta gitmemesi de benim için kritikti."', t3role: 'Yazılım Geliştirici' },
+    },
+    en: {
+      nav: { features: 'Features', how: 'How It Works', pricing: 'Pricing', faq: 'FAQ', privacy: 'Privacy', download: 'Free Download' },
+      hero: { badge: '🚀 Now available for Windows', h1: 'Take meeting notes<br><span>the smart way.</span>', sub: 'No bots added, no notifications sent. Audio is processed entirely on your computer and stays with you.' },
+      features: { label: 'Features', title: "Everything you need, nothing you don't", sub: 'Focus on your meetings. Let us handle the notes.' },
+      feat: { '1': { title: 'Bot-free recording', desc: "Records your computer's audio output — no extra user or bot joins your meeting." }, '2': { title: 'Auto transcription', desc: 'High-accuracy speech-to-text with OpenAI Whisper, supporting 99 languages.' }, '3': { title: 'AI summary & actions', desc: 'GPT-4o-mini summarizes the meeting in 3-5 bullet points and extracts an action list.' }, '4': { title: 'Local storage', desc: 'All transcripts and summaries stay on your computer only. Nothing goes to any server.' }, '5': { title: 'Speaker diarization', desc: 'AssemblyAI labels "Speaker A / Speaker B" — who said what, clearly visible.' }, '6': { title: 'Full-text search', desc: "Instant search across past meetings. No more 'What did we decide in that meeting?'" } },
+      compare: { pricing: '✅ From $4.99/mo' },
+      pricing: { label: 'Pricing', title: 'Choose the right plan', sub: 'You use your own OpenAI key — API costs are yours, app fee is fixed.', guarantee: 'License key sent instantly to your email after purchase.' },
+      plan: { monthly: { name: 'Monthly', period: '/mo', note: 'billed monthly · 3 devices' }, yearly: { badge: '⭐ Most Popular', name: 'Yearly', period: '/yr', note: 'billed yearly · save 33%' }, lifetime: { name: 'Lifetime', note: 'one-time payment · 3 devices', feat7: 'Lifetime free updates', feat8: 'Priority support', feat9: 'Future features included' }, feat1: 'Unlimited meeting recordings', feat2: 'Whisper transcription (99 languages)', feat3: 'GPT-4o-mini summary & actions', feat4: 'Speaker diarization', feat5: 'Local archive', feat6: 'Auto updates', buy: { cta: 'Buy Now →' } },
+      privacy: { label: 'Privacy', title: 'You control your data' },
+      faq: { label: 'FAQ', title: 'Your questions answered' },
+      footer: { rights: '© 2026 Silent Note AI. All rights reserved.', buy: 'Buy Now' },
+      stats: { langs: 'Language support', processing: 'Processing time', local: 'Local storage', price: 'One-time, lifetime' },
+      how: { label: 'How It Works', title: 'Ready in 3 steps', step1: { title: 'Download & Install', desc: 'Download and install the .exe for Windows. Only Windows 10/11 is supported.' }, step2: { title: 'Add API Key', desc: "Create a free OpenAI account if you don't have one. Generate an API key and paste it in the app's Settings screen." }, step3: { title: 'Join your meeting', desc: "Open Zoom, Teams, or any meeting. Click 'Start Recording' and continue your conversation." }, step4: { title: 'Summary ready', desc: "Click 'Stop & Summarize'. Transcript, summary, and action list ready in seconds." } },
+      users: { label: 'Users', title: 'What early adopters say' },
+      macos: { title: 'macOS version coming soon', sub: 'Leave your email and be the first to know when macOS support is ready.', btn: 'Notify Me', success: "✅ Registered! We'll notify you when macOS is ready." },
+      cta: { title: 'Take your next meeting<br>notes the smart way', sub: 'Currently free · Lifetime updates · Bot-free recording', note: 'Windows 10/11 · OpenAI API key required · macOS coming soon' },
+      modal: { title: 'Download starting', sub: "Leave your email and we'll keep you updated.<br>Or skip if you prefer.", btn: '⬇ Download', skip: 'Download without email' },
+      compare: { pricing: '✅ From $4.99/mo', label: 'Comparison', title: 'Why Silent Note AI?', row1: 'Bot joins meeting?', sna1: '❌ Never', row2: 'Where is data?', sna2: '💻 Only on your device', row3: 'Works locally', sna3: '✅ Yes', row4: 'API cost', sna4: 'Your own key', row5: 'Turkish support', sna5: '✅ Full' },
+      privacy: { label: 'Privacy', title: 'You control your data', boxTitle: 'Full control of your data', item1: 'Audio file is automatically deleted after transcription is complete', item2: 'All transcripts and summaries are stored only on your computer (local SQLite)', item3: 'Your OpenAI API key is protected by OS-level encryption (safeStorage)', item4: 'No usage analytics or telemetry collected', item5: 'Internet connection only used for OpenAI Whisper and GPT API calls' },
+      faq: { label: 'FAQ', title: 'Your questions answered', q1: 'Are meeting participants notified?', q2: 'How do I get an OpenAI API key?', q3: 'Where is my data stored?', q4: 'When will Mac and Linux support come?', q5: 'Does it work with Zoom, Teams, Google Meet?', q6: 'How does the purchase process work?' },
+      hero: { badge: '🚀 Now available for Windows', h1: 'Take meeting notes<br><span>the smart way.</span>', sub: 'No bots added, no notifications sent. Audio is processed entirely on your computer and stays with you.', dlBtn: '⬇ Free Download', howBtn: 'How does it work?', guarantee: '✅ Currently free · Lifetime updates · Bot-free recording', note: 'Works with your own OpenAI key · Your data never goes to the cloud' },
+      mock: { status: '⏺ Recording...', stop: '⏹ Stop & Summarize', transcript: 'Transcript', summary: 'Summary' },
+      api: { title: '🔑 How to get an OpenAI API Key?', step1: 'Go to <a href="https://platform.openai.com" target="_blank" style="color:var(--accent);">platform.openai.com</a>, create an account (free)', step2: 'Open the <strong style="color:var(--text);">API Keys</strong> tab from the left menu', step3: 'Click <strong style="color:var(--text);">Create new secret key</strong>', step4: 'Copy the generated <code style="background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;font-size:13px;">sk-...</code> key', step5: 'Open Silent Note AI → <strong style="color:var(--text);">Settings</strong> → paste into API Key field → Save', tip: '💡 OpenAI gives free credits to new accounts. Average meeting costs ~$0.01.' },
+      comp: { row6: 'One-time payment', botYes: '✅ Bot joins', cloud: '☁️ Cloud', otterPrice: '$16.99/mo', ffPrice: '$18/mo', fathomPrice: 'Free*', partial: '⚠️ Partial', subNo: '❌ Subscription' },
+      users: { label: 'Users', title: 'What early adopters say', t1: '"I no longer need to take notes in my Zoom meetings. I press Stop & Summarize and everything is ready in 30 seconds. With competitor apps, everyone asked questions when the bot joined — here no one notices."', t1role: 'Project Manager', t2: '"Very useful in client meetings. Transcript + summary + action list all at once. Paying $29 one-time is much more sensible than a monthly subscription."', t2role: 'Sales Consultant', t3: '"Turkish support is excellent. In other tools, Turkish transcript quality was terrible. With Whisper it\'s nearly flawless. Not having my data go to the cloud was also critical for me."', t3role: 'Software Developer' },
+    },
+    es: {
+      nav: { features: 'Características', how: 'Cómo Funciona', pricing: 'Precios', faq: 'FAQ', privacy: 'Privacidad', download: 'Descargar Gratis' },
+      hero: { badge: '🚀 Disponible ahora para Windows', h1: 'Toma notas de reuniones<br><span>de forma inteligente.</span>', sub: 'Sin bots, sin notificaciones. El audio se procesa completamente en tu computadora y se queda contigo.' },
+      features: { label: 'Características', title: 'Todo lo que necesitas, nada más', sub: 'Enfócate en tus reuniones. Nosotros nos encargamos de las notas.' },
+      feat: { '1': { title: 'Grabación sin bot', desc: 'No se une ningún usuario o bot extra a tu reunión. Graba la salida de audio de tu computadora.' }, '2': { title: 'Transcripción automática', desc: 'Conversión de voz a texto de alta precisión con OpenAI Whisper, compatible con 99 idiomas.' }, '3': { title: 'Resumen IA & acciones', desc: 'GPT-4o-mini resume la reunión en 3-5 puntos y extrae una lista de acciones.' }, '4': { title: 'Almacenamiento local', desc: 'Todas las transcripciones y resúmenes se quedan en tu computadora. Nada va a ningún servidor.' }, '5': { title: 'Identificación de hablantes', desc: 'AssemblyAI etiqueta "Hablante A / Hablante B" — quién dijo qué, claramente visible.' }, '6': { title: 'Búsqueda de texto completo', desc: 'Búsqueda instantánea en reuniones pasadas.' } },
+      compare: { pricing: '✅ Desde $4.99/mes' },
+      pricing: { label: 'Precios', title: 'Elige el plan adecuado', sub: 'Usas tu propia clave OpenAI — los costos de API son tuyos, la tarifa de la app es fija.', guarantee: 'Clave de licencia enviada instantáneamente a tu email después de la compra.' },
+      plan: { monthly: { name: 'Mensual', period: '/mes', note: 'facturado mensualmente · 3 dispositivos' }, yearly: { badge: '⭐ Más Popular', name: 'Anual', period: '/año', note: 'facturado anualmente · ahorra 33%' }, lifetime: { name: 'Lifetime', note: 'pago único · 3 dispositivos', feat7: 'Actualizaciones gratuitas de por vida', feat8: 'Soporte prioritario', feat9: 'Futuras funciones incluidas' }, feat1: 'Grabaciones ilimitadas', feat2: 'Transcripción Whisper (99 idiomas)', feat3: 'Resumen GPT-4o-mini & acciones', feat4: 'Identificación de hablantes', feat5: 'Archivo local', feat6: 'Actualizaciones automáticas', buy: { cta: 'Comprar →' } },
+      privacy: { label: 'Privacidad', title: 'Tú controlas tus datos' },
+      faq: { label: 'Preguntas Frecuentes', title: 'Tus preguntas respondidas' },
+      footer: { rights: '© 2026 Silent Note AI. Todos los derechos reservados.', buy: 'Comprar' },
+      stats: { langs: 'Soporte de idiomas', processing: 'Tiempo de procesamiento', local: 'Almacenamiento local', price: 'Una vez, de por vida' },
+      how: { label: 'Cómo Funciona', title: 'Listo en 3 pasos', step1: { title: 'Descargar e Instalar', desc: 'Descarga e instala el .exe para Windows. Solo compatible con Windows 10/11.' }, step2: { title: 'Agregar API Key', desc: 'Crea una cuenta OpenAI gratuita si no tienes una. Genera una API key y pégala en Configuración.' }, step3: { title: 'Únete a tu reunión', desc: "Abre Zoom, Teams o cualquier reunión. Haz clic en 'Iniciar Grabación' y continúa." }, step4: { title: 'Resumen listo', desc: "Haz clic en 'Detener y Resumir'. Transcripción, resumen y lista de acciones listos en segundos." } },
+      users: { label: 'Usuarios', title: '¿Qué dicen los primeros usuarios?' },
+      macos: { title: 'macOS próximamente', sub: 'Deja tu email y sé el primero en saber cuándo el soporte de macOS esté listo.', btn: 'Notificarme', success: '✅ ¡Registrado! Te notificaremos cuando macOS esté listo.' },
+      cta: { title: 'Toma notas de tu próxima<br>reunión de forma inteligente', sub: 'Actualmente gratis · Actualizaciones de por vida · Grabación sin bot', note: 'Windows 10/11 · Se requiere clave API de OpenAI · macOS próximamente' },
+      modal: { title: 'Descarga iniciándose', sub: 'Deja tu email y te mantendremos actualizado.<br>O sáltate este paso si prefieres.', btn: '⬇ Descargar', skip: 'Descargar sin email' },
+      compare: { pricing: '✅ Desde $4.99/mes', label: 'Comparación', title: '¿Por qué Silent Note AI?', row1: '¿Se une un bot a la reunión?', sna1: '❌ Nunca', row2: '¿Dónde están los datos?', sna2: '💻 Solo en tu dispositivo', row3: 'Funciona localmente', sna3: '✅ Sí', row4: 'Costo API', sna4: 'Tu propia clave', row5: 'Soporte en turco', sna5: '✅ Completo' },
+      privacy: { label: 'Privacidad', title: 'Tú controlas tus datos', boxTitle: 'Control total de tus datos', item1: 'El archivo de audio se elimina automáticamente después de la transcripción', item2: 'Todas las transcripciones y resúmenes se almacenan solo en tu computadora (SQLite local)', item3: 'Tu clave API de OpenAI está protegida por cifrado a nivel de SO (safeStorage)', item4: 'No se recopilan análisis de uso ni telemetría', item5: 'La conexión a Internet solo se usa para llamadas a la API de OpenAI Whisper y GPT' },
+      faq: { label: 'Preguntas Frecuentes', title: 'Tus preguntas respondidas', q1: '¿Se notifica a los participantes de la reunión?', q2: '¿Cómo obtengo una clave API de OpenAI?', q3: '¿Dónde se almacenan mis datos?', q4: '¿Cuándo llegará el soporte para Mac y Linux?', q5: '¿Funciona con Zoom, Teams, Google Meet?', q6: '¿Cómo funciona el proceso de compra?' },
+      hero: { badge: '🚀 Disponible ahora para Windows', h1: 'Toma notas de reuniones<br><span>de forma inteligente.</span>', sub: 'Sin bots, sin notificaciones. El audio se procesa completamente en tu computadora y se queda contigo.', dlBtn: '⬇ Descargar Gratis', howBtn: '¿Cómo funciona?', guarantee: '✅ Actualmente gratis · Actualizaciones de por vida · Grabación sin bot', note: 'Funciona con tu propia clave OpenAI · Tus datos no van a la nube' },
+      mock: { status: '⏺ Grabando...', stop: '⏹ Detener y Resumir', transcript: 'Transcripción', summary: 'Resumen' },
+      api: { title: '🔑 ¿Cómo obtener una API Key de OpenAI?', step1: 'Ve a <a href="https://platform.openai.com" target="_blank" style="color:var(--accent);">platform.openai.com</a>, crea una cuenta (gratis)', step2: 'Abre la pestaña <strong style="color:var(--text);">API Keys</strong> del menú izquierdo', step3: 'Haz clic en <strong style="color:var(--text);">Create new secret key</strong>', step4: 'Copia la clave <code style="background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;font-size:13px;">sk-...</code> generada', step5: 'Abre Silent Note AI → <strong style="color:var(--text);">Ajustes</strong> → pega en el campo API Key → Guardar', tip: '💡 OpenAI da créditos gratis a cuentas nuevas. Una reunión promedio cuesta ~$0.01.' },
+      comp: { row6: 'Pago único', botYes: '✅ Bot se une', cloud: '☁️ Nube', otterPrice: '$16.99/mes', ffPrice: '$18/mes', fathomPrice: 'Gratis*', partial: '⚠️ Parcial', subNo: '❌ Suscripción' },
+      users: { label: 'Usuarios', title: '¿Qué dicen los primeros usuarios?', t1: '"Ya no necesito tomar notas en mis reuniones de Zoom. Presiono Detener y Resumir, todo listo en 30 segundos. Con otras apps el bot causaba preguntas — aquí nadie lo nota."', t1role: 'Gerente de Proyecto', t2: '"Muy útil en reuniones con clientes. Transcripción + resumen + lista de acciones de una vez. Pagar $29 de una vez es mucho más sensato que una suscripción mensual."', t2role: 'Consultora de Ventas', t3: '"El soporte turco es excelente. En otras herramientas la calidad era terrible. Con Whisper es casi perfecto. Que mis datos no vayan a la nube también fue crítico para mí."', t3role: 'Desarrollador de Software' },
+    },
+    fr: {
+      nav: { features: 'Fonctionnalités', how: 'Comment ça marche', pricing: 'Tarifs', faq: 'FAQ', privacy: 'Confidentialité', download: 'Télécharger gratuitement' },
+      hero: { badge: '🚀 Disponible maintenant pour Windows', h1: 'Prenez des notes de réunion<br><span>de façon intelligente.</span>', sub: "Aucun bot ajouté, aucune notification envoyée. L'audio est traité entièrement sur votre ordinateur." },
+      features: { label: 'Fonctionnalités', title: 'Tout ce dont vous avez besoin, rien de plus', sub: "Concentrez-vous sur vos réunions. On s'occupe des notes." },
+      feat: { '1': { title: 'Enregistrement sans bot', desc: 'Aucun utilisateur ou bot supplémentaire ne rejoint votre réunion. Enregistre la sortie audio de votre ordinateur.' }, '2': { title: 'Transcription automatique', desc: 'Conversion voix-texte haute précision avec OpenAI Whisper, supportant 99 langues.' }, '3': { title: 'Résumé IA & actions', desc: "GPT-4o-mini résume la réunion en 3-5 points et extrait une liste d'actions." }, '4': { title: 'Stockage local', desc: 'Toutes les transcriptions et résumés restent sur votre ordinateur. Rien ne va sur aucun serveur.' }, '5': { title: 'Identification des intervenants', desc: 'AssemblyAI étiquette "Intervenant A / Intervenant B" — qui a dit quoi, clairement visible.' }, '6': { title: 'Recherche plein texte', desc: 'Recherche instantanée dans les réunions passées.' } },
+      compare: { pricing: '✅ À partir de $4.99/mois' },
+      pricing: { label: 'Tarifs', title: 'Choisissez le bon plan', sub: "Vous utilisez votre propre clé OpenAI — les coûts API sont les vôtres, les frais d'application sont fixes.", guarantee: "Clé de licence envoyée instantanément par email après l'achat." },
+      plan: { monthly: { name: 'Mensuel', period: '/mois', note: 'facturé mensuellement · 3 appareils' }, yearly: { badge: '⭐ Le Plus Populaire', name: 'Annuel', period: '/an', note: 'facturé annuellement · économisez 33%' }, lifetime: { name: 'Lifetime', note: 'paiement unique · 3 appareils', feat7: 'Mises à jour gratuites à vie', feat8: 'Support prioritaire', feat9: 'Futures fonctionnalités incluses' }, feat1: 'Enregistrements illimités', feat2: 'Transcription Whisper (99 langues)', feat3: 'Résumé GPT-4o-mini & actions', feat4: 'Identification des intervenants', feat5: 'Archive locale', feat6: 'Mises à jour automatiques', buy: { cta: 'Acheter →' } },
+      privacy: { label: 'Confidentialité', title: 'Vous contrôlez vos données' },
+      faq: { label: 'Questions Fréquentes', title: 'Vos questions, nos réponses' },
+      footer: { rights: '© 2026 Silent Note AI. Tous droits réservés.', buy: 'Acheter' },
+      stats: { langs: 'Support linguistique', processing: 'Temps de traitement', local: 'Stockage local', price: 'Une fois, à vie' },
+      how: { label: 'Comment ça marche', title: 'Prêt en 3 étapes', step1: { title: 'Télécharger et Installer', desc: 'Téléchargez et installez le .exe pour Windows. Seul Windows 10/11 est pris en charge.' }, step2: { title: 'Ajouter la clé API', desc: "Créez un compte OpenAI gratuit si vous n'en avez pas. Générez une clé API et collez-la dans les Paramètres." }, step3: { title: 'Rejoindre la réunion', desc: "Ouvrez Zoom, Teams ou n'importe quelle réunion. Cliquez sur 'Démarrer l'enregistrement'." }, step4: { title: 'Résumé prêt', desc: "Cliquez sur 'Arrêter et Résumer'. Transcription, résumé et liste d'actions prêts en secondes." } },
+      users: { label: 'Utilisateurs', title: 'Ce que disent les premiers utilisateurs' },
+      macos: { title: 'macOS bientôt disponible', sub: 'Laissez votre email et soyez le premier à savoir quand le support macOS est prêt.', btn: 'Me notifier', success: '✅ Inscrit ! Nous vous informerons quand macOS sera prêt.' },
+      cta: { title: 'Prenez les notes de votre<br>prochaine réunion intelligemment', sub: 'Actuellement gratuit · Mises à jour à vie · Enregistrement sans bot', note: 'Windows 10/11 · Clé API OpenAI requise · macOS bientôt disponible' },
+      modal: { title: 'Téléchargement en cours', sub: "Laissez votre email et nous vous tiendrons informé.<br>Ou ignorez si vous préférez.", btn: '⬇ Télécharger', skip: 'Télécharger sans email' },
+      compare: { pricing: '✅ À partir de $4.99/mois', label: 'Comparaison', title: 'Pourquoi Silent Note AI ?', row1: 'Un bot rejoint la réunion ?', sna1: '❌ Jamais', row2: 'Où sont les données ?', sna2: '💻 Sur votre appareil uniquement', row3: 'Fonctionne localement', sna3: '✅ Oui', row4: 'Coût API', sna4: 'Votre propre clé', row5: 'Support turc', sna5: '✅ Complet' },
+      privacy: { label: 'Confidentialité', title: 'Vous contrôlez vos données', boxTitle: 'Contrôle total de vos données', item1: 'Le fichier audio est automatiquement supprimé après la transcription', item2: 'Toutes les transcriptions et résumés sont stockés uniquement sur votre ordinateur (SQLite local)', item3: 'Votre clé API OpenAI est protégée par le chiffrement au niveau du système d\'exploitation (safeStorage)', item4: 'Aucune analyse d\'utilisation ni télémétrie collectée', item5: 'La connexion Internet n\'est utilisée que pour les appels API OpenAI Whisper et GPT' },
+      faq: { label: 'Questions Fréquentes', title: 'Vos questions, nos réponses', q1: 'Les participants à la réunion sont-ils notifiés ?', q2: 'Comment obtenir une clé API OpenAI ?', q3: 'Où mes données sont-elles stockées ?', q4: 'Quand le support Mac et Linux arrivera-t-il ?', q5: 'Fonctionne-t-il avec Zoom, Teams, Google Meet ?', q6: 'Comment fonctionne le processus d\'achat ?' },
+      hero: { badge: '🚀 Disponible maintenant pour Windows', h1: 'Prenez des notes de réunion<br><span>de façon intelligente.</span>', sub: "Aucun bot ajouté, aucune notification envoyée. L'audio est traité entièrement sur votre ordinateur.", dlBtn: '⬇ Télécharger gratuitement', howBtn: 'Comment ça marche ?', guarantee: '✅ Actuellement gratuit · Mises à jour à vie · Enregistrement sans bot', note: 'Fonctionne avec votre propre clé OpenAI · Vos données ne vont pas dans le cloud' },
+      mock: { status: '⏺ Enregistrement...', stop: '⏹ Arrêter et Résumer', transcript: 'Transcription', summary: 'Résumé' },
+      api: { title: '🔑 Comment obtenir une clé API OpenAI ?', step1: 'Allez sur <a href="https://platform.openai.com" target="_blank" style="color:var(--accent);">platform.openai.com</a>, créez un compte (gratuit)', step2: 'Ouvrez l\'onglet <strong style="color:var(--text);">API Keys</strong> dans le menu gauche', step3: 'Cliquez sur <strong style="color:var(--text);">Create new secret key</strong>', step4: 'Copiez la clé <code style="background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;font-size:13px;">sk-...</code> générée', step5: 'Ouvrez Silent Note AI → <strong style="color:var(--text);">Paramètres</strong> → collez dans le champ API Key → Enregistrer', tip: '💡 OpenAI offre des crédits gratuits aux nouveaux comptes. Une réunion moyenne coûte ~$0.01.' },
+      comp: { row6: 'Paiement unique', botYes: '✅ Bot rejoint', cloud: '☁️ Cloud', otterPrice: '$16.99/mois', ffPrice: '$18/mois', fathomPrice: 'Gratuit*', partial: '⚠️ Partiel', subNo: '❌ Abonnement' },
+      users: { label: 'Utilisateurs', title: 'Ce que disent les premiers utilisateurs', t1: '"Je n\'ai plus besoin de prendre des notes dans mes réunions Zoom. J\'appuie sur Arrêter et Résumer, tout est prêt en 30 secondes. Avec les autres apps, tout le monde posait des questions quand le bot rejoignait — ici personne ne remarque rien."', t1role: 'Chef de Projet', t2: '"Très utile dans les réunions clients. Transcription + résumé + liste d\'actions en une seule fois. Payer $29 une seule fois est bien plus sensé qu\'un abonnement mensuel."', t2role: 'Conseillère Commerciale', t3: '"Le support turc est excellent. Dans les autres outils, la qualité était terrible. Avec Whisper, c\'est presque parfait. Que mes données ne partent pas dans le cloud était aussi crucial pour moi."', t3role: 'Développeur Logiciel' },
+    },
+    de: {
+      nav: { features: 'Funktionen', how: 'Wie es funktioniert', pricing: 'Preise', faq: 'FAQ', privacy: 'Datenschutz', download: 'Kostenlos herunterladen' },
+      hero: { badge: '🚀 Jetzt für Windows verfügbar', h1: 'Besprechungen<br><span>intelligent dokumentieren.</span>', sub: 'Kein Bot wird hinzugefügt, keine Benachrichtigungen gesendet. Audio wird vollständig auf Ihrem Computer verarbeitet.' },
+      features: { label: 'Funktionen', title: 'Alles was Sie brauchen, nichts mehr', sub: 'Konzentrieren Sie sich auf Ihre Meetings. Wir kümmern uns um die Notizen.' },
+      feat: { '1': { title: 'Bot-freie Aufnahme', desc: 'Kein zusätzlicher Benutzer oder Bot tritt Ihrem Meeting bei. Nimmt die Audioausgabe Ihres Computers auf.' }, '2': { title: 'Automatische Transkription', desc: 'Hochpräzise Sprache-zu-Text-Konvertierung mit OpenAI Whisper, unterstützt 99 Sprachen.' }, '3': { title: 'KI-Zusammenfassung & Aufgaben', desc: 'GPT-4o-mini fasst das Meeting in 3-5 Punkten zusammen und erstellt eine Aufgabenliste.' }, '4': { title: 'Lokale Speicherung', desc: 'Alle Transkripte und Zusammenfassungen bleiben auf Ihrem Computer. Nichts geht auf einen Server.' }, '5': { title: 'Sprecheridentifikation', desc: 'AssemblyAI kennzeichnet "Sprecher A / Sprecher B" — wer was gesagt hat, klar sichtbar.' }, '6': { title: 'Volltextsuche', desc: 'Sofortige Suche in vergangenen Meetings.' } },
+      compare: { pricing: '✅ Ab $4.99/Monat' },
+      pricing: { label: 'Preise', title: 'Wählen Sie den richtigen Plan', sub: 'Sie verwenden Ihren eigenen OpenAI-Schlüssel — API-Kosten sind Ihre, App-Gebühr ist fest.', guarantee: 'Lizenzschlüssel wird nach dem Kauf sofort per E-Mail gesendet.' },
+      plan: { monthly: { name: 'Monatlich', period: '/Monat', note: 'monatlich abgerechnet · 3 Geräte' }, yearly: { badge: '⭐ Beliebteste', name: 'Jährlich', period: '/Jahr', note: 'jährlich abgerechnet · 33% sparen' }, lifetime: { name: 'Lifetime', note: 'Einmalzahlung · 3 Geräte', feat7: 'Lebenslange kostenlose Updates', feat8: 'Prioritäts-Support', feat9: 'Zukünftige Funktionen inklusive' }, feat1: 'Unbegrenzte Meeting-Aufnahmen', feat2: 'Whisper-Transkription (99 Sprachen)', feat3: 'GPT-4o-mini Zusammenfassung & Aufgaben', feat4: 'Sprecheridentifikation', feat5: 'Lokales Archiv', feat6: 'Automatische Updates', buy: { cta: 'Kaufen →' } },
+      privacy: { label: 'Datenschutz', title: 'Sie kontrollieren Ihre Daten' },
+      faq: { label: 'Häufig gestellte Fragen', title: 'Ihre Fragen beantwortet' },
+      footer: { rights: '© 2026 Silent Note AI. Alle Rechte vorbehalten.', buy: 'Kaufen' },
+      stats: { langs: 'Sprachunterstützung', processing: 'Verarbeitungszeit', local: 'Lokale Speicherung', price: 'Einmalig, lebenslang' },
+      how: { label: 'Wie es funktioniert', title: 'In 3 Schritten bereit', step1: { title: 'Herunterladen & Installieren', desc: 'Laden Sie die .exe für Windows herunter und installieren Sie sie. Nur Windows 10/11 wird unterstützt.' }, step2: { title: 'API-Schlüssel hinzufügen', desc: 'Erstellen Sie ein kostenloses OpenAI-Konto. Generieren Sie einen API-Schlüssel und fügen Sie ihn in die Einstellungen ein.' }, step3: { title: 'Meeting beitreten', desc: "Öffnen Sie Zoom, Teams oder ein beliebiges Meeting. Klicken Sie auf 'Aufnahme starten'." }, step4: { title: 'Zusammenfassung fertig', desc: "Klicken Sie auf 'Stoppen & Zusammenfassen'. Transkript, Zusammenfassung und Aufgabenliste in Sekunden." } },
+      users: { label: 'Benutzer', title: 'Was sagen die ersten Nutzer?' },
+      macos: { title: 'macOS demnächst verfügbar', sub: 'Hinterlassen Sie Ihre E-Mail und seien Sie der Erste zu wissen, wenn macOS-Support bereit ist.', btn: 'Benachrichtigen', success: '✅ Registriert! Wir benachrichtigen Sie, wenn macOS fertig ist.' },
+      cta: { title: 'Machen Sie Ihre nächste<br>Besprechung smart', sub: 'Derzeit kostenlos · Lebenslange Updates · Bot-freie Aufnahme', note: 'Windows 10/11 · OpenAI-API-Schlüssel erforderlich · macOS bald' },
+      modal: { title: 'Download startet', sub: 'Hinterlassen Sie Ihre E-Mail und wir halten Sie auf dem Laufenden.<br>Oder überspringen Sie diesen Schritt.', btn: '⬇ Herunterladen', skip: 'Ohne E-Mail herunterladen' },
+      compare: { pricing: '✅ Ab $4.99/Monat', label: 'Vergleich', title: 'Warum Silent Note AI?', row1: 'Bot tritt Meeting bei?', sna1: '❌ Niemals', row2: 'Wo sind die Daten?', sna2: '💻 Nur auf Ihrem Gerät', row3: 'Funktioniert lokal', sna3: '✅ Ja', row4: 'API-Kosten', sna4: 'Ihr eigener Schlüssel', row5: 'Türkisch-Unterstützung', sna5: '✅ Vollständig' },
+      privacy: { label: 'Datenschutz', title: 'Sie kontrollieren Ihre Daten', boxTitle: 'Volle Kontrolle über Ihre Daten', item1: 'Audiodatei wird nach abgeschlossener Transkription automatisch gelöscht', item2: 'Alle Transkripte und Zusammenfassungen bleiben nur auf Ihrem Computer (lokale SQLite)', item3: 'Ihr OpenAI-API-Schlüssel ist durch Verschlüsselung auf Betriebssystemebene geschützt (safeStorage)', item4: 'Keine Nutzungsanalysen oder Telemetrie gesammelt', item5: 'Internetverbindung wird nur für OpenAI Whisper und GPT-API-Aufrufe verwendet' },
+      faq: { label: 'Häufig gestellte Fragen', title: 'Ihre Fragen beantwortet', q1: 'Werden Besprechungsteilnehmer benachrichtigt?', q2: 'Wie bekomme ich einen OpenAI-API-Schlüssel?', q3: 'Wo werden meine Daten gespeichert?', q4: 'Wann kommt Mac- und Linux-Unterstützung?', q5: 'Funktioniert es mit Zoom, Teams, Google Meet?', q6: 'Wie funktioniert der Kaufprozess?' },
+      hero: { badge: '🚀 Jetzt für Windows verfügbar', h1: 'Besprechungen<br><span>intelligent dokumentieren.</span>', sub: 'Kein Bot wird hinzugefügt, keine Benachrichtigungen gesendet. Audio wird vollständig auf Ihrem Computer verarbeitet.', dlBtn: '⬇ Kostenlos herunterladen', howBtn: 'Wie funktioniert es?', guarantee: '✅ Derzeit kostenlos · Lebenslange Updates · Bot-freie Aufnahme', note: 'Funktioniert mit Ihrem eigenen OpenAI-Schlüssel · Ihre Daten gehen nicht in die Cloud' },
+      mock: { status: '⏺ Aufzeichnung...', stop: '⏹ Stoppen & Zusammenfassen', transcript: 'Transkript', summary: 'Zusammenfassung' },
+      api: { title: '🔑 Wie bekomme ich einen OpenAI API-Schlüssel?', step1: 'Gehe zu <a href="https://platform.openai.com" target="_blank" style="color:var(--accent);">platform.openai.com</a>, erstelle ein Konto (kostenlos)', step2: 'Öffne den <strong style="color:var(--text);">API Keys</strong>-Tab im linken Menü', step3: 'Klicke auf <strong style="color:var(--text);">Create new secret key</strong>', step4: 'Kopiere den generierten <code style="background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;font-size:13px;">sk-...</code>-Schlüssel', step5: 'Öffne Silent Note AI → <strong style="color:var(--text);">Einstellungen</strong> → füge in das API Key-Feld ein → Speichern', tip: '💡 OpenAI gibt neuen Konten kostenlose Credits. Eine durchschnittliche Sitzung kostet ~$0.01.' },
+      comp: { row6: 'Einmalzahlung', botYes: '✅ Bot tritt bei', cloud: '☁️ Cloud', otterPrice: '$16.99/Monat', ffPrice: '$18/Monat', fathomPrice: 'Kostenlos*', partial: '⚠️ Teilweise', subNo: '❌ Abonnement' },
+      users: { label: 'Benutzer', title: 'Was sagen die ersten Nutzer?', t1: '"Ich muss keine Notizen mehr in meinen Zoom-Meetings machen. Ich drücke Stopp & Zusammenfassen, alles fertig in 30 Sekunden. Bei anderen Apps fragten alle, als der Bot beitrat — hier merkt niemand etwas."', t1role: 'Projektmanager', t2: '"Sehr nützlich in Kundengesprächen. Transkript + Zusammenfassung + Aktionsliste auf einmal. $29 einmal zahlen ist viel sinnvoller als ein monatliches Abonnement."', t2role: 'Vertriebsberaterin', t3: '"Die türkische Unterstützung ist ausgezeichnet. In anderen Tools war die Qualität schrecklich. Mit Whisper ist es fast fehlerfrei. Dass meine Daten nicht in die Cloud gehen, war auch entscheidend."', t3role: 'Softwareentwickler' },
+    },
+    pt: {
+      nav: { features: 'Recursos', how: 'Como Funciona', pricing: 'Preços', faq: 'FAQ', privacy: 'Privacidade', download: 'Download Gratuito' },
+      hero: { badge: '🚀 Disponível agora para Windows', h1: 'Tome notas de reuniões<br><span>de forma inteligente.</span>', sub: 'Sem bots adicionados, sem notificações enviadas. O áudio é processado completamente no seu computador.' },
+      features: { label: 'Recursos', title: 'Tudo que você precisa, nada mais', sub: 'Foque nas suas reuniões. Nós cuidamos das notas.' },
+      feat: { '1': { title: 'Gravação sem bot', desc: 'Nenhum usuário ou bot extra entra na sua reunião. Grava a saída de áudio do seu computador.' }, '2': { title: 'Transcrição automática', desc: 'Conversão de voz para texto de alta precisão com OpenAI Whisper, suportando 99 idiomas.' }, '3': { title: 'Resumo IA & ações', desc: 'GPT-4o-mini resume a reunião em 3-5 pontos e extrai uma lista de ações.' }, '4': { title: 'Armazenamento local', desc: 'Todas as transcrições e resumos ficam apenas no seu computador. Nada vai para nenhum servidor.' }, '5': { title: 'Identificação de falantes', desc: 'AssemblyAI etiqueta "Falante A / Falante B" — quem disse o quê, claramente visível.' }, '6': { title: 'Pesquisa de texto completo', desc: 'Pesquisa instantânea em reuniões passadas.' } },
+      compare: { pricing: '✅ A partir de $4.99/mês' },
+      pricing: { label: 'Preços', title: 'Escolha o plano certo', sub: 'Você usa sua própria chave OpenAI — custos da API são seus, taxa do app é fixa.', guarantee: 'Chave de licença enviada instantaneamente ao seu email após a compra.' },
+      plan: { monthly: { name: 'Mensal', period: '/mês', note: 'cobrado mensalmente · 3 dispositivos' }, yearly: { badge: '⭐ Mais Popular', name: 'Anual', period: '/ano', note: 'cobrado anualmente · economize 33%' }, lifetime: { name: 'Lifetime', note: 'pagamento único · 3 dispositivos', feat7: 'Atualizações gratuitas para sempre', feat8: 'Suporte prioritário', feat9: 'Recursos futuros incluídos' }, feat1: 'Gravações ilimitadas', feat2: 'Transcrição Whisper (99 idiomas)', feat3: 'Resumo GPT-4o-mini & ações', feat4: 'Identificação de falantes', feat5: 'Arquivo local', feat6: 'Atualizações automáticas', buy: { cta: 'Comprar →' } },
+      privacy: { label: 'Privacidade', title: 'Você controla seus dados' },
+      faq: { label: 'Perguntas Frequentes', title: 'Suas perguntas respondidas' },
+      footer: { rights: '© 2026 Silent Note AI. Todos os direitos reservados.', buy: 'Comprar' },
+      stats: { langs: 'Suporte de idiomas', processing: 'Tempo de processamento', local: 'Armazenamento local', price: 'Uma vez, para sempre' },
+      how: { label: 'Como Funciona', title: 'Pronto em 3 passos', step1: { title: 'Baixar e Instalar', desc: 'Baixe e instale o .exe para Windows. Somente Windows 10/11 é suportado.' }, step2: { title: 'Adicionar API Key', desc: 'Crie uma conta OpenAI gratuita se não tiver uma. Gere uma API key e cole nas Configurações.' }, step3: { title: 'Entrar na reunião', desc: "Abra Zoom, Teams ou qualquer reunião. Clique em 'Iniciar Gravação' e continue." }, step4: { title: 'Resumo pronto', desc: "Clique em 'Parar e Resumir'. Transcrição, resumo e lista de ações prontos em segundos." } },
+      users: { label: 'Usuários', title: 'O que os primeiros usuários dizem?' },
+      macos: { title: 'macOS em breve', sub: 'Deixe seu email e seja o primeiro a saber quando o suporte macOS estiver pronto.', btn: 'Avisar-me', success: '✅ Registrado! Avisaremos quando macOS estiver pronto.' },
+      cta: { title: 'Tome as notas da sua próxima<br>reunião de forma inteligente', sub: 'Atualmente gratuito · Atualizações vitalícias · Gravação sem bot', note: 'Windows 10/11 · Chave API OpenAI necessária · macOS em breve' },
+      modal: { title: 'Download iniciando', sub: 'Deixe seu email e nós te manteremos atualizado.<br>Ou pule se preferir.', btn: '⬇ Baixar', skip: 'Baixar sem email' },
+      compare: { pricing: '✅ A partir de $4.99/mês', label: 'Comparação', title: 'Por que Silent Note AI?', row1: 'Bot entra na reunião?', sna1: '❌ Nunca', row2: 'Onde estão os dados?', sna2: '💻 Apenas no seu dispositivo', row3: 'Funciona localmente', sna3: '✅ Sim', row4: 'Custo API', sna4: 'Sua própria chave', row5: 'Suporte ao turco', sna5: '✅ Completo' },
+      privacy: { label: 'Privacidade', title: 'Você controla seus dados', boxTitle: 'Controle total dos seus dados', item1: 'O arquivo de áudio é excluído automaticamente após a transcrição', item2: 'Todas as transcrições e resumos ficam apenas no seu computador (SQLite local)', item3: 'Sua chave API do OpenAI é protegida por criptografia no nível do SO (safeStorage)', item4: 'Nenhuma análise de uso ou telemetria coletada', item5: 'Conexão com a Internet usada apenas para chamadas às APIs OpenAI Whisper e GPT' },
+      faq: { label: 'Perguntas Frequentes', title: 'Suas perguntas respondidas', q1: 'Os participantes da reunião são notificados?', q2: 'Como obtenho uma chave API do OpenAI?', q3: 'Onde meus dados são armazenados?', q4: 'Quando chegará o suporte para Mac e Linux?', q5: 'Funciona com Zoom, Teams, Google Meet?', q6: 'Como funciona o processo de compra?' },
+      hero: { badge: '🚀 Disponível agora para Windows', h1: 'Tome notas de reuniões<br><span>de forma inteligente.</span>', sub: 'Sem bots adicionados, sem notificações enviadas. O áudio é processado completamente no seu computador.', dlBtn: '⬇ Download Gratuito', howBtn: 'Como funciona?', guarantee: '✅ Atualmente gratuito · Atualizações vitalícias · Gravação sem bot', note: 'Funciona com sua própria chave OpenAI · Seus dados não vão para a nuvem' },
+      mock: { status: '⏺ Gravando...', stop: '⏹ Parar e Resumir', transcript: 'Transcrição', summary: 'Resumo' },
+      api: { title: '🔑 Como obter uma chave de API da OpenAI?', step1: 'Acesse <a href="https://platform.openai.com" target="_blank" style="color:var(--accent);">platform.openai.com</a>, crie uma conta (gratuito)', step2: 'Abra a aba <strong style="color:var(--text);">API Keys</strong> no menu esquerdo', step3: 'Clique em <strong style="color:var(--text);">Create new secret key</strong>', step4: 'Copie a chave <code style="background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;font-size:13px;">sk-...</code> gerada', step5: 'Abra o Silent Note AI → <strong style="color:var(--text);">Configurações</strong> → cole no campo API Key → Salvar', tip: '💡 A OpenAI dá créditos gratuitos para novas contas. Uma reunião média custa ~$0.01.' },
+      comp: { row6: 'Pagamento único', botYes: '✅ Bot entra', cloud: '☁️ Nuvem', otterPrice: '$16.99/mês', ffPrice: '$18/mês', fathomPrice: 'Grátis*', partial: '⚠️ Parcial', subNo: '❌ Assinatura' },
+      users: { label: 'Usuários', title: 'O que os primeiros usuários dizem?', t1: '"Não preciso mais tomar notas nas minhas reuniões Zoom. Aperto Parar e Resumir, tudo pronto em 30 segundos. Com outros apps, o bot causava perguntas — aqui ninguém percebe."', t1role: 'Gerente de Projetos', t2: '"Muito útil em reuniões com clientes. Transcrição + resumo + lista de ações de uma vez. Pagar $29 uma vez é muito mais sensato do que uma assinatura mensal."', t2role: 'Consultora de Vendas', t3: '"O suporte ao turco é excelente. Em outras ferramentas, a qualidade era terrível. Com Whisper é quase perfeito. Não ter meus dados na nuvem também foi crítico para mim."', t3role: 'Desenvolvedor de Software' },
+    },
+    zh: {
+      nav: { features: '功能', how: '使用方式', pricing: '价格', faq: '常见问题', privacy: '隐私', download: '免费下载' },
+      hero: { badge: '🚀 Windows版本现已发布', h1: '用智能方式<br><span>记录会议笔记。</span>', sub: '不添加机器人，不发送通知。音频完全在您的计算机上处理，数据只保留在您这里。' },
+      features: { label: '功能', title: '您需要的一切，不多也不少', sub: '专注于会议，让我们处理笔记。' },
+      feat: { '1': { title: '无机器人录制', desc: '不会有额外用户或机器人加入您的会议。录制计算机的音频输出。' }, '2': { title: '自动转录', desc: '使用OpenAI Whisper进行高精度语音转文字，支持99种语言。' }, '3': { title: 'AI摘要与行动项', desc: 'GPT-4o-mini将会议总结为3-5个要点并提取行动列表。' }, '4': { title: '本地存储', desc: '所有转录和摘要仅保留在您的计算机上。不会上传到任何服务器。' }, '5': { title: '说话人识别', desc: 'AssemblyAI标注"说话人A/说话人B"——清晰显示谁说了什么。' }, '6': { title: '全文搜索', desc: '立即搜索过去的会议记录。' } },
+      compare: { pricing: '✅ 从$4.99/月起' },
+      pricing: { label: '价格', title: '选择适合您的计划', sub: '使用您自己的OpenAI密钥——API费用由您承担，应用费用固定。', guarantee: '购买后，许可证密钥立即发送到您的电子邮件。' },
+      plan: { monthly: { name: '月付', period: '/月', note: '按月计费 · 3台设备' }, yearly: { badge: '⭐ 最受欢迎', name: '年付', period: '/年', note: '按年计费 · 节省33%' }, lifetime: { name: '终身版', note: '一次性付款 · 3台设备', feat7: '终身免费更新', feat8: '优先支持', feat9: '包含未来新功能' }, feat1: '无限次会议录制', feat2: 'Whisper转录（99种语言）', feat3: 'GPT-4o-mini摘要与行动项', feat4: '说话人识别', feat5: '本地存档', feat6: '自动更新', buy: { cta: '立即购买 →' } },
+      privacy: { label: '隐私', title: '您掌控自己的数据' },
+      faq: { label: '常见问题', title: '解答您的疑问' },
+      footer: { rights: '© 2026 Silent Note AI. 版权所有。', buy: '购买' },
+      stats: { langs: '语言支持', processing: '处理时间', local: '本地存储', price: '一次付费，终身使用' },
+      how: { label: '使用方式', title: '3步即可开始', step1: { title: '下载并安装', desc: '下载Windows版.exe文件并安装。仅支持Windows 10/11。' }, step2: { title: '添加API密钥', desc: '如果没有OpenAI账户，请免费创建。生成API密钥并粘贴到应用的设置界面。' }, step3: { title: '加入会议', desc: '打开Zoom、Teams或任何会议。点击"开始录制"并继续您的对话。' }, step4: { title: '摘要已就绪', desc: '点击"停止并摘要"。几秒内，转录文本、摘要和行动列表即可准备就绪。' } },
+      users: { label: '用户', title: '早期用户怎么说' },
+      macos: { title: 'macOS版本即将推出', sub: '留下您的邮箱，第一时间获知macOS支持就绪的消息。', btn: '通知我', success: '✅ 已注册！macOS就绪时我们会通知您。' },
+      cta: { title: '用智能方式记录<br>您的下一次会议笔记', sub: '目前免费 · 终身更新 · 无机器人录制', note: 'Windows 10/11 · 需要OpenAI API密钥 · macOS即将推出' },
+      modal: { title: '下载开始', sub: '留下您的邮箱，我们将为您提供最新动态。<br>或者直接跳过。', btn: '⬇ 下载', skip: '不留邮箱直接下载' },
+      compare: { pricing: '✅ 从$4.99/月起', label: '对比', title: '为什么选择Silent Note AI？', row1: '机器人加入会议？', sna1: '❌ 从不', row2: '数据在哪里？', sna2: '💻 仅在您的设备上', row3: '本地运行', sna3: '✅ 是', row4: 'API费用', sna4: '您自己的密钥', row5: '土耳其语支持', sna5: '✅ 完整' },
+      privacy: { label: '隐私', title: '您掌控自己的数据', boxTitle: '完全掌控您的数据', item1: '转录完成后，音频文件自动删除', item2: '所有转录和摘要仅存储在您的计算机上（本地SQLite）', item3: '您的OpenAI API密钥受操作系统级别的加密保护（safeStorage）', item4: '不收集使用分析或遥测数据', item5: '互联网连接仅用于OpenAI Whisper和GPT API调用' },
+      faq: { label: '常见问题', title: '解答您的疑问', q1: '会议参与者会收到通知吗？', q2: '如何获取OpenAI API密钥？', q3: '我的数据存储在哪里？', q4: 'Mac和Linux支持什么时候来？', q5: '可以与Zoom、Teams、Google Meet一起使用吗？', q6: '购买流程如何运作？' },
+      hero: { badge: '🚀 Windows版本现已发布', h1: '用智能方式<br><span>记录会议笔记。</span>', sub: '不添加机器人，不发送通知。音频完全在您的计算机上处理，数据只保留在您这里。', dlBtn: '⬇ 免费下载', howBtn: '如何使用？', guarantee: '✅ 目前免费 · 终身更新 · 无机器人录制', note: '使用您自己的OpenAI密钥 · 数据不会上传到云端' },
+      mock: { status: '⏺ 录制中...', stop: '⏹ 停止并总结', transcript: '转录', summary: '摘要' },
+      api: { title: '🔑 如何获取 OpenAI API 密钥？', step1: '访问 <a href="https://platform.openai.com" target="_blank" style="color:var(--accent);">platform.openai.com</a>，创建账户（免费）', step2: '从左侧菜单打开 <strong style="color:var(--text);">API Keys</strong> 标签', step3: '点击 <strong style="color:var(--text);">Create new secret key</strong>', step4: '复制生成的 <code style="background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;font-size:13px;">sk-...</code> 密钥', step5: '打开 Silent Note AI → <strong style="color:var(--text);">设置</strong> → 粘贴到 API Key 栏 → 保存', tip: '💡 OpenAI 为新账户提供免费额度。平均一次会议费用约 $0.01。' },
+      comp: { row6: '一次性付款', botYes: '✅ 机器人加入', cloud: '☁️ 云端', otterPrice: '$16.99/月', ffPrice: '$18/月', fathomPrice: '免费*', partial: '⚠️ 部分支持', subNo: '❌ 订阅' },
+      users: { label: '用户', title: '早期用户怎么说', t1: '"我不再需要在 Zoom 会议中记笔记了。我按停止并总结，30 秒内一切准备就绪。其他应用的机器人加入时大家都会问问题——这里没有人注意到。"', t1role: '项目经理', t2: '"在客户会议中非常有用。一次获得转录 + 摘要 + 行动列表。一次性支付 $29 比每月订阅明智得多。"', t2role: '销售顾问', t3: '"土耳其语支持很出色。在其他工具中质量很差。用 Whisper 几乎无误。数据不上云对我来说也至关重要。"', t3role: '软件开发者' },
+    },
+    ar: {
+      nav: { features: 'المميزات', how: 'كيف يعمل', pricing: 'الأسعار', faq: 'الأسئلة الشائعة', privacy: 'الخصوصية', download: 'تحميل مجاني' },
+      hero: { badge: '🚀 متاح الآن لـ Windows', h1: 'سجّل ملاحظات اجتماعاتك<br><span>بطريقة ذكية.</span>', sub: 'لا يُضاف أي بوت، ولا تُرسل إشعارات. يتم معالجة الصوت بالكامل على جهازك ويبقى معك.' },
+      features: { label: 'المميزات', title: 'كل ما تحتاجه، لا أكثر', sub: 'ركّز على اجتماعاتك. دعنا نتولى الملاحظات.' },
+      feat: { '1': { title: 'تسجيل بدون بوت', desc: 'لا ينضم أي مستخدم أو بوت إضافي إلى اجتماعك. يسجل مخرجات الصوت من جهازك.' }, '2': { title: 'نسخ تلقائي', desc: 'تحويل صوت إلى نص بدقة عالية مع OpenAI Whisper، يدعم 99 لغة.' }, '3': { title: 'ملخص ذكي وإجراءات', desc: 'يلخص GPT-4o-mini الاجتماع في 3-5 نقاط ويستخرج قائمة الإجراءات.' }, '4': { title: 'تخزين محلي', desc: 'جميع النصوص والملخصات تبقى على جهازك فقط. لا شيء يذهب إلى أي خادم.' }, '5': { title: 'تمييز المتحدثين', desc: 'يضع AssemblyAI تسميات "المتحدث أ / المتحدث ب" — من قال ماذا، واضح تماماً.' }, '6': { title: 'بحث نصي كامل', desc: 'بحث فوري في سجلات الاجتماعات السابقة.' } },
+      compare: { pricing: '✅ من $4.99/شهر' },
+      pricing: { label: 'الأسعار', title: 'اختر الخطة المناسبة', sub: 'تستخدم مفتاحك الخاص من OpenAI — تكاليف API عليك، رسوم التطبيق ثابتة.', guarantee: 'يُرسل مفتاح الترخيص فوراً إلى بريدك الإلكتروني بعد الشراء.' },
+      plan: { monthly: { name: 'شهري', period: '/شهر', note: 'فواتير شهرية · 3 أجهزة' }, yearly: { badge: '⭐ الأكثر شعبية', name: 'سنوي', period: '/سنة', note: 'فواتير سنوية · وفّر 33%' }, lifetime: { name: 'مدى الحياة', note: 'دفع لمرة واحدة · 3 أجهزة', feat7: 'تحديثات مجانية مدى الحياة', feat8: 'دعم ذو أولوية', feat9: 'الميزات المستقبلية مشمولة' }, feat1: 'تسجيلات اجتماعات غير محدودة', feat2: 'نسخ Whisper (99 لغة)', feat3: 'ملخص GPT-4o-mini وإجراءات', feat4: 'تمييز المتحدثين', feat5: 'أرشيف محلي', feat6: 'تحديثات تلقائية', buy: { cta: '← اشتر الآن' } },
+      privacy: { label: 'الخصوصية', title: 'أنت تتحكم في بياناتك' },
+      faq: { label: 'الأسئلة الشائعة', title: 'إجابات لأسئلتك' },
+      footer: { rights: '© 2026 Silent Note AI. جميع الحقوق محفوظة.', buy: 'اشتر' },
+      stats: { langs: 'دعم اللغات', processing: 'وقت المعالجة', local: 'تخزين محلي', price: 'مرة واحدة، مدى الحياة' },
+      how: { label: 'كيف يعمل', title: 'جاهز في 3 خطوات', step1: { title: 'تنزيل وتثبيت', desc: 'نزّل ملف .exe لـ Windows وقم بتثبيته. يدعم Windows 10/11 فقط.' }, step2: { title: 'إضافة مفتاح API', desc: 'أنشئ حساباً مجانياً في OpenAI إذا لم يكن لديك واحد. أنشئ مفتاح API والصقه في الإعدادات.' }, step3: { title: 'انضم إلى الاجتماع', desc: "افتح Zoom أو Teams أو أي اجتماع. اضغط على 'بدء التسجيل' وتابع محادثتك." }, step4: { title: 'الملخص جاهز', desc: "اضغط على 'إيقاف وتلخيص'. النص والملخص وقائمة الإجراءات جاهزة في ثوانٍ." } },
+      users: { label: 'المستخدمون', title: 'ماذا يقول المستخدمون الأوائل؟' },
+      macos: { title: 'نسخة macOS قادمة قريباً', sub: 'اترك بريدك الإلكتروني وكن أول من يعلم عندما يكون دعم macOS جاهزاً.', btn: 'أبلغني', success: '✅ تم التسجيل! سنعلمك عندما يكون macOS جاهزاً.' },
+      cta: { title: 'سجّل ملاحظات اجتماعك القادم<br>بطريقة ذكية', sub: 'مجاني حالياً · تحديثات مدى الحياة · تسجيل بدون بوت', note: 'Windows 10/11 · مفتاح API من OpenAI مطلوب · macOS قريباً' },
+      modal: { title: 'بدء التنزيل', sub: 'اترك بريدك الإلكتروني وسنبقيك على اطلاع.<br>أو تخطَّ هذه الخطوة.', btn: '⬇ تنزيل', skip: 'تنزيل بدون بريد إلكتروني' },
+      compare: { pricing: '✅ من $4.99/شهر', label: 'المقارنة', title: 'لماذا Silent Note AI؟', row1: 'هل يدخل بوت إلى الاجتماع؟', sna1: '❌ أبداً', row2: 'أين البيانات؟', sna2: '💻 على جهازك فقط', row3: 'يعمل محلياً', sna3: '✅ نعم', row4: 'تكلفة API', sna4: 'مفتاحك الخاص', row5: 'دعم اللغة التركية', sna5: '✅ كامل' },
+      privacy: { label: 'الخصوصية', title: 'أنت تتحكم في بياناتك', boxTitle: 'تحكم كامل في بياناتك', item1: 'يُحذف ملف الصوت تلقائياً بعد اكتمال النسخ', item2: 'جميع النصوص والملخصات مخزنة فقط على جهازك (SQLite محلي)', item3: 'مفتاح API الخاص بك محمي بتشفير على مستوى نظام التشغيل (safeStorage)', item4: 'لا يتم جمع أي تحليلات للاستخدام أو بيانات القياس', item5: 'يستخدم الاتصال بالإنترنت فقط لاستدعاءات API من OpenAI Whisper وGPT' },
+      faq: { label: 'الأسئلة الشائعة', title: 'إجابات لأسئلتك', q1: 'هل يتم إعلام المشاركين في الاجتماع؟', q2: 'كيف أحصل على مفتاح API من OpenAI؟', q3: 'أين يتم تخزين بياناتي؟', q4: 'متى سيأتي دعم Mac وLinux؟', q5: 'هل يعمل مع Zoom وTeams وGoogle Meet؟', q6: 'كيف تعمل عملية الشراء؟' },
+      hero: { badge: '🚀 متاح الآن لـ Windows', h1: 'سجّل ملاحظات اجتماعاتك<br><span>بطريقة ذكية.</span>', sub: 'لا يُضاف أي بوت، ولا تُرسل إشعارات. يتم معالجة الصوت بالكامل على جهازك ويبقى معك.', dlBtn: '⬇ تحميل مجاني', howBtn: 'كيف يعمل؟', guarantee: '✅ مجاني حالياً · تحديثات مدى الحياة · تسجيل بدون بوت', note: 'يعمل مع مفتاح OpenAI الخاص بك · بياناتك لا تذهب إلى السحابة' },
+      mock: { status: '⏺ جارٍ التسجيل...', stop: '⏹ إيقاف وتلخيص', transcript: 'نص', summary: 'ملخص' },
+      api: { title: '🔑 كيف تحصل على مفتاح OpenAI API؟', step1: 'اذهب إلى <a href="https://platform.openai.com" target="_blank" style="color:var(--accent);">platform.openai.com</a>، أنشئ حسابًا (مجاني)', step2: 'افتح تبويب <strong style="color:var(--text);">API Keys</strong> من القائمة اليسرى', step3: 'انقر على <strong style="color:var(--text);">Create new secret key</strong>', step4: 'انسخ المفتاح المُنشأ <code style="background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;font-size:13px;">sk-...</code>', step5: 'افتح Silent Note AI ← <strong style="color:var(--text);">الإعدادات</strong> ← الصق في حقل API Key ← حفظ', tip: '💡 تمنح OpenAI رصيدًا مجانيًا للحسابات الجديدة. متوسط تكلفة اجتماع ~$0.01.' },
+      comp: { row6: 'دفع لمرة واحدة', botYes: '✅ بوت ينضم', cloud: '☁️ سحابة', otterPrice: '$16.99/شهر', ffPrice: '$18/شهر', fathomPrice: 'مجاني*', partial: '⚠️ جزئي', subNo: '❌ اشتراك' },
+      users: { label: 'المستخدمون', title: 'ماذا يقول المستخدمون الأوائل؟', t1: '"لم أعد بحاجة لتدوين ملاحظات في اجتماعات Zoom. أضغط إيقاف وتلخيص، كل شيء جاهز في 30 ثانية. مع التطبيقات الأخرى، الجميع يتساءل عن البوت — هنا لا أحد يلاحظ."', t1role: 'مدير مشروع', t2: '"مفيد جدًا في اجتماعات العملاء. النص + الملخص + قائمة الإجراءات دفعة واحدة. دفع $29 مرة واحدة أفضل بكثير من اشتراك شهري."', t2role: 'مستشارة مبيعات', t3: '"دعم التركية ممتاز. في الأدوات الأخرى كانت الجودة سيئة. مع Whisper تكاد تكون مثالية. عدم ذهاب بياناتي إلى السحابة كان حاسمًا أيضًا."', t3role: 'مطور برمجيات' },
+    },
+    hi: {
+      nav: { features: 'सुविधाएं', how: 'यह कैसे काम करता है', pricing: 'मूल्य', faq: 'FAQ', privacy: 'गोपनीयता', download: 'मुफ्त डाउनलोड' },
+      hero: { badge: '🚀 Windows के लिए अभी उपलब्ध', h1: 'मीटिंग नोट्स लें<br><span>स्मार्ट तरीके से।</span>', sub: 'कोई बोट नहीं जोड़ा जाता, कोई सूचना नहीं भेजी जाती। ऑडियो पूरी तरह से आपके कंप्यूटर पर प्रोसेस होता है।' },
+      features: { label: 'सुविधाएं', title: 'जो चाहिए वो सब, बाकी कुछ नहीं', sub: 'अपनी मीटिंग पर ध्यान दें। नोट्स हम संभालते हैं।' },
+      feat: { '1': { title: 'बोट-फ्री रिकॉर्डिंग', desc: 'आपकी मीटिंग में कोई अतिरिक्त यूज़र या बोट नहीं जुड़ता। आपके कंप्यूटर की ऑडियो आउटपुट रिकॉर्ड करता है।' }, '2': { title: 'स्वचालित ट्रांसक्रिप्शन', desc: 'OpenAI Whisper के साथ उच्च-सटीकता वाला स्पीच-टू-टेक्स्ट, 99 भाषाओं में।' }, '3': { title: 'AI सारांश और कार्य-सूची', desc: 'GPT-4o-mini मीटिंग को 3-5 बिंदुओं में सारांशित करता है और एक्शन लिस्ट निकालता है।' }, '4': { title: 'लोकल स्टोरेज', desc: 'सभी ट्रांसक्रिप्ट और सारांश केवल आपके कंप्यूटर पर रहते हैं। कुछ भी किसी सर्वर पर नहीं जाता।' }, '5': { title: 'स्पीकर पहचान', desc: 'AssemblyAI "स्पीकर A / स्पीकर B" लेबल करता है — किसने क्या कहा, साफ दिखता है।' }, '6': { title: 'फुल-टेक्स्ट सर्च', desc: 'पिछली मीटिंग में तुरंत सर्च करें।' } },
+      compare: { pricing: '✅ $4.99/माह से' },
+      pricing: { label: 'मूल्य', title: 'सही प्लान चुनें', sub: 'आप अपनी OpenAI key उपयोग करते हैं — API लागत आपकी, ऐप शुल्क स्थिर।', guarantee: 'खरीदारी के बाद लाइसेंस की तुरंत ईमेल से भेजी जाती है।' },
+      plan: { monthly: { name: 'मासिक', period: '/माह', note: 'मासिक बिलिंग · 3 डिवाइस' }, yearly: { badge: '⭐ सबसे लोकप्रिय', name: 'वार्षिक', period: '/वर्ष', note: 'वार्षिक बिलिंग · 33% बचाएं' }, lifetime: { name: 'Lifetime', note: 'एकमुश्त भुगतान · 3 डिवाइस', feat7: 'आजीवन मुफ्त अपडेट', feat8: 'प्राथमिकता समर्थन', feat9: 'भविष्य की सुविधाएं शामिल' }, feat1: 'असीमित मीटिंग रिकॉर्डिंग', feat2: 'Whisper ट्रांसक्रिप्शन (99 भाषाएं)', feat3: 'GPT-4o-mini सारांश और कार्य', feat4: 'स्पीकर पहचान', feat5: 'लोकल आर्काइव', feat6: 'स्वचालित अपडेट', buy: { cta: 'अभी खरीदें →' } },
+      privacy: { label: 'गोपनीयता', title: 'आप अपने डेटा को नियंत्रित करते हैं' },
+      faq: { label: 'अक्सर पूछे जाने वाले प्रश्न', title: 'आपके सवालों के जवाब' },
+      footer: { rights: '© 2026 Silent Note AI. सर्वाधिकार सुरक्षित।', buy: 'खरीदें' },
+      stats: { langs: 'भाषा समर्थन', processing: 'प्रोसेसिंग समय', local: 'लोकल स्टोरेज', price: 'एक बार, आजीवन' },
+      how: { label: 'यह कैसे काम करता है', title: '3 स्टेप में तैयार', step1: { title: 'डाउनलोड और इंस्टॉल', desc: 'Windows के लिए .exe डाउनलोड करें और इंस्टॉल करें। केवल Windows 10/11 समर्थित है।' }, step2: { title: 'API Key जोड़ें', desc: 'अगर OpenAI अकाउंट नहीं है तो मुफ्त में बनाएं। API key बनाएं और Settings में पेस्ट करें।' }, step3: { title: 'मीटिंग में शामिल हों', desc: "Zoom, Teams या कोई भी मीटिंग खोलें। 'रिकॉर्डिंग शुरू करें' पर क्लिक करें।" }, step4: { title: 'सारांश तैयार', desc: "'रोकें और सारांश करें' पर क्लिक करें। सेकंड में ट्रांसक्रिप्ट, सारांश और एक्शन लिस्ट तैयार।" } },
+      users: { label: 'उपयोगकर्ता', title: 'शुरुआती उपयोगकर्ता क्या कहते हैं?' },
+      macos: { title: 'macOS संस्करण जल्द आ रहा है', sub: 'अपना ईमेल छोड़ें, macOS समर्थन तैयार होने पर पहले सूचित हों।', btn: 'सूचित करें', success: '✅ पंजीकृत! macOS तैयार होने पर हम आपको सूचित करेंगे।' },
+      cta: { title: 'अगली मीटिंग के नोट्स<br>स्मार्ट तरीके से लें', sub: 'अभी मुफ्त · आजीवन अपडेट · बोट-फ्री रिकॉर्डिंग', note: 'Windows 10/11 · OpenAI API key आवश्यक · macOS जल्द' },
+      modal: { title: 'डाउनलोड शुरू हो रहा है', sub: 'अपना ईमेल छोड़ें और हम आपको अपडेट करते रहेंगे।<br>या छोड़ दें।', btn: '⬇ डाउनलोड', skip: 'ईमेल के बिना डाउनलोड करें' },
+      compare: { pricing: '✅ $4.99/माह से', label: 'तुलना', title: 'Silent Note AI क्यों?', row1: 'क्या बोट मीटिंग में जुड़ता है?', sna1: '❌ कभी नहीं', row2: 'डेटा कहाँ है?', sna2: '💻 केवल आपके डिवाइस पर', row3: 'लोकल काम', sna3: '✅ हाँ', row4: 'API लागत', sna4: 'आपकी अपनी key', row5: 'तुर्की समर्थन', sna5: '✅ पूर्ण' },
+      privacy: { label: 'गोपनीयता', title: 'आप अपने डेटा को नियंत्रित करते हैं', boxTitle: 'आपके डेटा पर पूर्ण नियंत्रण', item1: 'ट्रांसक्रिप्शन पूरा होने के बाद ऑडियो फ़ाइल स्वचालित रूप से हटा दी जाती है', item2: 'सभी ट्रांसक्रिप्ट और सारांश केवल आपके कंप्यूटर पर संग्रहीत (लोकल SQLite)', item3: 'आपकी OpenAI API key OS-स्तर के एन्क्रिप्शन (safeStorage) द्वारा सुरक्षित', item4: 'कोई उपयोग विश्लेषण या टेलीमेट्री एकत्र नहीं', item5: 'इंटरनेट कनेक्शन केवल OpenAI Whisper और GPT API कॉल के लिए उपयोग' },
+      faq: { label: 'अक्सर पूछे जाने वाले प्रश्न', title: 'आपके सवालों के जवाब', q1: 'क्या मीटिंग प्रतिभागियों को सूचित किया जाता है?', q2: 'OpenAI API key कैसे प्राप्त करें?', q3: 'मेरा डेटा कहाँ संग्रहीत है?', q4: 'Mac और Linux समर्थन कब आएगा?', q5: 'क्या यह Zoom, Teams, Google Meet के साथ काम करता है?', q6: 'खरीद प्रक्रिया कैसे काम करती है?' },
+      hero: { badge: '🚀 Windows के लिए अभी उपलब्ध', h1: 'मीटिंग नोट्स लें<br><span>स्मार्ट तरीके से।</span>', sub: 'कोई बोट नहीं जोड़ा जाता, कोई सूचना नहीं भेजी जाती। ऑडियो पूरी तरह से आपके कंप्यूटर पर प्रोसेस होता है।', dlBtn: '⬇ मुफ्त डाउनलोड', howBtn: 'यह कैसे काम करता है?', guarantee: '✅ अभी मुफ्त · आजीवन अपडेट · बोट-फ्री रिकॉर्डिंग', note: 'अपनी OpenAI key से काम करता है · आपका डेटा क्लाउड पर नहीं जाता' },
+      mock: { status: '⏺ रिकॉर्डिंग हो रही है...', stop: '⏹ रोकें और सारांश करें', transcript: 'ट्रांसक्रिप्ट', summary: 'सारांश' },
+      api: { title: '🔑 OpenAI API Key कैसे प्राप्त करें?', step1: '<a href="https://platform.openai.com" target="_blank" style="color:var(--accent);">platform.openai.com</a> पर जाएं, अकाउंट बनाएं (मुफ्त)', step2: 'बाएं मेनू से <strong style="color:var(--text);">API Keys</strong> टैब खोलें', step3: '<strong style="color:var(--text);">Create new secret key</strong> पर क्लिक करें', step4: 'बनाई गई <code style="background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;font-size:13px;">sk-...</code> key कॉपी करें', step5: 'Silent Note AI खोलें → <strong style="color:var(--text);">सेटिंग्स</strong> → API Key फ़ील्ड में पेस्ट करें → सेव करें', tip: '💡 OpenAI नए अकाउंट को मुफ्त क्रेडिट देती है। एक औसत मीटिंग ~$0.01 खर्च करती है।' },
+      comp: { row6: 'एकमुश्त भुगतान', botYes: '✅ बोट जुड़ता है', cloud: '☁️ क्लाउड', otterPrice: '$16.99/माह', ffPrice: '$18/माह', fathomPrice: 'मुफ्त*', partial: '⚠️ आंशिक', subNo: '❌ सदस्यता' },
+      users: { label: 'उपयोगकर्ता', title: 'शुरुआती उपयोगकर्ता क्या कहते हैं?', t1: '"अब मुझे Zoom मीटिंग में नोट्स नहीं लेने पड़ते। मैं रोकें और सारांश दबाता हूं, 30 सेकंड में सब कुछ तैयार। दूसरे ऐप्स में बोट के जुड़ने पर सब पूछने लगते थे — यहां कोई नोटिस नहीं करता।"', t1role: 'प्रोजेक्ट मैनेजर', t2: '"क्लाइंट मीटिंग में बहुत उपयोगी। ट्रांसक्रिप्ट + सारांश + एक्शन लिस्ट एक बार में। $29 एकमुश्त देना मासिक सदस्यता से कहीं बेहतर है।"', t2role: 'सेल्स कंसल्टेंट', t3: '"तुर्की समर्थन बेहतरीन है। दूसरे टूल्स में गुणवत्ता खराब थी। Whisper के साथ लगभग बेदाग। मेरा डेटा क्लाउड पर न जाना भी मेरे लिए महत्वपूर्ण था।"', t3role: 'सॉफ्टवेयर डेवलपर' },
+    },
+  };
+
+  function _t(obj, key) {
+    return key.split('.').reduce(function(o, k) { return (o && o[k] !== undefined) ? o[k] : undefined; }, obj);
+  }
+
+  function setLang(code) {
+    var t = T[code] || T.tr;
+    localStorage.setItem('sna-lang', code);
+    var lang = LANGS.find(function(l) { return l.code === code; });
+    document.getElementById('langBtn').textContent = lang ? (lang.flag + ' ' + code.toUpperCase()) : '🌐';
+    document.getElementById('langMenu').style.display = 'none';
+    document.documentElement.setAttribute('lang', code);
+    document.documentElement.setAttribute('dir', code === 'ar' ? 'rtl' : 'ltr');
+    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+      var val = _t(t, el.dataset.i18n);
+      if (val !== undefined) el.textContent = val;
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+      var val = _t(t, el.dataset.i18nHtml);
+      if (val !== undefined) el.innerHTML = val;
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var menu = document.getElementById('langMenu');
+    LANGS.forEach(function(l) {
+      var b = document.createElement('button');
+      b.textContent = l.flag + ' ' + l.label;
+      b.onclick = function() { setLang(l.code); };
+      menu.appendChild(b);
+    });
+
+    document.getElementById('langBtn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      var m = document.getElementById('langMenu');
+      m.style.display = m.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', function() {
+      document.getElementById('langMenu').style.display = 'none';
+    });
+
+    var saved = localStorage.getItem('sna-lang');
+    var browser = (navigator.language || '').split('-')[0];
+    var code = saved || (LANGS.find(function(l) { return l.code === browser; }) ? browser : 'en');
+    setLang(code);
+  });
 </script>
 
 </body>
