@@ -37,29 +37,21 @@ export default function LicenseView({ onActivated }: { onActivated: () => void }
           </p>
         </div>
 
-        {/* Pricing pills */}
-        <div style={{ display: 'flex', gap: '12px', marginBottom: '28px' }}>
+        {/* Pricing pill */}
+        <div style={{ marginBottom: '28px' }}>
           <div style={{
-            flex: 1, padding: '16px', borderRadius: '12px',
-            background: '#141414', border: '1px solid #222', textAlign: 'center',
-          }}>
-            <div style={{ fontSize: '11px', color: '#555', marginBottom: '6px' }}>AYLIK</div>
-            <div style={{ fontSize: '22px', fontWeight: 800, color: '#f0f0f0' }}>$7.99</div>
-            <div style={{ fontSize: '11px', color: '#555' }}>/ ay</div>
-          </div>
-          <div style={{
-            flex: 1, padding: '16px', borderRadius: '12px',
+            padding: '20px', borderRadius: '12px',
             background: 'rgba(99,102,241,.08)', border: '1px solid #6366f1', textAlign: 'center',
           }}>
-            <div style={{ fontSize: '11px', color: '#6366f1', marginBottom: '6px', fontWeight: 700 }}>EN POPÜLER</div>
-            <div style={{ fontSize: '22px', fontWeight: 800, color: '#f0f0f0' }}>$49</div>
-            <div style={{ fontSize: '11px', color: '#555' }}>lifetime</div>
+            <div style={{ fontSize: '11px', color: '#6366f1', marginBottom: '6px', fontWeight: 700 }}>LİFETIME LİSANS</div>
+            <div style={{ fontSize: '32px', fontWeight: 800, color: '#f0f0f0' }}>$29</div>
+            <div style={{ fontSize: '12px', color: '#555', marginTop: '4px' }}>tek seferlik ödeme · 3 cihaz</div>
           </div>
         </div>
 
         {/* Buy button */}
         <button
-          onClick={() => window.api.openExternal('https://silent-note-landing.vercel.app/#pricing')}
+          onClick={() => window.api.openExternal('https://silentnoteai.lemonsqueezy.com/checkout/buy/3c35056c-2075-4429-8193-e4cab81cd49a')}
           style={{
             display: 'block', width: '100%', padding: '12px', borderRadius: '10px',
             background: '#6366f1', color: '#fff', fontSize: '14px', fontWeight: 700,

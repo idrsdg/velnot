@@ -662,23 +662,34 @@
     <h2 class="section-title">Bir kez öde, sonsuza kadar kullan</h2>
     <p class="section-sub">Kendi OpenAI key'ini kullanırsın — API maliyeti sana aittir, uygulama ücreti sabit.</p>
 
-    <div class="pricing-grid">
-      <div class="price-card featured">
-        <div class="price-badge">🎉 Şu an ücretsiz</div>
-        <div class="price-name">Early Access</div>
-        <div class="price-amount">$0 <span>şimdilik</span></div>
-        <div class="price-note" style="color:#6ee77a">Erken erişim — yakında ücretli olacak</div>
+    <div class="pricing-grid" style="max-width:680px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+      <div class="price-card">
+        <div class="price-badge" style="background:rgba(5,150,105,.12);color:#6ee77a">🎉 Early Access</div>
+        <div class="price-name">Ücretsiz</div>
+        <div class="price-amount">$0</div>
+        <div class="price-note" style="color:#6ee77a">Şu an tamamen ücretsiz</div>
         <ul class="price-features">
           <li>Sınırsız toplantı kaydı</li>
           <li>Whisper transkripsiyon (50+ dil)</li>
           <li>GPT-4o-mini özet & aksiyonlar</li>
           <li>Konuşmacı ayrıştırma</li>
-          <li>Lokal SQLite arşiv</li>
-          <li>Otomatik .txt kayıt</li>
-          <li>Ömür boyu ücretsiz güncelleme</li>
-          <li>Erken erişim avantajı</li>
+          <li>Lokal arşiv</li>
+          <li>Otomatik güncelleme</li>
         </ul>
         <button class="price-btn primary" onclick="openDlModal()" style="cursor:pointer;border:none;">Ücretsiz İndir</button>
+      </div>
+      <div class="price-card featured">
+        <div class="price-badge">⚡ Lifetime</div>
+        <div class="price-name">Lifetime Lisans</div>
+        <div class="price-amount">$29</div>
+        <div class="price-note">tek seferlik ödeme · 3 cihaz</div>
+        <ul class="price-features">
+          <li>Ücretsiz plandaki her şey</li>
+          <li>Ömür boyu ücretsiz güncelleme</li>
+          <li>Öncelikli destek</li>
+          <li>Gelecek özellikler dahil</li>
+        </ul>
+        <a class="price-btn primary" href="https://silentnoteai.lemonsqueezy.com/checkout/buy/3c35056c-2075-4429-8193-e4cab81cd49a" target="_blank" style="text-decoration:none;display:block;text-align:center;" onclick="track('ls_checkout_click')">Satın Al →</a>
       </div>
     </div>
   </div>
@@ -805,7 +816,7 @@
   <div style="display:flex;gap:24px;flex-wrap:wrap;">
     <a href="mailto:idrisdag96@gmail.com">idrisdag96@gmail.com</a>
     <a href="https://github.com/idrsdg/silentnoteai" target="_blank">GitHub</a>
-    <a href="https://idrisdag.gumroad.com/l/ydkcvn" target="_blank">Satın Al</a>
+    <a href="https://silentnoteai.lemonsqueezy.com/checkout/buy/3c35056c-2075-4429-8193-e4cab81cd49a" target="_blank">Satın Al</a>
   </div>
 </footer>
 
@@ -846,10 +857,10 @@
     if (el) pricingObserver.observe(el);
   });
 
-  // Gumroad link tıklamaları
+  // Lemon Squeezy link tıklamaları
   document.addEventListener('click', e => {
-    const a = e.target.closest('a[href*="gumroad"]');
-    if (a) track('gumroad_click', null, { href: a.href });
+    const a = e.target.closest('a[href*="lemonsqueezy"]');
+    if (a) track('ls_checkout_click', null, { href: a.href });
   });
 
   function openDlModal() {
