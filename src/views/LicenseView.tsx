@@ -23,7 +23,7 @@ export default function LicenseView({ onActivated }: { onActivated: () => void }
     if (result.success) {
       onActivated();
     } else {
-      setError(localizeError(result.error ?? '', t) || result.error ?? t.license.activate.btn);
+      setError(localizeError(result.error ?? '', t) || (result.error ?? t.license.activate.btn));
     }
   };
 
