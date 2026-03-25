@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { useT, localizeError } from '../LanguageContext';
 
+// TODO: Replace MONTHLY_URL and YEARLY_URL after creating subscription products on Lemon Squeezy
+const CHECKOUT_URLS = {
+  monthly:  'MONTHLY_CHECKOUT_URL',
+  yearly:   'YEARLY_CHECKOUT_URL',
+  lifetime: 'https://silentnoteai.lemonsqueezy.com/checkout/buy/3c35056c-2075-4429-8193-e4cab81cd49a',
+};
+
 export default function LicenseView({ onActivated }: { onActivated: () => void }) {
   const { t } = useT();
   const [key, setKey] = useState('');
@@ -20,12 +27,18 @@ export default function LicenseView({ onActivated }: { onActivated: () => void }
     }
   };
 
+  const plans = [
+    { id: 'monthly' as const,  popular: false, url: CHECKOUT_URLS.monthly,  ...t.license.plans.monthly  },
+    { id: 'yearly' as const,   popular: true,  url: CHECKOUT_URLS.yearly,   ...t.license.plans.yearly   },
+    { id: 'lifetime' as const, popular: false, url: CHECKOUT_URLS.lifetime, ...t.license.plans.lifetime },
+  ];
+
   return (
     <div style={{
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       height: '100%', padding: '40px',
     }}>
-      <div style={{ maxWidth: '440px', width: '100%' }}>
+      <div style={{ maxWidth: '680px', width: '100%' }}>
 
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
@@ -38,29 +51,54 @@ export default function LicenseView({ onActivated }: { onActivated: () => void }
           </p>
         </div>
 
-        {/* Pricing pill */}
-        <div style={{ marginBottom: '28px' }}>
-          <div style={{
-            padding: '20px', borderRadius: '12px',
-            background: 'rgba(99,102,241,.08)', border: '1px solid #6366f1', textAlign: 'center',
-          }}>
-            <div style={{ fontSize: '11px', color: '#6366f1', marginBottom: '6px', fontWeight: 700 }}>{t.license.plan.label}</div>
-            <div style={{ fontSize: '32px', fontWeight: 800, color: '#f0f0f0' }}>$29</div>
-            <div style={{ fontSize: '12px', color: '#555', marginTop: '4px' }}>{t.license.plan.note}</div>
-          </div>
+        {/* Pricing cards */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '28px' }}>
+          {plans.map(plan => (
+            <div
+              key={plan.id}
+              style={{
+                padding: '22px 16px 18px', borderRadius: '14px', textAlign: 'center',
+                background: plan.popular ? 'rgba(99,102,241,.1)' : '#111',
+                border: plan.popular ? '1.5px solid #6366f1' : '1px solid #222',
+                position: 'relative',
+              }}
+            >
+              {plan.popular && (
+                <div style={{
+                  position: 'absolute', top: '-11px', left: '50%', transform: 'translateX(-50%)',
+                  background: '#6366f1', color: '#fff', fontSize: '10px', fontWeight: 700,
+                  padding: '3px 10px', borderRadius: '20px', whiteSpace: 'nowrap',
+                }}>
+                  {t.license.popular}
+                </div>
+              )}
+              <div style={{
+                fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', marginBottom: '10px',
+                color: plan.popular ? '#818cf8' : '#555',
+              }}>
+                {plan.label}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: '2px', marginBottom: '4px' }}>
+                <span style={{ fontSize: '28px', fontWeight: 800, color: '#f0f0f0' }}>{plan.price}</span>
+                {plan.period && <span style={{ fontSize: '12px', color: '#555' }}>{plan.period}</span>}
+              </div>
+              <div style={{ fontSize: '11px', color: '#444', marginBottom: '14px', minHeight: '16px', lineHeight: '1.5' }}>
+                {plan.note}
+              </div>
+              <button
+                onClick={() => window.api.openExternal(plan.url)}
+                style={{
+                  width: '100%', padding: '8px', borderRadius: '8px',
+                  background: plan.popular ? '#6366f1' : '#1e1e1e',
+                  color: '#fff', fontSize: '12px', fontWeight: 600, cursor: 'pointer',
+                  border: plan.popular ? 'none' : '1px solid #2a2a2a',
+                }}
+              >
+                {t.license.buy}
+              </button>
+            </div>
+          ))}
         </div>
-
-        {/* Buy button */}
-        <button
-          onClick={() => window.api.openExternal('https://silentnoteai.lemonsqueezy.com/checkout/buy/3c35056c-2075-4429-8193-e4cab81cd49a')}
-          style={{
-            display: 'block', width: '100%', padding: '12px', borderRadius: '10px',
-            background: '#6366f1', color: '#fff', fontSize: '14px', fontWeight: 700,
-            border: 'none', cursor: 'pointer', marginBottom: '24px',
-          }}
-        >
-          {t.license.buy}
-        </button>
 
         {/* Activation */}
         <div style={{
