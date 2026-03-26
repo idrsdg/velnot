@@ -940,8 +940,7 @@
   function startFileDownload() {
     const a = document.createElement('a');
     a.href = DL_URL;
-    a.target = '_blank';
-    a.rel = 'noopener';
+    a.download = 'Velnot-Setup.exe';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
