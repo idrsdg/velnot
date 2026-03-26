@@ -3,6 +3,7 @@ import RecordingView from './views/RecordingView';
 import HistoryView from './views/HistoryView';
 import SettingsView from './views/SettingsView';
 import LicenseView from './views/LicenseView';
+import OnboardingModal from './views/OnboardingModal';
 import { LanguageProvider, useT } from './LanguageContext';
 import { LANGUAGES, Lang } from './i18n';
 
@@ -14,6 +15,7 @@ function AppInner() {
   const [onboarding, setOnboarding] = useState(false);
   const [licenseStatus, setLicenseStatus] = useState<{ type: string; sessionsUsed?: number; sessionsLimit?: number; daysLeft?: number } | null>(null);
   const [showLangMenu, setShowLangMenu] = useState(false);
+  const [showTour, setShowTour] = useState(false);
 
   const refreshLicense = async () => {
     const status = await window.api.getLicenseStatus();
@@ -22,6 +24,9 @@ function AppInner() {
   };
 
   useEffect(() => {
+    window.api.getSetting('onboarding_done').then(done => {
+      if (!done) setShowTour(true);
+    });
     window.api.getSetting('api_key').then(key => {
       if (!key) { setActiveView('settings'); setOnboarding(true); }
     });
@@ -46,8 +51,14 @@ function AppInner() {
 
   const isTrial = licenseStatus?.type === 'trial';
 
+  const handleTourDone = () => {
+    window.api.setSetting('onboarding_done', '1');
+    setShowTour(false);
+  };
+
   return (
     <div style={{ display: 'flex', height: '100vh', background: '#0e0a07', color: '#f5f0eb' }}>
+      {showTour && <OnboardingModal onDone={handleTourDone} />}
       {/* Sidebar */}
       <aside style={{
         width: '60px', background: '#150f09', borderRight: '1px solid #2a1e14',
