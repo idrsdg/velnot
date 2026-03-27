@@ -10,6 +10,12 @@ import { updateElectronApp } from 'update-electron-app';
 
 if (started) app.quit();
 
+// Single instance lock — required for deep link handling on Windows
+const gotLock = app.requestSingleInstanceLock();
+if (!gotLock) {
+  app.quit();
+}
+
 // Register velnot:// custom protocol to serve local audio files
 protocol.registerSchemesAsPrivileged([
   { scheme: 'velnot', privileges: { secure: true, standard: true, stream: true } },
@@ -104,7 +110,44 @@ if (app.isPackaged) {
   });
 }
 
+function handleAuthUrl(url: string): void {
+  if (!mainWindow) return;
+  try {
+    const params = new URL(url).searchParams;
+    mainWindow.webContents.send('auth:login', {
+      email: params.get('email'),
+      plan: params.get('plan'),
+      expires: params.get('expires'),
+    });
+    mainWindow.show();
+    mainWindow.focus();
+  } catch (e) {
+    console.error('handleAuthUrl error:', e);
+  }
+}
+
+// Windows: second-instance fires when a second instance opens with a deep link
+app.on('second-instance', (_event, argv) => {
+  const url = argv.find(a => a.startsWith('velnotauth://'));
+  if (url) handleAuthUrl(url);
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.focus();
+  }
+});
+
+// macOS: open-url event
+app.on('open-url', (_event, url) => {
+  handleAuthUrl(url);
+});
+
 app.on('ready', async () => {
+  // Register the velnotauth:// protocol so Windows routes deep links to this app
+  app.setAsDefaultProtocolClient('velnotauth');
+
+  // Check if the app was launched via a deep link (Windows)
+  const startUrl = process.argv.find(a => a.startsWith('velnotauth://'));
+
   await initDb();
 
   // Serve local .webm audio files via velnot://{sessionId}
@@ -125,6 +168,13 @@ app.on('ready', async () => {
   buildAppMenu(uiLang);
   createWindow();
   createTray();
+
+  // Handle deep link that launched the app
+  if (startUrl) {
+    mainWindow?.webContents.once('did-finish-load', () => {
+      handleAuthUrl(startUrl);
+    });
+  }
 });
 
 app.on('window-all-closed', () => {

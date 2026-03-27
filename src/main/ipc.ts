@@ -100,6 +100,36 @@ export function registerIpcHandlers() {
     shell.openExternal(url);
   });
 
+  // ── Auth (Magic Link) ─────────────────────────────────────
+  const BACKEND_URL = 'https://velnot-backend.onrender.com/api';
+
+  ipcMain.handle('auth:requestMagicLink', async (_e, email: string) => {
+    const res = await fetch(`${BACKEND_URL}/auth/request-magic-link`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    return res.json();
+  });
+
+  ipcMain.handle('auth:getEmail', () => {
+    return getSetting('account_email') ?? '';
+  });
+
+  ipcMain.handle('auth:getPlan', () => {
+    return getSetting('account_plan') ?? '';
+  });
+
+  ipcMain.handle('auth:getExpires', () => {
+    return getSetting('account_expires') ?? '';
+  });
+
+  ipcMain.handle('auth:logout', () => {
+    setSetting('account_email', '');
+    setSetting('account_plan', '');
+    setSetting('account_expires', '');
+  });
+
   // ── Menu language rebuild ─────────────────────────────────
   ipcMain.on('menu:setLanguage', (_e, lang: string) => {
     buildAppMenu(lang);

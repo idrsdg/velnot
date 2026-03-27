@@ -85,6 +85,7 @@ declare global {
       // License
       getLicenseStatus: () => Promise<LicenseStatus>;
       activateLicense: (key: string) => Promise<{ success: boolean; error?: string }>;
+      getLicenseUsage?: () => Promise<{ used: number; limit: number; remaining: number }>;
 
       // Shell
       openExternal: (url: string) => Promise<void>;
@@ -95,6 +96,14 @@ declare global {
       // Menu
       setMenuLanguage: (lang: string) => void;
       onMenuNavigate: (cb: (view: string) => void) => () => void;
+
+      // Auth (Magic Link)
+      requestMagicLink?: (email: string) => Promise<{ sent: boolean }>;
+      authLogout?: () => Promise<void>;
+      getAccountEmail?: () => Promise<string>;
+      getAccountPlan?: () => Promise<string>;
+      getAccountExpires?: () => Promise<string>;
+      onAuthLogin?: (cb: (data: { email: string; plan: string; expires: string }) => void) => () => void;
     };
   }
 }

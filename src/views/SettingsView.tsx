@@ -53,6 +53,9 @@ export default function SettingsView({ onSaved, licenseStatus, onGetLicense }: {
         <p style={{ color: '#555', fontSize: '13px', marginTop: '2px' }}>{t.settings.subtitle}</p>
       </div>
 
+      {/* Account / Magic Link */}
+      <AccountSection t={t} />
+
       {/* Plan Status */}
       {licenseStatus && <PlanCard status={licenseStatus} t={t} onGetLicense={onGetLicense} />}
 
@@ -136,7 +139,7 @@ export default function SettingsView({ onSaved, licenseStatus, onGetLicense }: {
   );
 }
 
-const CHECKOUT_URL_PRO = 'PLACEHOLDER_PRO_URL';
+const BILLING_URL = 'https://velnot.lemonsqueezy.com/billing';
 
 function UsageCard({ usage, t, onGetLicense, licenseStatus }: { usage: UsageInfo; t: any; onGetLicense?: () => void; licenseStatus?: LicenseStatus | null }) {
   const isUnlimited = usage.limit === -1;
@@ -173,7 +176,7 @@ function UsageCard({ usage, t, onGetLicense, licenseStatus }: { usage: UsageInfo
 
       {showUpgrade && (
         <button
-          onClick={() => window.api.openExternal(CHECKOUT_URL_PRO)}
+          onClick={() => window.api.openExternal(BILLING_URL)}
           style={{
             padding: '7px 16px', borderRadius: '8px', border: 'none',
             background: '#f97316', color: '#fff', fontSize: '12px', fontWeight: 600,
@@ -255,7 +258,7 @@ function PlanCard({ status, t, onGetLicense }: { status: { type: string; session
 
       {isActive && (
         <button
-          onClick={() => window.api.openExternal(CHECKOUT_URL_PRO)}
+          onClick={() => window.api.openExternal(BILLING_URL)}
           style={{
             padding: '7px 16px', borderRadius: '8px', border: '1px solid #1a3a1a',
             background: 'transparent', color: '#86efac', fontSize: '12px', fontWeight: 600,
@@ -264,6 +267,140 @@ function PlanCard({ status, t, onGetLicense }: { status: { type: string; session
         >
           {t.settings.plan.manage}
         </button>
+      )}
+    </div>
+  );
+}
+
+function AccountSection({ t }: { t: any }) {
+  type State = 'idle' | 'sending' | 'sent' | 'loggedIn';
+  const [email, setEmail] = useState('');
+  const [state, setState] = useState<State>('idle');
+  const [accountEmail, setAccountEmail] = useState('');
+  const [accountPlan, setAccountPlan] = useState('');
+  const [accountExpires, setAccountExpires] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const at = t.settings.account;
+
+  // Load stored account info
+  useEffect(() => {
+    window.api.getAccountEmail?.().then((e: string) => {
+      if (e) { setAccountEmail(e); setState('loggedIn'); }
+    }).catch(() => {});
+    window.api.getAccountPlan?.().then((p: string) => setAccountPlan(p)).catch(() => {});
+    window.api.getAccountExpires?.().then((ex: string) => setAccountExpires(ex)).catch(() => {});
+  }, []);
+
+  // Listen for deep link auth
+  useEffect(() => {
+    const unsub = window.api.onAuthLogin?.((data: { email: string; plan: string; expires: string }) => {
+      window.api.setSetting('account_email', data.email);
+      window.api.setSetting('account_plan', data.plan);
+      window.api.setSetting('account_expires', data.expires);
+      setAccountEmail(data.email);
+      setAccountPlan(data.plan);
+      setAccountExpires(data.expires);
+      setState('loggedIn');
+    });
+    return () => { unsub?.(); };
+  }, []);
+
+  const sendLink = async () => {
+    if (!email.trim()) return;
+    setState('sending');
+    setErrorMsg('');
+    try {
+      const res = await window.api.requestMagicLink?.(email.trim());
+      if (res?.sent) {
+        setState('sent');
+      } else {
+        setErrorMsg(at.notFound);
+        setState('idle');
+      }
+    } catch {
+      setState('idle');
+    }
+  };
+
+  const logout = async () => {
+    await window.api.authLogout?.();
+    window.api.setSetting('account_email', '');
+    window.api.setSetting('account_plan', '');
+    window.api.setSetting('account_expires', '');
+    setAccountEmail('');
+    setAccountPlan('');
+    setAccountExpires('');
+    setEmail('');
+    setState('idle');
+  };
+
+  const expiresLabel = accountExpires && accountExpires !== 'null' && accountExpires !== ''
+    ? new Date(Number(accountExpires)).toLocaleDateString()
+    : null;
+
+  return (
+    <div style={{ marginBottom: '20px', padding: '18px 20px', background: '#150f09', borderRadius: '12px', border: '1px solid #222' }}>
+      <div style={{ fontSize: '14px', fontWeight: 600, color: '#e5e5e5', marginBottom: '12px' }}>{at.title}</div>
+
+      {state === 'loggedIn' ? (
+        <>
+          <div style={{ fontSize: '13px', color: '#888', marginBottom: '4px' }}>{at.loggedInAs}</div>
+          <div style={{ fontSize: '14px', color: '#f97316', fontWeight: 600, marginBottom: '8px' }}>{accountEmail}</div>
+          {accountPlan && (
+            <div style={{ fontSize: '12px', color: '#22c55e', marginBottom: '4px' }}>
+              {accountPlan}{expiresLabel ? ` · ${expiresLabel}` : ''}
+            </div>
+          )}
+          <div style={{ display: 'flex', gap: '8px', marginTop: '12px', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => window.api.openExternal('https://velnot.lemonsqueezy.com/billing')}
+              style={{ padding: '6px 14px', borderRadius: '8px', border: '1px solid #2a2a2a', background: 'transparent', color: '#f97316', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}
+            >
+              {at.manage}
+            </button>
+            <button
+              onClick={logout}
+              style={{ padding: '6px 14px', borderRadius: '8px', border: '1px solid #2a2a2a', background: 'transparent', color: '#888', fontSize: '12px', cursor: 'pointer' }}
+            >
+              {at.logout}
+            </button>
+          </div>
+        </>
+      ) : state === 'sent' ? (
+        <div style={{ fontSize: '13px', color: '#fdba74', lineHeight: '1.6' }}>{at.checkEmail}</div>
+      ) : (
+        <>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <input
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && sendLink()}
+              placeholder={at.emailPlaceholder}
+              style={{
+                flex: 1, padding: '8px 12px', borderRadius: '8px',
+                background: '#0e0a07', border: '1px solid #2a2a2a',
+                color: '#f0f0f0', fontSize: '13px', outline: 'none',
+              }}
+            />
+            <button
+              onClick={sendLink}
+              disabled={state === 'sending'}
+              style={{
+                padding: '8px 14px', borderRadius: '8px', border: 'none',
+                background: '#f97316', color: '#fff', fontSize: '12px', fontWeight: 600,
+                cursor: state === 'sending' ? 'not-allowed' : 'pointer',
+                opacity: state === 'sending' ? 0.6 : 1, whiteSpace: 'nowrap',
+              }}
+            >
+              {state === 'sending' ? at.sending : at.sendLink}
+            </button>
+          </div>
+          {errorMsg && (
+            <div style={{ fontSize: '12px', color: '#f87171', marginTop: '6px' }}>{errorMsg}</div>
+          )}
+        </>
       )}
     </div>
   );
@@ -279,6 +416,11 @@ const LANG_OPTIONS = [
   { value: 'zh', label: '中文',      flag: '🇨🇳' },
   { value: 'ar', label: 'العربية',  flag: '🇸🇦' },
   { value: 'hi', label: 'हिन्दी',   flag: '🇮🇳' },
+  { value: 'ru', label: 'Русский',  flag: '🇷🇺' },
+  { value: 'ja', label: '日本語',   flag: '🇯🇵' },
+  { value: 'id', label: 'Indonesia', flag: '🇮🇩' },
+  { value: 'ko', label: '한국어',   flag: '🇰🇷' },
+  { value: 'bn', label: 'বাংলা',   flag: '🇧🇩' },
   { value: 'auto', label: 'Auto',    flag: '🌐' },
 ];
 

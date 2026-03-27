@@ -77,4 +77,20 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.on('menu:navigate', handler);
     return () => ipcRenderer.removeListener('menu:navigate', handler);
   },
+
+  // ── Auth (Magic Link) ─────────────────────────────────────
+  requestMagicLink: (email: string) =>
+    ipcRenderer.invoke('auth:requestMagicLink', email),
+
+  authLogout: () => ipcRenderer.invoke('auth:logout'),
+
+  getAccountEmail: () => ipcRenderer.invoke('auth:getEmail'),
+  getAccountPlan:  () => ipcRenderer.invoke('auth:getPlan'),
+  getAccountExpires: () => ipcRenderer.invoke('auth:getExpires'),
+
+  onAuthLogin: (cb: (data: { email: string; plan: string; expires: string }) => void) => {
+    const handler = (_: Electron.IpcRendererEvent, data: any) => cb(data);
+    ipcRenderer.on('auth:login', handler);
+    return () => ipcRenderer.removeListener('auth:login', handler);
+  },
 });
