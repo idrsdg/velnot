@@ -42,6 +42,7 @@ export default function HistoryView() {
   const [selected, setSelected] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; session: SessionData } | null>(null);
 
   // Edit state
   const [editTitle, setEditTitle] = useState('');
@@ -78,6 +79,17 @@ export default function HistoryView() {
     const timer = setTimeout(() => load(search), 300);
     return () => clearTimeout(timer);
   }, [search, load]);
+
+  useEffect(() => {
+    if (!contextMenu) return;
+    const close = () => setContextMenu(null);
+    window.addEventListener('click', close);
+    window.addEventListener('contextmenu', close);
+    return () => {
+      window.removeEventListener('click', close);
+      window.removeEventListener('contextmenu', close);
+    };
+  }, [contextMenu]);
 
   const selectedSession = sessions.find(s => s.id === selected);
 
@@ -170,6 +182,33 @@ export default function HistoryView() {
 
   return (
     <div style={{ display: 'flex', height: '100%' }}>
+      {contextMenu && (
+        <div
+          onClick={e => e.stopPropagation()}
+          style={{
+            position: 'fixed', zIndex: 1000,
+            top: contextMenu.y, left: contextMenu.x,
+            background: '#1a1a1a', border: '1px solid #2a2a2a',
+            borderRadius: '8px', padding: '4px',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
+            minWidth: '140px',
+          }}
+        >
+          <button
+            onClick={() => { setSelected(contextMenu.session.id); setContextMenu(null); }}
+            style={ctxMenuItemStyle}
+          >
+            Aç
+          </button>
+          <div style={{ height: '1px', background: '#2a2a2a', margin: '2px 0' }} />
+          <button
+            onClick={() => { handleDelete(contextMenu.session.id); setContextMenu(null); }}
+            style={{ ...ctxMenuItemStyle, color: '#ef4444' }}
+          >
+            {t.history.delete}
+          </button>
+        </div>
+      )}
       {/* List */}
       <div style={{
         width: selectedSession ? '300px' : '100%',
@@ -205,6 +244,11 @@ export default function HistoryView() {
               <div
                 key={s.id}
                 onClick={() => setSelected(s.id === selected ? null : s.id)}
+                onContextMenu={e => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setContextMenu({ x: e.clientX, y: e.clientY, session: s });
+                }}
                 style={{
                   padding: '16px 24px', borderBottom: '1px solid #1a1a1a',
                   cursor: 'pointer',
@@ -449,6 +493,13 @@ export default function HistoryView() {
     </div>
   );
 }
+
+const ctxMenuItemStyle: React.CSSProperties = {
+  display: 'block', width: '100%', padding: '7px 12px',
+  background: 'none', border: 'none', borderRadius: '5px',
+  color: '#e5e5e5', fontSize: '13px', textAlign: 'left',
+  cursor: 'pointer',
+};
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (

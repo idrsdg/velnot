@@ -1,8 +1,8 @@
-import os from 'node:os';
 import { getSetting, setSetting } from './settings';
 import { getSessions } from './db';
+import { getDeviceId } from './device';
 
-export const TRIAL_SESSION_LIMIT = 5;
+export const TRIAL_SESSION_LIMIT = 3;
 export const TRIAL_DAY_LIMIT = 7;
 
 export interface LicenseStatus {
@@ -13,11 +13,9 @@ export interface LicenseStatus {
 }
 
 export function getLicenseStatus(): LicenseStatus {
-  // Aktif lisans var mı?
   const licenseKey = getSetting('license_key');
   if (licenseKey) return { type: 'licensed' };
 
-  // Trial başlangıcı — ilk çalışmada kaydet
   let trialStart = parseInt(getSetting('trial_start') ?? '0');
   if (!trialStart) {
     trialStart = Date.now();
@@ -42,29 +40,27 @@ export function getLicenseStatus(): LicenseStatus {
 
 export async function activateLicense(key: string): Promise<{ success: boolean; error?: string }> {
   try {
-    const instanceName = `sna-${os.hostname()}-${Date.now()}`;
-    const res = await fetch('https://api.lemonsqueezy.com/v1/licenses/activate', {
+    const deviceId = getDeviceId();
+    const res = await fetch('https://velnot-backend.onrender.com/api/license/activate', {
       method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({ license_key: key, instance_name: instanceName }).toString(),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ license_key: key, device_id: deviceId }),
     });
 
     const data = await res.json() as {
-      activated?: boolean;
+      success?: boolean;
       error?: string;
-      instance?: { id: string };
+      plan?: string;
+      expires_at?: number | null;
     };
 
-    if (data.activated) {
+    if (data.success) {
       setSetting('license_key', key);
-      if (data.instance?.id) setSetting('license_instance_id', data.instance.id);
+      if (data.plan) setSetting('license_plan', data.plan);
       return { success: true };
     }
 
-    return { success: false, error: data.error ?? 'Geçersiz lisans key.' };
+    return { success: false, error: data.error ?? 'Geçersiz lisans anahtarı.' };
   } catch (e: any) {
     return { success: false, error: 'Bağlantı hatası: ' + (e?.message ?? '') };
   }

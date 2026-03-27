@@ -155,7 +155,7 @@ function UsageCard({ usage, t, onGetLicense, licenseStatus }: { usage: UsageInfo
         {isUnlimited
           ? <span style={{ fontSize: '12px', color: '#22c55e', fontWeight: 600 }}>∞ Sınırsız</span>
           : <span style={{ fontSize: '12px', color: isDanger ? '#f87171' : '#888' }}>
-              {usage.remaining} / {usage.limit} dk kaldı
+              {usage.remaining} / {usage.limit} kayıt kaldı
             </span>
         }
       </div>
@@ -166,7 +166,7 @@ function UsageCard({ usage, t, onGetLicense, licenseStatus }: { usage: UsageInfo
             <div style={{ height: '100%', width: `${pct}%`, background: barColor, borderRadius: '3px', transition: 'width 0.4s' }} />
           </div>
           <div style={{ fontSize: '12px', color: '#555', marginBottom: showUpgrade ? '12px' : '0' }}>
-            {usage.used} dk kullanıldı · Ayda bir sıfırlanır
+            {usage.used} kayıt kullanıldı
           </div>
         </>
       )}

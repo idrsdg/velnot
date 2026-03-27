@@ -44,6 +44,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
   const sysStreamRef = useRef<MediaStream | null>(null);
   const audioBlobRef = useRef<Blob | null>(null);
   const audioRef     = useRef<HTMLAudioElement | null>(null);
+  const lastLiveChunkRef = useRef<number>(0);
 
   useEffect(() => {
     window.api.getSetting('recording_consent_given').then(val => {
@@ -127,6 +128,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
       animate();
 
       chunksRef.current = [];
+      lastLiveChunkRef.current = 0;
       const recorder = new MediaRecorder(dest.stream);
       recorderRef.current = recorder;
       recorder.ondataavailable = e => { if (e.data.size > 0) chunksRef.current.push(e.data); };
@@ -139,12 +141,15 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
       // Real-time transcription every 30 seconds (cumulative chunks)
       const lang = (await window.api.getSetting('language')) ?? 'tr';
       liveTimerRef.current = setInterval(async () => {
-        if (chunksRef.current.length === 0) return;
+        const from = lastLiveChunkRef.current;
+        const newChunks = chunksRef.current.slice(from);
+        if (newChunks.length === 0) return;
+        lastLiveChunkRef.current = chunksRef.current.length;
         try {
-          const snapshot = new Blob([...chunksRef.current], { type: 'audio/webm' });
+          const snapshot = new Blob(newChunks, { type: 'audio/webm' });
           const buf = await snapshot.arrayBuffer();
           const partial = await window.api.transcribeChunk(buf, lang);
-          if (partial) setLiveTranscript(partial);
+          if (partial) setLiveTranscript(prev => prev ? `${prev} ${partial}` : partial);
         } catch { /* silent — live transcript is best-effort */ }
       }, 30000);
     } catch (e: any) {
