@@ -387,7 +387,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
             <div style={{ fontSize: '12px', color: '#fb923c', fontWeight: 600, marginBottom: '14px', letterSpacing: '0.06em' }}>
               {t.record.transcriptReady}
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
               {MODES.map(m => (
                 <button
                   key={m.key}
@@ -406,19 +406,20 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
                   <span style={{ fontSize: '11px', color: '#555' }}>{t.record.modes[m.key].desc}</span>
                 </button>
               ))}
-            </div>
-            <div style={{ marginTop: '14px', display: 'flex', justifyContent: 'flex-end' }}>
               <button
                 onClick={() => { if (window.confirm((t.record as any).discardConfirm)) reset(); }}
                 style={{
-                  padding: '7px 16px', borderRadius: '8px', border: '1px solid #2a2a2a',
-                  background: 'transparent', color: '#666', fontSize: '12px', cursor: 'pointer',
-                  transition: 'color 0.15s, border-color 0.15s',
+                  padding: '14px 10px', borderRadius: '10px', border: '1px solid #2a2a2a',
+                  background: '#0e0a07', color: '#666', cursor: 'pointer',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px',
+                  transition: 'border-color 0.15s, background 0.15s, color 0.15s',
                 }}
-                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#ef4444'; (e.currentTarget as HTMLButtonElement).style.borderColor = '#ef4444'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#666'; (e.currentTarget as HTMLButtonElement).style.borderColor = '#2a2a2a'; }}
+                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#ef4444'; (e.currentTarget as HTMLButtonElement).style.background = '#1a0a0a'; (e.currentTarget as HTMLButtonElement).style.color = '#ef4444'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#2a2a2a'; (e.currentTarget as HTMLButtonElement).style.background = '#0e0a07'; (e.currentTarget as HTMLButtonElement).style.color = '#666'; }}
               >
-                🗑 {(t.record as any).discard}
+                <span style={{ fontSize: '22px' }}>🗑</span>
+                <span style={{ fontSize: '13px', fontWeight: 600 }}>{(t.record as any).discard}</span>
+                <span style={{ fontSize: '11px', color: '#555' }}> </span>
               </button>
             </div>
           </div>
