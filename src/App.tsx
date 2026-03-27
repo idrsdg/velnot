@@ -12,7 +12,6 @@ type View = 'recording' | 'history' | 'settings' | 'license';
 function AppInner() {
   const { t, lang, setLang } = useT();
   const [activeView, setActiveView] = useState<View>('recording');
-  const [onboarding, setOnboarding] = useState(false);
   const [licenseStatus, setLicenseStatus] = useState<{ type: string; sessionsUsed?: number; sessionsLimit?: number; daysLeft?: number } | null>(null);
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [showTour, setShowTour] = useState(false);
@@ -26,9 +25,6 @@ function AppInner() {
   useEffect(() => {
     window.api.getSetting('onboarding_done').then(done => {
       if (!done) setShowTour(true);
-    });
-    window.api.getSetting('api_key').then(key => {
-      if (!key) { setActiveView('settings'); setOnboarding(true); }
     });
     refreshLicense();
   }, []);
@@ -155,18 +151,11 @@ function AppInner() {
 
       {/* Main content */}
       <main style={{ flex: 1, overflow: 'auto' }}>
-        {onboarding && activeView === 'settings' && (
-          <div style={{ padding: '20px 32px 0', background: '#0e0a07', borderBottom: '1px solid #2a1e14' }}>
-            <div style={{ padding: '12px 16px', borderRadius: '8px', background: '#0d1a0d', border: '1px solid #1e3a1e', color: '#6ee77a', fontSize: '13px' }}>
-              {t.onboarding.welcome}
-            </div>
-          </div>
-        )}
         {activeView === 'recording' && (
           <RecordingView licenseStatus={licenseStatus} onSessionSaved={refreshLicense} onGetLicense={() => setActiveView('license')} />
         )}
         {activeView === 'history' && <HistoryView />}
-        {activeView === 'settings' && <SettingsView onSaved={() => setOnboarding(false)} licenseStatus={licenseStatus} onGetLicense={() => setActiveView('license')} />}
+        {activeView === 'settings' && <SettingsView onSaved={() => {}} licenseStatus={licenseStatus} onGetLicense={() => setActiveView('license')} />}
         {activeView === 'license' && (
           <LicenseView onActivated={() => { refreshLicense(); setActiveView('recording'); }} />
         )}
