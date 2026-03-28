@@ -710,34 +710,34 @@
       </div>
       <div class="testimonial-card">
         <div class="testimonial-stars">★★★★★</div>
-        <p class="testimonial-text">"I manage distributed teams across three time zones. Velnot automatically handles notes for every standup and planning session. The bot-free recording is a game changer for sensitive client calls — no one ever asks who's recording."</p>
+        <p class="testimonial-text" data-i18n="users.t4">"I manage distributed teams across three time zones. Velnot automatically handles notes for every standup and planning session. The bot-free recording is a game changer for sensitive client calls — no one ever asks who's recording."</p>
         <div class="testimonial-author">
           <div class="testimonial-avatar" style="background:linear-gradient(135deg,#3b82f6,#6366f1)">J</div>
           <div>
             <div class="testimonial-name">James T. 🇺🇸</div>
-            <div class="testimonial-role">Engineering Manager</div>
+            <div class="testimonial-role" data-i18n="users.t4role">Engineering Manager</div>
           </div>
         </div>
       </div>
       <div class="testimonial-card">
         <div class="testimonial-stars">★★★★★</div>
-        <p class="testimonial-text">"As a lawyer, data confidentiality is non-negotiable. Velnot processes everything locally — nothing leaves my machine. The transcription accuracy on multi-speaker calls is outstanding. No API key needed makes it incredibly easy to set up."</p>
+        <p class="testimonial-text" data-i18n="users.t5">"As a lawyer, data confidentiality is non-negotiable. Velnot processes everything locally — nothing leaves my machine. The transcription accuracy on multi-speaker calls is outstanding. No API key needed makes it incredibly easy to set up."</p>
         <div class="testimonial-author">
           <div class="testimonial-avatar" style="background:linear-gradient(135deg,#10b981,#059669)">S</div>
           <div>
             <div class="testimonial-name">Sarah L. 🇸🇬</div>
-            <div class="testimonial-role">Legal Counsel</div>
+            <div class="testimonial-role" data-i18n="users.t5role">Legal Counsel</div>
           </div>
         </div>
       </div>
       <div class="testimonial-card">
         <div class="testimonial-stars">★★★★★</div>
-        <p class="testimonial-text">"Works perfectly with Google Meet and Slack Huddle. Spanish transcription quality with Whisper is excellent. Starting at $9.99/month with no API key required — far better than $17-18/month subscriptions elsewhere."</p>
+        <p class="testimonial-text" data-i18n="users.t6">"Works perfectly with Google Meet and Slack Huddle. Spanish transcription quality with Whisper is excellent. Starting at $9.99/month with no API key required — far better than $17-18/month subscriptions elsewhere."</p>
         <div class="testimonial-author">
           <div class="testimonial-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">C</div>
           <div>
             <div class="testimonial-name">Carlos R. 🇧🇷</div>
-            <div class="testimonial-role">Product Lead</div>
+            <div class="testimonial-role" data-i18n="users.t6role">Product Lead</div>
           </div>
         </div>
       </div>
@@ -916,20 +916,20 @@
       </div>
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          <span>Is there a free trial?</span>
+          <span data-i18n="faq.q7">Is there a free trial?</span>
           <span class="faq-icon">+</span>
         </button>
         <div class="faq-answer">
-          <p>Yes. Velnot gives you <strong>3 free recordings</strong> with no credit card or sign-up required — just download and start. After your free recordings are used, choose a plan to continue. The license key is sent instantly to your email after purchase.</p>
+          <p data-i18n-html="faq.a7">Yes. Velnot gives you <strong>3 free recordings</strong> with no credit card or sign-up required — just download and start. After your free recordings are used, choose a plan to continue. The license key is sent instantly to your email after purchase.</p>
         </div>
       </div>
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          <span>Which languages does it support?</span>
+          <span data-i18n="faq.q8">Which languages does it support?</span>
           <span class="faq-icon">+</span>
         </button>
         <div class="faq-answer">
-          <p>Velnot uses <strong>OpenAI Whisper</strong> for transcription, which supports <strong>99 languages</strong> including English, Turkish, Spanish, French, German, Arabic, Hindi, Japanese, Korean, Chinese, Indonesian, Portuguese, Russian, Bengali and many more. The AI summary is generated in the same language as the transcript.</p>
+          <p data-i18n-html="faq.a8">Velnot uses <strong>OpenAI Whisper</strong> for transcription, which supports <strong>99 languages</strong> including English, Turkish, Spanish, French, German, Arabic, Hindi, Japanese, Korean, Chinese, Indonesian, Portuguese, Russian, Bengali and many more. The AI summary is generated in the same language as the transcript.</p>
         </div>
       </div>
     </div>
@@ -1216,7 +1216,7 @@
       modal: { title: 'Download starting', sub: "Leave your email and we'll keep you updated.<br>Or skip if you prefer.", btn: '⬇ Download', skip: 'Download without email' },
       compare: { pricing: '✅ From $9.99/mo', label: 'Comparison', title: 'Why Velnot?', row1: 'Bot joins meeting?', sna1: '❌ Never', row2: 'Where is data?', sna2: '💻 Only on your device', row3: 'Works locally', sna3: '✅ Yes', row4: 'API cost', sna4: 'Included', row5: 'Turkish support', sna5: '✅ Full' },
       privacy: { label: 'Privacy', title: 'You control your data', boxTitle: 'Full control of your data', item1: 'Audio file is automatically deleted after transcription is complete', item2: 'All transcripts and summaries are stored only on your computer (local SQLite)', item3: 'Your license key is stored securely (safeStorage)', item4: 'No usage analytics or telemetry collected', item5: 'Internet connection only used for transcription and summary processing via Velnot servers' },
-      faq: { label: 'FAQ', title: 'Your questions answered', q1: 'Are meeting participants notified?', q2: 'Do I need an API key?', q3: 'Where is my data stored?', q4: 'When will Mac and Linux support come?', q5: 'Does it work with Zoom, Teams, Google Meet?', q6: 'How does the purchase process work?', a1: 'No. Tools like Otter.ai and Fireflies join your meeting as a separate "bot" user, which automatically notifies other participants. Velnot works completely differently: it records your computer\'s audio output and microphone, just like screen recording software. No extra user is visible to the meeting application.', a2: 'No. Velnot now uses its own API infrastructure. After purchasing a license, you can start right away.', a3: 'All transcripts and summaries are stored only on your computer (AppData/Velnot folder). Audio files are automatically deleted after transcription completes. No data ever reaches our servers.', a4: 'Currently only Windows is supported. A macOS version is in development — the Apple Developer certificate process is underway. Leave your email below to be notified when macOS support is ready.', a5: 'Yes, since it records system audio, it works with any meeting software: Zoom, Microsoft Teams, Google Meet, Webex, Slack Huddle, and more. You can even use it for a YouTube video or podcast.', a6: 'After payment, your license key is sent via email through Lemon Squeezy. Download the app from this page and enter your license key to activate. Contact us at <a href="mailto:support@velnot.com" style="color:var(--accent)">support@velnot.com</a> for any questions.' },
+      faq: { label: 'FAQ', title: 'Your questions answered', q1: 'Are meeting participants notified?', q2: 'Do I need an API key?', q3: 'Where is my data stored?', q4: 'When will Mac and Linux support come?', q5: 'Does it work with Zoom, Teams, Google Meet?', q6: 'How does the purchase process work?', a1: 'No. Tools like Otter.ai and Fireflies join your meeting as a separate "bot" user, which automatically notifies other participants. Velnot works completely differently: it records your computer\'s audio output and microphone, just like screen recording software. No extra user is visible to the meeting application.', a2: 'No. Velnot now uses its own API infrastructure. After purchasing a license, you can start right away.', a3: 'All transcripts and summaries are stored only on your computer (AppData/Velnot folder). Audio files are automatically deleted after transcription completes. No data ever reaches our servers.', a4: 'Currently only Windows is supported. A macOS version is in development — the Apple Developer certificate process is underway. Leave your email below to be notified when macOS support is ready.', a5: 'Yes, since it records system audio, it works with any meeting software: Zoom, Microsoft Teams, Google Meet, Webex, Slack Huddle, and more. You can even use it for a YouTube video or podcast.', a6: 'After payment, your license key is sent via email through Lemon Squeezy. Download the app from this page and enter your license key to activate. Contact us at <a href="mailto:support@velnot.com" style="color:var(--accent)">support@velnot.com</a> for any questions.', q7: 'Is there a free trial?', a7: 'Yes. Velnot gives you <strong>3 free recordings</strong> with no credit card or sign-up required — just download and start. After your free recordings are used, choose a plan to continue. The license key is sent instantly to your email after purchase.', q8: 'Which languages does it support?', a8: 'Velnot uses <strong>OpenAI Whisper</strong> for transcription, which supports <strong>99 languages</strong> including English, Turkish, Spanish, French, German, Arabic, Hindi, Japanese, Korean, Chinese, Indonesian, Portuguese, Russian, Bengali and many more. The AI summary is generated in the same language as the transcript.' },
       hero: { badge: '⚡ Windows 10/11 · Free to start', h1: 'Stay focused in every meeting,<br><span>let AI handle the notes.</span>', sub: 'No bot joins, nobody notices. Audio is processed on your computer — transcript, summary and action list ready in 60 seconds.', dlBtn: '⬇ Get Started Free', howBtn: 'How does it work?', guarantee: '✅ Currently free · Lifetime updates · Bot-free recording', note: 'No API key needed · Your data stays local', noCreditCard: 'No API key needed · 2 minute setup' },
       trust: { noBot: 'No bot', local: '100% Local', openSource: 'Open Source', langs: '50+ Languages' },
       works: { label: 'Works with any meeting tool', andMore: '+ more' },
@@ -1226,7 +1226,7 @@
       comp: { row6: 'Monthly price', row7: 'Lifetime license', botYes: '✅ Bot joins', cloud: '☁️ Cloud', otterPrice: '$16.99/mo', ffPrice: '$18/mo', fathomPrice: 'Free*', partial: '⚠️ Partial', subNo: '❌ Subscription' },
       cta: { title: 'Take your next meeting<br><span style="background:linear-gradient(135deg,#f97316,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">notes the smart way</span>', sub: 'No bot · No cloud · No credit card', feat1: 'Instant setup', feat2: 'Windows 10/11', feat3: 'Auto updates', feat4: 'Open source' },
       account: { label: 'Account', title: 'Already have a license? Sign in', sub: 'Enter the email you used to purchase and we\'ll send you a login link for the app.', emailPlaceholder: 'email you used to purchase', sendLink: 'Send Magic Link', sending: 'Sending...', checkEmail: '📧 Check your email. The link is valid for 15 minutes.', notFound: 'No license found for this email address.' },
-      users: { label: 'Users', title: 'What early adopters say', t1: '"I no longer need to take notes in my Zoom meetings. I press Stop & Summarize and everything is ready in 30 seconds. With competitor apps, everyone asked questions when the bot joined — here no one notices."', t1role: 'Project Manager', t2: '"Very useful in client meetings. Transcript + summary + action list all at once. Starting at $9.99/mo with no API key required — much more sensible than competitor subscriptions at $17-18/mo."', t2role: 'Sales Consultant', t3: '"Turkish support is excellent. In other tools, Turkish transcript quality was terrible. With Whisper it\'s nearly flawless. Not having my data go to the cloud was also critical for me."', t3role: 'Software Developer' },
+      users: { label: 'Users', title: 'What early adopters say', t1: '"I no longer need to take notes in my Zoom meetings. I press Stop & Summarize and everything is ready in 30 seconds. With competitor apps, everyone asked questions when the bot joined — here no one notices."', t1role: 'Project Manager', t2: '"Very useful in client meetings. Transcript + summary + action list all at once. Starting at $9.99/mo with no API key required — much more sensible than competitor subscriptions at $17-18/mo."', t2role: 'Sales Consultant', t3: '"Turkish support is excellent. In other tools, Turkish transcript quality was terrible. With Whisper it\'s nearly flawless. Not having my data go to the cloud was also critical for me."', t3role: 'Software Developer', t4: '"I manage distributed teams across three time zones. Velnot automatically handles notes for every standup and planning session. The bot-free recording is a game changer for sensitive client calls — no one ever asks who\'s recording."', t4role: 'Engineering Manager', t5: '"As a lawyer, data confidentiality is non-negotiable. Velnot processes everything locally — nothing leaves my machine. The transcription accuracy on multi-speaker calls is outstanding. No API key needed makes it incredibly easy to set up."', t5role: 'Legal Counsel', t6: '"Works perfectly with Google Meet and Slack Huddle. Whisper transcription quality is excellent. Starting at $9.99/month with no API key required — far better than $17-18/month subscriptions elsewhere."', t6role: 'Product Lead' },
     },
     es: {
       nav: { features: 'Características', how: 'Cómo Funciona', pricing: 'Precios', faq: 'FAQ', privacy: 'Privacidad', download: 'Descargar Gratis' },
@@ -1382,8 +1382,8 @@
       cta: { title: '用智能方式记录<br>您的下一次会议笔记', sub: '目前免费 · 终身更新 · 无机器人录制', note: 'Windows 10/11 · 无需API密钥 · macOS即将推出' },
       modal: { title: '下载开始', sub: '留下您的邮箱，我们将为您提供最新动态。<br>或者直接跳过。', btn: '⬇ 下载', skip: '不留邮箱直接下载' },
       compare: { pricing: '✅ 从$9.99/月起', label: '对比', title: '为什么选择Velnot？', row1: '机器人加入会议？', sna1: '❌ 从不', row2: '数据在哪里？', sna2: '💻 仅在您的设备上', row3: '本地运行', sna3: '✅ 是', row4: 'API费用', sna4: '已包含', row5: '土耳其语支持', sna5: '✅ 完整' },
-      privacy: { label: '隐私', title: '您掌控自己的数据', boxTitle: '完全掌控您的数据', item1: '转录完成后，音频文件自动删除', item2: '所有转录和摘要仅存储在您的计算机上（本地SQLite）', item3: '您的许可证密钥安全存储（safeStorage）', item4: '不收集使用分析或遥测数据', item5: '互联网连接仅用于OpenAI Whisper和GPT API调用' },
-      faq: { label: '常见问题', title: '解答您的疑问', q1: '会议参与者会收到通知吗？', q2: '我需要API密钥吗？', q3: '我的数据存储在哪里？', q4: 'Mac和Linux支持什么时候来？', q5: '可以与Zoom、Teams、Google Meet一起使用吗？', q6: '购买流程如何运作？', a1: '不会。Otter.ai、Fireflies等工具作为单独的"机器人"用户加入会议，会自动通知其他参与者。Velnot的工作方式完全不同：它录制您计算机的音频输出，就像屏幕录制软件一样。会议应用程序中不会出现任何额外用户。', a2: '不需要。Velnot现在使用自己的API基础设施。购买许可证后，您可以立即开始使用。', a3: '所有转录和摘要仅存储在您的计算机上（AppData/Velnot文件夹）。转录完成后，音频文件将自动删除。没有任何数据到达我们的服务器。', a4: '目前仅支持Windows。macOS版本正在开发中——Apple Developer证书流程正在进行。请在下方留下您的电子邮件，以便在macOS支持准备好时收到通知。', a5: '是的，由于它录制系统音频，可与任何会议软件配合使用：Zoom、Microsoft Teams、Google Meet、Webex、Slack Huddle等。甚至可以用于YouTube视频或播客。', a6: '付款后，您的许可证密钥将通过Lemon Squeezy以电子邮件形式发送。从本页下载应用并输入许可证密钥进行激活。如有问题，请联系 <a href="mailto:support@velnot.com" style="color:var(--accent)">support@velnot.com</a>。' },
+      privacy: { label: '隐私', title: '您掌控自己的数据', boxTitle: '完全掌控您的数据', item1: '转录完成后，音频文件自动删除', item2: '所有转录和摘要仅存储在您的计算机上（本地SQLite）', item3: '您的许可证密钥安全存储（safeStorage）', item4: '不收集使用分析或遥测数据', item5: '互联网连接仅用于通过Velnot服务器进行转录和摘要处理' },
+      faq: { label: '常见问题', title: '解答您的疑问', q1: '会议参与者会收到通知吗？', q2: '我需要API密钥吗？', q3: '我的数据存储在哪里？', q4: 'Mac和Linux支持什么时候来？', q5: '可以与Zoom、Teams、Google Meet一起使用吗？', q6: '购买流程如何运作？', a1: '不会。Otter.ai、Fireflies等工具作为单独的"机器人"用户加入会议，会自动通知其他参与者。Velnot的工作方式完全不同：它录制您计算机的音频输出，就像屏幕录制软件一样。会议应用程序中不会出现任何额外用户。', a2: '不需要。Velnot现在使用自己的API基础设施。购买许可证后，您可以立即开始使用。', a3: '所有转录和摘要仅存储在您的计算机上（AppData/Velnot文件夹）。转录完成后，音频文件将自动删除。没有任何数据到达我们的服务器。', a4: '目前仅支持Windows。macOS版本正在开发中——Apple Developer证书流程正在进行。请在下方留下您的电子邮件，以便在macOS支持准备好时收到通知。', a5: '是的，由于它录制系统音频，可与任何会议软件配合使用：Zoom、Microsoft Teams、Google Meet、Webex、Slack Huddle等。甚至可以用于YouTube视频或播客。', a6: '付款后，您的许可证密钥将通过Lemon Squeezy以电子邮件形式发送。从本页下载应用并输入许可证密钥进行激活。如有问题，请联系 <a href="mailto:support@velnot.com" style="color:var(--accent)">support@velnot.com</a>。', q7: '有免费试用吗？', a7: '有。Velnot 提供 <strong>3次免费录制</strong>，无需信用卡或注册——直接下载即可开始。免费次数用完后，选择一个计划继续使用。购买后，许可证密钥立即发送至您的邮箱。', q8: '支持哪些语言？', a8: 'Velnot 使用 <strong>OpenAI Whisper</strong> 进行转录，支持 <strong>99种语言</strong>，包括中文、英语、日语、韩语、阿拉伯语、印地语、西班牙语、法语、德语、葡萄牙语、俄语、印尼语、孟加拉语等。AI摘要将以与转录相同的语言生成。' },
       hero: { badge: '🚀 Windows版本现已发布', h1: '用智能方式<br><span>记录会议笔记。</span>', sub: '不添加机器人，不发送通知。音频完全在您的计算机上处理，数据只保留在您这里。', dlBtn: '⬇ 免费下载', howBtn: '如何使用？', guarantee: '✅ 目前免费 · 终身更新 · 无机器人录制', note: '无需API密钥 · 数据保留在本地' },
       mock: { status: '⏺ 录制中...', stop: '⏹ 停止并总结', transcript: '转录', summary: '摘要' },
       comp: { row6: '一次性付款', botYes: '✅ 机器人加入', cloud: '☁️ 云端', otterPrice: '$16.99/月', ffPrice: '$18/月', fathomPrice: '免费*', partial: '⚠️ 部分支持', subNo: '❌ 订阅' },
@@ -1395,7 +1395,7 @@
       stats: { langs: '语言支持 (Whisper)', processing: '平均处理时间', bots: '无机器人、服务器、云', price: '每月 · 随时取消' },
       comp: { row6: '月费', row7: '终身许可', botYes: '✅ 机器人加入', cloud: '☁️ 云端', otterPrice: '$16.99/月', ffPrice: '$18/月', fathomPrice: '免费*', partial: '⚠️ 部分支持', subNo: '❌ 订阅' },
       compare: { pricing: '✅ 从$9.99/月起', label: '对比', title: '为什么选择Velnot？', row1: '机器人加入会议？', sna1: '❌ 从不', row2: '数据在哪里？', sna2: '💻 仅在您的设备上', row3: '本地运行', sna3: '✅ 是', row4: 'API费用', sna4: '已包含', row5: '土耳其语支持', sna5: '✅ 完整' },
-      users: { label: '用户', title: '早期用户怎么说', t1: '"我不再需要在 Zoom 会议中记笔记了。我按停止并总结，30 秒内一切准备就绪。其他应用的机器人加入时大家都会问问题——这里没有人注意到。"', t1role: '项目经理', t2: '"在客户会议中非常有用。一次获得转录 + 摘要 + 行动列表。从$9.99/月起且无需API密钥，性价比远超竞品。"', t2role: '销售顾问', t3: '"土耳其语支持很出色。在其他工具中质量很差。用 Whisper 几乎无误。数据不上云对我来说也至关重要。"', t3role: '软件开发者' },
+      users: { label: '用户', title: '早期用户怎么说', t1: '"我不再需要在 Zoom 会议中记笔记了。我按停止并总结，30 秒内一切准备就绪。其他应用的机器人加入时大家都会问问题——这里没有人注意到。"', t1role: '项目经理', t2: '"在客户会议中非常有用。一次获得转录 + 摘要 + 行动列表。从$9.99/月起且无需API密钥，性价比远超竞品。"', t2role: '销售顾问', t3: '"Whisper的转录质量非常出色。在其他工具中质量很差。数据不上云对我来说也至关重要。"', t3role: '软件开发者', t4: '"我管理跨三个时区的分布式团队。Velnot 自动处理每次站会和规划会议的笔记。无机器人录制对敏感客户通话来说是颠覆性的——没有人会问谁在录音。"', t4role: '工程经理', t5: '"作为律师，数据保密性不可妥协。Velnot 在本地处理一切——没有任何数据离开我的电脑。多说话人通话的转录准确性令人印象深刻。无需API密钥，设置极为简单。"', t5role: '法律顾问', t6: '"与Google Meet和Slack Huddle完美配合。Whisper的中文转录质量出色。从$9.99/月起且无需API密钥——远优于其他订阅。"', t6role: '产品负责人' },
       cta: { title: '用智能方式记录<br><span style="background:linear-gradient(135deg,#f97316,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">下一场会议</span>', sub: '无机器人 · 无云端 · 无需信用卡', feat1: '即时安装', feat2: 'Windows 10/11', feat3: '自动更新', feat4: '开源' },
       account: { label: '账户', title: '已有许可证？登录', sub: '输入购买时使用的邮箱，我们会向你发送应用登录链接。', emailPlaceholder: '购买时使用的邮箱', sendLink: '发送 Magic Link', sending: '发送中...', checkEmail: '📧 请检查你的邮箱。链接 15 分钟内有效。', notFound: '未找到与该邮箱关联的许可证。' },
     },    ar: {
