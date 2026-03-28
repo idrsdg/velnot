@@ -215,6 +215,9 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
   };
 
   const stopRecording = async () => {
+    // Capture live transcript before any async ops (accumulated from 10s chunks during recording)
+    const capturedLive = liveTranscript;
+
     timerRef.current && clearInterval(timerRef.current);
     liveTimerRef.current && clearInterval(liveTimerRef.current);
     rafRef.current && cancelAnimationFrame(rafRef.current);
@@ -238,21 +241,32 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
       const arrayBuffer = await audioBlob.arrayBuffer();
       const requestId = ++diarizationTokenRef.current;
 
-      const diarizationPromise = window.api
-        .transcribeAudio(arrayBuffer, lang)
-        .then(async result => {
-          await applyDiarizationResult(requestId, result);
-          return result;
-        })
+      // AssemblyAI diarization always runs fully in background
+      window.api.transcribeAudio(arrayBuffer, lang)
+        .then(async result => { await applyDiarizationResult(requestId, result); })
         .catch(() => null);
 
-      const fastTranscript = await window.api.transcribeFast(arrayBuffer, lang);
-      setTranscript(fastTranscript);
-      setEditTranscript(fastTranscript);
-      setLiveTranscript('');
-      setState('transcribed');
-
-      void diarizationPromise;
+      if (capturedLive) {
+        // Live transcript ready → show immediately, refine with full Whisper in background
+        setTranscript(capturedLive);
+        setEditTranscript(capturedLive);
+        setLiveTranscript('');
+        setState('transcribed');
+        window.api.transcribeFast(arrayBuffer, lang)
+          .then(result => {
+            if (result && stateRef.current !== 'done') {
+              setTranscript(result);
+              if (stateRef.current === 'transcribed') setEditTranscript(result);
+            }
+          }).catch(() => {});
+      } else {
+        // Short recording (< 10s): no live transcript yet, wait for Whisper
+        const fastTranscript = await window.api.transcribeFast(arrayBuffer, lang);
+        setTranscript(fastTranscript);
+        setEditTranscript(fastTranscript);
+        setLiveTranscript('');
+        setState('transcribed');
+      }
     } catch (e: any) {
       setError(localizeError(e?.message ?? '', t));
       setState('done');
