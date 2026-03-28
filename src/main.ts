@@ -23,6 +23,7 @@ protocol.registerSchemesAsPrivileged([
 
 let mainWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;
+let warmupTimer: ReturnType<typeof setInterval> | null = null;
 
 function getIconPath(): string {
   if (app.isPackaged) {
@@ -176,7 +177,7 @@ app.on('ready', async () => {
   createWindow();
   createTray();
   warmupBackend();
-  setInterval(warmupBackend, 9 * 60 * 1000); // keep warm every 9 min (Render sleeps at 15 min)
+  warmupTimer = setInterval(warmupBackend, 9 * 60 * 1000); // keep warm every 9 min (Render sleeps at 15 min)
 
   // Handle deep link that launched the app
   if (startUrl) {
@@ -198,4 +199,7 @@ app.on('activate', () => {
 
 app.on('before-quit', () => {
   (app as any).isQuitting = true;
+  if (warmupTimer) clearInterval(warmupTimer);
+  // Force exit if normal quit hangs (pending fetch/IPC keeps process alive)
+  setTimeout(() => process.exit(0), 2000).unref();
 });
