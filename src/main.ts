@@ -141,6 +141,12 @@ app.on('open-url', (_event, url) => {
   handleAuthUrl(url);
 });
 
+// Backend warm-up — prevents Render free-tier cold start (~30-60s delay)
+function warmupBackend(): void {
+  fetch('https://velnot-backend.onrender.com/health', { signal: AbortSignal.timeout(30000) })
+    .catch(() => { /* silent */ });
+}
+
 app.on('ready', async () => {
   // Register the velnotauth:// protocol so Windows routes deep links to this app
   app.setAsDefaultProtocolClient('velnotauth');
@@ -168,6 +174,8 @@ app.on('ready', async () => {
   buildAppMenu(uiLang);
   createWindow();
   createTray();
+  warmupBackend();
+  setInterval(warmupBackend, 9 * 60 * 1000); // keep warm every 9 min (Render sleeps at 15 min)
 
   // Handle deep link that launched the app
   if (startUrl) {

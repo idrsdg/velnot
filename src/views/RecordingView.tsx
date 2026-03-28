@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useT, localizeError } from '../LanguageContext';
-import { Utterance } from '../types/api';
+import { DiarizationResult, Utterance } from '../types/api';
 
 type State = 'idle' | 'recording' | 'transcribing' | 'transcribed' | 'analyzing' | 'done';
 type ProcessMode = 'summary' | 'action_plan' | 'meeting_notes';
@@ -32,8 +32,11 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
   const [consentChecked, setConsentChecked] = useState(false);
   const [consentGiven, setConsentGiven] = useState(false);
 
+  const [processingElapsed, setProcessingElapsed] = useState(0);
+
   const timerRef    = useRef<ReturnType<typeof setInterval> | null>(null);
   const liveTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const processingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const rafRef      = useRef<number | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef   = useRef<Blob[]>([]);
@@ -45,6 +48,11 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
   const audioBlobRef = useRef<Blob | null>(null);
   const audioRef     = useRef<HTMLAudioElement | null>(null);
   const lastLiveChunkRef = useRef<number>(0);
+  const transcriptRef = useRef('');
+  const stateRef = useRef<State>('idle');
+  const savedSessionIdRef = useRef<string | null>(null);
+  const diarizationTokenRef = useRef(0);
+  const latestDiarizationRef = useRef<DiarizationResult | null>(null);
 
   useEffect(() => {
     window.api.getSetting('recording_consent_given').then(val => {
@@ -53,9 +61,34 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
   }, []);
 
   useEffect(() => {
+    transcriptRef.current = transcript;
+  }, [transcript]);
+
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
+
+  useEffect(() => {
+    savedSessionIdRef.current = savedSessionId;
+  }, [savedSessionId]);
+
+  useEffect(() => {
+    if (state === 'transcribing' || state === 'analyzing') {
+      setProcessingElapsed(0);
+      processingTimerRef.current = setInterval(() => setProcessingElapsed(s => s + 1), 1000);
+    } else {
+      if (processingTimerRef.current) {
+        clearInterval(processingTimerRef.current);
+        processingTimerRef.current = null;
+      }
+    }
+  }, [state]);
+
+  useEffect(() => {
     return () => {
       timerRef.current && clearInterval(timerRef.current);
       liveTimerRef.current && clearInterval(liveTimerRef.current);
+      processingTimerRef.current && clearInterval(processingTimerRef.current);
       rafRef.current && cancelAnimationFrame(rafRef.current);
       audioCtxRef.current?.close();
       micStreamRef.current?.getTracks().forEach(tr => tr.stop());
@@ -83,6 +116,9 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
     setError('');
     setHasSysAudio(false);
     setLiveTranscript('');
+    setUtterances([]);
+    latestDiarizationRef.current = null;
+    diarizationTokenRef.current += 1;
     try {
       const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
       micStreamRef.current = micStream;
@@ -138,7 +174,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
       timerRef.current = setInterval(() => setElapsed(s => s + 1), 1000);
       setState('recording');
 
-      // Real-time transcription every 30 seconds (cumulative chunks)
+      // Real-time transcription every 10 seconds so shorter recordings get a preview sooner.
       const lang = (await window.api.getSetting('language')) ?? 'tr';
       liveTimerRef.current = setInterval(async () => {
         const from = lastLiveChunkRef.current;
@@ -151,9 +187,30 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
           const partial = await window.api.transcribeChunk(buf, lang);
           if (partial) setLiveTranscript(prev => prev ? `${prev} ${partial}` : partial);
         } catch { /* silent — live transcript is best-effort */ }
-      }, 30000);
+      }, 10000);
     } catch (e: any) {
       setError(localizeError(e?.message ?? '', t));
+    }
+  };
+
+  const applyDiarizationResult = async (requestId: number, result: DiarizationResult) => {
+    if (diarizationTokenRef.current !== requestId) return;
+
+    latestDiarizationRef.current = result;
+    setUtterances(result.utterances ?? []);
+
+    const sessionId = savedSessionIdRef.current;
+    if (!sessionId || !result.utterances?.length) return;
+
+    try {
+      const session = await window.api.getSession(sessionId);
+      if (!session) return;
+      await window.api.updateSession({
+        ...session,
+        utterances: JSON.stringify(result.utterances),
+      });
+    } catch {
+      // Speaker timing enrichment is best-effort.
     }
   };
 
@@ -179,11 +236,23 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
     try {
       const lang = (await window.api.getSetting('language')) ?? 'tr';
       const arrayBuffer = await audioBlob.arrayBuffer();
-      const result = await window.api.transcribeAudio(arrayBuffer, lang);
-      setTranscript(result.transcript);
-      setUtterances(result.utterances ?? []);
+      const requestId = ++diarizationTokenRef.current;
+
+      const diarizationPromise = window.api
+        .transcribeAudio(arrayBuffer, lang)
+        .then(async result => {
+          await applyDiarizationResult(requestId, result);
+          return result;
+        })
+        .catch(() => null);
+
+      const fastTranscript = await window.api.transcribeFast(arrayBuffer, lang);
+      setTranscript(fastTranscript);
+      setEditTranscript(fastTranscript);
       setLiveTranscript('');
       setState('transcribed');
+
+      void diarizationPromise;
     } catch (e: any) {
       setError(localizeError(e?.message ?? '', t));
       setState('done');
@@ -194,7 +263,9 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
     setActiveMode(mode);
     setState('analyzing');
     try {
-      const result = await window.api.generateSummary(transcript, mode);
+      const baseTranscript = transcriptRef.current;
+      const result = await window.api.generateSummary(baseTranscript, mode);
+      const diarization = latestDiarizationRef.current;
       setTitle(result.title);
       setSummary(result.summary);
       setActions(result.action_items);
@@ -205,15 +276,15 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
         started_at: startedAtRef.current,
         ended_at: endedAtRef.current,
         duration_sec: elapsed,
-        transcript,
+        transcript: baseTranscript,
         summary: JSON.stringify(result.summary),
         action_items: JSON.stringify(result.action_items),
         tags: JSON.stringify([mode]),
-        utterances: utterances.length > 0 ? JSON.stringify(utterances) : undefined,
+        utterances: diarization?.utterances?.length ? JSON.stringify(diarization.utterances) : undefined,
       } as any);
 
       setSavedSessionId(saved.id);
-      setEditTranscript(transcript);
+      setEditTranscript(baseTranscript);
 
       // Save audio file linked to session
       if (audioBlobRef.current) {
@@ -245,8 +316,11 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
   };
 
   const reset = () => {
+    diarizationTokenRef.current += 1;
+    latestDiarizationRef.current = null;
     setState('idle');
     setElapsed(0);
+    setProcessingElapsed(0);
     setTranscript('');
     setLiveTranscript('');
     setUtterances([]);
@@ -351,6 +425,9 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
             </div>
             <div style={{ fontSize: '12px', color: '#444', marginTop: '6px' }}>
               {t.record.status[state]}
+              {(state === 'transcribing' || state === 'analyzing') && processingElapsed > 0 && (
+                <span style={{ marginLeft: '6px', color: '#555' }}>({processingElapsed}s)</span>
+              )}
             </div>
           </div>
 
