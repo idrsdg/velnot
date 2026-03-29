@@ -28,8 +28,13 @@ export default function LicenseView({ onActivated }: { onActivated: () => void }
   };
 
   const openCheckout = (planId: 'monthly' | 'yearly' | 'lifetime') => {
+    if (!email.trim()) {
+      setError(t.license.emailRequired ?? 'Please enter your email address first.');
+      return;
+    }
+    setError('');
     const params = new URLSearchParams();
-    if (email.trim()) params.set('checkout[email]', email.trim());
+    params.set('checkout[email]', email.trim());
     params.set('checkout[redirect_url]', 'https://velnot.com');
     window.api.openExternal(`${CHECKOUT_URLS[planId]}?${params.toString()}`);
   };

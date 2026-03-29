@@ -98,6 +98,7 @@ export const translations = {
       account: {
         title: 'Hesabın',
         emailPlaceholder: 'satın almada kullandığın email',
+        emailRequired: 'Lütfen önce e-posta adresinizi girin.',
         sendLink: 'Magic Link Gönder',
         sending: 'Gönderiliyor...',
         checkEmail: '📧 Email\'ini kontrol et. Link 15 dk geçerli.',
@@ -215,6 +216,7 @@ export const translations = {
       account: {
         title: 'Your Account',
         emailPlaceholder: 'email you used to purchase',
+        emailRequired: 'Please enter your email address first.',
         sendLink: 'Send Magic Link',
         sending: 'Sending...',
         checkEmail: '📧 Check your email. Link valid for 15 min.',
@@ -332,6 +334,7 @@ export const translations = {
       account: {
         title: 'Tu Cuenta',
         emailPlaceholder: 'email usado en la compra',
+        emailRequired: 'Por favor, ingresa tu correo electrónico primero.',
         sendLink: 'Enviar Magic Link',
         sending: 'Enviando...',
         checkEmail: '📧 Revisa tu correo. El enlace es válido 15 min.',
@@ -449,6 +452,7 @@ export const translations = {
       account: {
         title: '您的账户',
         emailPlaceholder: '购买时使用的邮箱',
+        emailRequired: '请先输入您的电子邮件地址。',
         sendLink: '发送 Magic Link',
         sending: '发送中...',
         checkEmail: '📧 请查看您的邮件。链接15分钟内有效。',
@@ -566,6 +570,7 @@ export const translations = {
       account: {
         title: 'حسابك',
         emailPlaceholder: 'البريد المستخدم في الشراء',
+        emailRequired: 'يرجى إدخال بريدك الإلكتروني أولاً.',
         sendLink: 'إرسال رابط سحري',
         sending: 'جارٍ الإرسال...',
         checkEmail: '📧 تحقق من بريدك. الرابط صالح 15 دقيقة.',
@@ -683,6 +688,7 @@ export const translations = {
       account: {
         title: 'आपका खाता',
         emailPlaceholder: 'खरीद में उपयोग किया गया ईमेल',
+        emailRequired: 'कृपया पहले अपना ईमेल पता दर्ज करें।',
         sendLink: 'Magic Link भेजें',
         sending: 'भेजा जा रहा है...',
         checkEmail: '📧 अपना ईमेल जांचें। लिंक 15 मिनट के लिए वैध है।',
@@ -800,6 +806,7 @@ export const translations = {
       account: {
         title: 'Votre Compte',
         emailPlaceholder: "email utilisé lors de l'achat",
+        emailRequired: "Veuillez d'abord entrer votre adresse e-mail.",
         sendLink: 'Envoyer un Magic Link',
         sending: 'Envoi...',
         checkEmail: '📧 Vérifiez votre email. Lien valide 15 min.',
@@ -917,6 +924,7 @@ export const translations = {
       account: {
         title: 'Sua Conta',
         emailPlaceholder: 'email usado na compra',
+        emailRequired: 'Por favor, insira seu endereço de e-mail primeiro.',
         sendLink: 'Enviar Magic Link',
         sending: 'Enviando...',
         checkEmail: '📧 Verifique seu email. Link válido por 15 min.',
@@ -1034,6 +1042,7 @@ export const translations = {
       account: {
         title: 'Ihr Konto',
         emailPlaceholder: 'beim Kauf verwendete E-Mail',
+        emailRequired: 'Bitte geben Sie zuerst Ihre E-Mail-Adresse ein.',
         sendLink: 'Magic Link senden',
         sending: 'Wird gesendet...',
         checkEmail: '📧 Überprüfen Sie Ihre E-Mail. Link 15 Min gültig.',
@@ -1150,6 +1159,7 @@ export const translations = {
       account: {
         title: 'Ваш аккаунт',
         emailPlaceholder: 'email, использованный при покупке',
+        emailRequired: 'Пожалуйста, сначала введите адрес электронной почты.',
         sendLink: 'Отправить Magic Link',
         sending: 'Отправка...',
         checkEmail: '📧 Проверьте почту. Ссылка действительна 15 мин.',
@@ -1267,6 +1277,7 @@ export const translations = {
       account: {
         title: 'アカウント',
         emailPlaceholder: '購入時のメールアドレス',
+        emailRequired: 'まずメールアドレスを入力してください。',
         sendLink: 'マジックリンクを送信',
         sending: '送信中...',
         checkEmail: '📧 メールを確認してください。リンクは15分間有効です。',
@@ -1384,6 +1395,7 @@ export const translations = {
       account: {
         title: 'Akun Anda',
         emailPlaceholder: 'email yang digunakan saat pembelian',
+        emailRequired: 'Silakan masukkan alamat email Anda terlebih dahulu.',
         sendLink: 'Kirim Magic Link',
         sending: 'Mengirim...',
         checkEmail: '📧 Periksa email Anda. Tautan valid selama 15 menit.',
@@ -1501,6 +1513,7 @@ export const translations = {
       account: {
         title: '내 계정',
         emailPlaceholder: '구매 시 사용한 이메일',
+        emailRequired: '먼저 이메일 주소를 입력해 주세요.',
         sendLink: '매직 링크 전송',
         sending: '전송 중...',
         checkEmail: '📧 이메일을 확인하세요. 링크는 15분간 유효합니다.',
@@ -1618,6 +1631,7 @@ export const translations = {
       account: {
         title: 'আপনার অ্যাকাউন্ট',
         emailPlaceholder: 'ক্রয়ে ব্যবহৃত ইমেইল',
+        emailRequired: 'অনুগ্রহ করে প্রথমে আপনার ইমেইল ঠিকানা লিখুন।',
         sendLink: 'ম্যাজিক লিংক পাঠান',
         sending: 'পাঠানো হচ্ছে...',
         checkEmail: '📧 আপনার ইমেইল দেখুন। লিংক ১৫ মিনিট বৈধ।',
