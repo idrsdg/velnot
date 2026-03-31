@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18051510116"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-18051510116');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Private Meeting Recorder — No Cloud, No Bot | Velnot</title>
+  <meta name="description" content="Velnot is a private meeting recorder for Windows. No bot joins your call. Audio never leaves your computer. GDPR-friendly local AI transcription." />
+  <meta name="keywords" content="private meeting recorder, meeting recorder no cloud, local meeting transcription, gdpr meeting recorder, no bot meeting recorder, offline meeting notes, secure meeting transcription" />
+  <link rel="canonical" href="https://velnot.com/privacy-meeting-recorder" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23f97316'/><stop offset='1' stop-color='%23ec4899'/></linearGradient></defs><rect width='32' height='32' rx='8' fill='url(%23g)'/><text x='16' y='22' text-anchor='middle' font-size='18'>🎙</text></svg>" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Private Meeting Recorder — No Cloud, No Bot | Velnot" />
+  <meta property="og:description" content="No bot joins your call. Audio never leaves your computer. GDPR-friendly local AI transcription for Windows." />
+  <meta property="og:url" content="https://velnot.com/privacy-meeting-recorder" />
+  <meta property="og:type" content="website" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0c0a08;
+      --bg2:      #131009;
+      --bg3:      #1a1410;
+      --border:   #2a1e14;
+      --text:     #f5f0eb;
+      --muted:    #7a6a5a;
+      --accent:   #f97316;
+      --accent2:  #ec4899;
+      --green:    #10b981;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 40px;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; text-decoration: none; color: var(--text); }
+    .logo-icon { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .nav-cta { padding: 8px 18px; border-radius: 8px; background: var(--accent); color: #fff; text-decoration: none; font-size: 14px; font-weight: 600; transition: opacity .2s; }
+    .nav-cta:hover { opacity: .85; }
+
+    .hero {
+      padding: 140px 24px 80px;
+      text-align: center;
+      max-width: 860px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: fixed; top: 0; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 400px;
+      background: radial-gradient(circle, rgba(249,115,22,.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 99px; background: rgba(249,115,22,.12); border: 1px solid rgba(249,115,22,.35); color: #fdba74; font-size: 13px; font-weight: 500; margin-bottom: 28px; }
+    h1 { font-size: clamp(32px, 5vw, 58px); font-weight: 800; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 24px; }
+    h1 span { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-sub { font-size: clamp(15px, 2vw, 18px); color: var(--muted); max-width: 560px; margin: 0 auto 40px; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 10px; background: var(--accent); color: #fff; text-decoration: none; font-size: 15px; font-weight: 700; transition: opacity .2s; }
+    .btn-primary:hover { opacity: .85; }
+    .hero-note { font-size: 12px; color: #444; margin-top: 14px; }
+
+    section { max-width: 860px; margin: 0 auto; padding: 60px 24px; }
+    h2 { font-size: clamp(22px, 3vw, 36px); font-weight: 700; letter-spacing: -0.5px; margin-bottom: 16px; }
+    h2 span { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .section-sub { color: var(--muted); font-size: 15px; margin-bottom: 40px; }
+
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+    .card-icon { font-size: 28px; margin-bottom: 14px; }
+    .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+    .card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .feature { display: flex; gap: 14px; align-items: flex-start; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+    .feature-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+    .feature h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .feature p { font-size: 13px; color: var(--muted); }
+
+    .steps { display: flex; flex-direction: column; gap: 20px; }
+    .step { display: flex; gap: 20px; align-items: flex-start; }
+    .step-num { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; color: #fff; }
+    .step-body h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .step-body p { font-size: 13px; color: var(--muted); }
+
+    .audience-list { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .audience-list li { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; font-size: 14px; display: flex; align-items: center; gap: 10px; }
+    .audience-list li::before { content: '✓'; color: var(--green); font-weight: 700; }
+
+    .cta-section { text-align: center; padding: 80px 24px; }
+    .cta-section h2 { margin-bottom: 16px; }
+    .cta-section p { color: var(--muted); margin-bottom: 36px; font-size: 15px; }
+
+    .faq { display: flex; flex-direction: column; gap: 16px; }
+    .faq-item { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; }
+    .faq-item h3 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+    .faq-item p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+    footer { border-top: 1px solid var(--border); padding: 32px 24px; text-align: center; font-size: 12px; color: var(--muted); }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+
+    @media (max-width: 600px) {
+      nav { padding: 14px 20px; }
+      .step { flex-direction: column; gap: 10px; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Velnot",
+    "applicationCategory": "ProductivityApplication",
+    "operatingSystem": "Windows",
+    "offers": {
+      "@type": "Offer",
+      "price": "4.99",
+      "priceCurrency": "USD",
+      "priceValidUntil": "2027-01-01"
+    },
+    "description": "Private meeting recorder for Windows. No bot, no cloud. AI meeting notes that never leave your computer.",
+    "url": "https://velnot.com"
+  }
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="logo">
+      <div class="logo-icon">🎙</div>
+      Velnot
+    </a>
+    <a href="/" class="nav-cta">Download Free</a>
+  </nav>
+
+  <div class="hero">
+    <div class="badge">🔒 100% local · No cloud · No bot</div>
+    <h1>The <span>Private Meeting Recorder</span><br>That Stays on Your Computer</h1>
+    <p class="hero-sub">No bot joins your call. Your audio never leaves your machine. Local AI transcription and summaries for Windows — GDPR-friendly by design.</p>
+    <a href="/" class="btn-primary">⬇ Download Velnot — Free Trial</a>
+    <p class="hero-note">Windows 10/11 · No account required · 5 sessions free</p>
+  </div>
+
+  <section>
+    <h2>Why <span>Privacy Matters</span> for Meeting Recorders</h2>
+    <p class="section-sub">Most meeting tools upload your audio to their servers. Here's why that's a problem.</p>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">☁️</div>
+        <h3>Cloud Tools Are a Liability</h3>
+        <p>Every meeting you record with Otter.ai, Fireflies, or Fathom is stored on their servers. Your confidential client calls, internal strategy, and sensitive discussions are in someone else's hands.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🤖</div>
+        <h3>Bots Create Friction</h3>
+        <p>Bot-based tools send a visible participant to your meetings. Clients notice. It triggers consent questions. In some industries and institutions, it's outright prohibited.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚖️</div>
+        <h3>GDPR & Compliance Risk</h3>
+        <p>Sending meeting audio to US-based servers raises GDPR concerns for EU organizations. Local processing eliminates the data transfer problem entirely.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>How Velnot Keeps <span>Your Meetings Private</span></h2>
+    <p class="section-sub">Privacy built into the architecture — not bolted on as a feature.</p>
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="feature-icon">💾</div>
+        <div>
+          <h3>Local storage only</h3>
+          <p>Recordings are saved on your computer. Never transmitted. Never backed up to any server without your explicit action.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🚫</div>
+        <div>
+          <h3>No bot participant</h3>
+          <p>Velnot records system audio directly. No bot joins your call. Other participants see nothing unusual.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔑</div>
+        <div>
+          <h3>Your API key, your data</h3>
+          <p>AI transcription uses your own OpenAI API key. Your audio goes to OpenAI — not to Velnot's servers.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📡</div>
+        <div>
+          <h3>Works offline</h3>
+          <p>Recording works with no internet connection. AI summary is optional — skip it for fully offline operation.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🗑️</div>
+        <div>
+          <h3>You control deletion</h3>
+          <p>Delete any recording at any time. No copies on remote servers. No recovery by third parties.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🏢</div>
+        <div>
+          <h3>IT policy friendly</h3>
+          <p>No cloud dependency means no new data processing agreements. Easier to clear with IT and compliance teams.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>How <span>Velnot Works</span></h2>
+    <p class="section-sub">Simple by design. Private by architecture.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Start recording — no bot, no setup</h3>
+          <p>Click record before your meeting starts. Velnot captures system audio silently in the background. Works with Zoom, Teams, Meet, and any other platform.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Audio stays on your computer</h3>
+          <p>Everything is saved locally on your machine. Nothing is transmitted, uploaded, or synced to any server. You own your recordings completely.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Get your AI summary in seconds</h3>
+          <p>After the meeting, click Summarize. Velnot sends the transcript text — not audio — to OpenAI and returns a clean summary, action items, and key decisions. Fully optional.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Who Needs a <span>Private Meeting Recorder</span></h2>
+    <p class="section-sub">Privacy isn't a niche concern — it's a professional requirement for many.</p>
+    <ul class="audience-list">
+      <li>Legal professionals</li>
+      <li>Healthcare workers</li>
+      <li>Financial advisors</li>
+      <li>HR & recruiters</li>
+      <li>Journalists & researchers</li>
+      <li>Therapists & coaches</li>
+      <li>Freelancers & consultants</li>
+      <li>Government contractors</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Frequently Asked <span>Questions</span></h2>
+    <p class="section-sub">Privacy-specific questions about Velnot.</p>
+    <div class="faq">
+      <div class="faq-item">
+        <h3>Is Velnot GDPR compliant?</h3>
+        <p>Velnot stores all recordings locally on your device. No audio is transferred to Velnot's servers. When using AI summarization with your own OpenAI API key, transcript text is sent to OpenAI — you should review OpenAI's data processing agreement for your use case. For fully offline operation, skip the AI summary step.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Where is my audio stored?</h3>
+        <p>On your computer only. Velnot saves recordings locally. They never leave your machine unless you explicitly export them. You can delete them at any time.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Does Velnot work without internet?</h3>
+        <p>Yes. Recording and local storage work completely offline. The AI transcription and summary steps require an internet connection to reach OpenAI's API, but these are optional.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Can my IT department approve this?</h3>
+        <p>Velnot has no cloud backend to approve. The app runs entirely locally. The only external connection is to OpenAI's API for optional AI features — using your own API key. This makes it significantly easier to clear with IT and compliance teams compared to cloud-based tools.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Will other meeting participants know I'm recording?</h3>
+        <p>No bot joins the call, so participants see nothing unusual on their end. Always check your local laws regarding consent for recording calls before using any meeting recorder.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta-section">
+    <h2>Start Recording <span>Privately Today</span></h2>
+    <p>Try Velnot free — 5 sessions, no credit card required.</p>
+    <a href="/" class="btn-primary">⬇ Download Velnot for Windows</a>
+    <p class="hero-note" style="margin-top:14px;">Windows 10/11 · Free trial · $4.99/month after</p>
+  </div>
+
+  <footer>
+    <p>© 2026 Velnot · <a href="/privacy.html">Privacy Policy</a> · <a href="/terms.html">Terms</a> · <a href="/">Home</a></p>
+  </footer>
+
+</body>
+</html>
