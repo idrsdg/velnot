@@ -1,7 +1,7 @@
 {
   "name": "velnot",
   "productName": "Velnot",
-  "version": "1.0.58",
+  "version": "1.0.59",
   "description": "Toplantılarını gizlice kaydet, AI ile özetle",
   "repository": "https://github.com/idrsdg/velnot",
   "main": ".vite/build/main.js",
