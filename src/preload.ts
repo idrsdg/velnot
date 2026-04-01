@@ -95,12 +95,6 @@ contextBridge.exposeInMainWorld('api', {
     return () => ipcRenderer.removeListener('menu:navigate', handler);
   },
 
-  onRecordingHotkey: (cb: () => void) => {
-    const handler = (_: Electron.IpcRendererEvent) => cb();
-    ipcRenderer.on('recording:toggleHotkey', handler);
-    return () => ipcRenderer.removeListener('recording:toggleHotkey', handler);
-  },
-
   // ── Auth (Magic Link) ─────────────────────────────────────
   requestMagicLink: (email: string) =>
     ipcRenderer.invoke('auth:requestMagicLink', email),

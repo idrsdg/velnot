@@ -158,10 +158,21 @@ export default function HistoryView() {
 
   const handleSpeakerNameBlur = async () => {
     if (!selectedSession) return;
+
+    // Rebuild transcript from utterances with renamed speaker labels
+    let newTranscript = editTranscript;
+    if (utterances.length > 0) {
+      newTranscript = utterances.map(u => {
+        const name = speakerMap[u.speaker]?.trim() || `Speaker ${u.speaker}`;
+        return `${name}: ${u.text}`;
+      }).join('\n');
+      setEditTranscript(newTranscript);
+    }
+
     const updatedSession: SessionData = {
       ...selectedSession,
       title: editTitle,
-      transcript: editTranscript,
+      transcript: newTranscript,
       speaker_map: JSON.stringify(speakerMap),
     };
     await window.api.updateSession(updatedSession);
@@ -296,11 +307,6 @@ export default function HistoryView() {
         const speakers = extractSpeakers(utterances);
         const audioSrc = `velnot://${selectedSession.id}`;
 
-        // Display transcript with speaker name mapping applied
-        const displayTranscript = Object.keys(speakerMap).length > 0
-          ? applyMap(editTranscript, speakerMap)
-          : editTranscript;
-
         return (
           <div style={{ flex: 1, overflowY: 'auto', padding: '28px', display: 'flex', flexDirection: 'column' }}>
             {/* Editable title */}
@@ -411,9 +417,10 @@ export default function HistoryView() {
             {/* Editable transcript */}
             <Section title={t.history.transcript}>
               <textarea
-                value={speakers.length > 0 ? displayTranscript : editTranscript}
-                onChange={e => { setEditTranscript(speakers.length > 0 ? e.target.value : e.target.value); setSaved(false); }}
+                value={editTranscript}
+                onChange={e => { setEditTranscript(e.target.value); setSaved(false); }}
                 onBlur={handleTranscriptBlur}
+                placeholder="Transkript burada görünecek..."
                 style={{
                   width: '100%', minHeight: '200px', fontSize: '13px', lineHeight: '1.75',
                   color: '#aaa', background: 'transparent', border: 'none',

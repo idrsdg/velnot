@@ -70,10 +70,9 @@ function AppInner() {
             width: '26px', height: '26px', borderRadius: '7px',
             background: 'linear-gradient(135deg, #f97316, #ec4899)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: '13px',
           }}>
-            <svg viewBox="0 0 32 32" width="16" height="16" fill="none">
-              <polyline points="4,7 16,23 28,7" stroke="white" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            🎙
           </div>
         </div>
         {/* App name + draggable area */}

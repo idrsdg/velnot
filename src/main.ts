@@ -210,7 +210,6 @@ app.on('activate', () => {
 app.on('before-quit', () => {
   (app as any).isQuitting = true;
   if (warmupTimer) clearInterval(warmupTimer);
-  globalShortcut.unregisterAll();
   // Force exit if normal quit hangs (pending fetch/IPC keeps process alive)
   setTimeout(() => process.exit(0), 2000).unref();
 });

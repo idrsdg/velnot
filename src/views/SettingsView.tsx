@@ -69,10 +69,10 @@ export default function SettingsView({ onSaved, licenseStatus, onGetLicense }: {
       </SettingCard>
 
       {/* Backup / Restore */}
-      <BackupSection />
+      <BackupSection t={t} />
 
       {/* Windows startup */}
-      <SettingCard title="Windows ile Başlat" desc="Bilgisayar açıldığında Velnot otomatik başlasın. Toplantıları kaçırmazsın.">
+      <SettingCard title={t.settings.startup?.title ?? 'Launch at Startup'} desc={t.settings.startup?.desc ?? 'Automatically start Velnot when your computer boots.'}>
         <div
           onClick={() => {
             const next = !startupEnabled;
@@ -183,9 +183,9 @@ function UsageCard({ usage, t, onGetLicense, licenseStatus }: { usage: UsageInfo
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
         <div style={{ fontSize: '14px', fontWeight: 600, color: '#e5e5e5' }}>{t.settings.usage?.title ?? 'Kullanım'}</div>
         {isUnlimited
-          ? <span style={{ fontSize: '12px', color: '#22c55e', fontWeight: 600 }}>∞ Sınırsız</span>
+          ? <span style={{ fontSize: '12px', color: '#22c55e', fontWeight: 600 }}>{t.settings.usage?.unlimited ?? '∞ Unlimited'}</span>
           : <span style={{ fontSize: '12px', color: isDanger ? '#f87171' : '#888' }}>
-              {usage.remaining} / {usage.limit} kayıt kaldı
+              {usage.remaining} / {usage.limit} {t.settings.usage?.recordsLeft ?? 'remaining'}
             </span>
         }
       </div>
@@ -196,7 +196,7 @@ function UsageCard({ usage, t, onGetLicense, licenseStatus }: { usage: UsageInfo
             <div style={{ height: '100%', width: `${pct}%`, background: barColor, borderRadius: '3px', transition: 'width 0.4s' }} />
           </div>
           <div style={{ fontSize: '12px', color: '#555', marginBottom: showUpgrade ? '12px' : '0' }}>
-            {usage.used} kayıt kullanıldı
+            {usage.used} {t.settings.usage?.recordsUsed ?? 'sessions used'}
           </div>
         </>
       )}
@@ -284,16 +284,24 @@ function PlanCard({ status, t, onGetLicense }: { status: { type: string; session
       )}
 
       {isActive && (
-        <button
-          onClick={() => window.api.openExternal(BILLING_URL)}
-          style={{
-            padding: '7px 16px', borderRadius: '8px', border: '1px solid #1a3a1a',
-            background: 'transparent', color: '#86efac', fontSize: '12px', fontWeight: 600,
-            cursor: 'pointer',
-          }}
-        >
-          {t.settings.plan.manage}
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+          <button
+            onClick={() => window.api.openExternal(BILLING_URL)}
+            style={{
+              padding: '7px 16px', borderRadius: '8px', border: '1px solid #1a3a1a',
+              background: 'transparent', color: '#86efac', fontSize: '12px', fontWeight: 600,
+              cursor: 'pointer',
+            }}
+          >
+            {t.settings.plan.manage}
+          </button>
+          <button
+            onClick={onGetLicense}
+            style={{ background: 'none', border: 'none', color: '#555', fontSize: '11px', cursor: 'pointer', textDecoration: 'underline', padding: 0 }}
+          >
+            {t.settings.plan.changeKey ?? 'Enter license key'}
+          </button>
+        </div>
       )}
     </div>
   );
@@ -515,7 +523,7 @@ function LangDropdown({ value, onChange }: { value: string; onChange: (v: string
   );
 }
 
-function BackupSection() {
+function BackupSection({ t }: { t: any }) {
   const [exportStatus, setExportStatus] = useState<'idle' | 'busy' | 'done' | 'error'>('idle');
   const [importStatus, setImportStatus] = useState<'idle' | 'busy' | 'done' | 'error'>('idle');
   const [exportMsg, setExportMsg] = useState('');
@@ -546,7 +554,7 @@ function BackupSection() {
       if (count === -1) {
         setImportStatus('idle'); // cancelled
       } else {
-        setImportMsg(`${count} oturum geri yüklendi. Uygulamayı yeniden başlatın.`);
+        setImportMsg(`${count} ${t.settings.backup?.importedSuffix ?? 'sessions restored. Restart the app.'}`);
         setImportStatus('done');
       }
     } catch (e: any) {
@@ -557,9 +565,9 @@ function BackupSection() {
 
   return (
     <div style={{ marginBottom: '20px', padding: '18px 20px', background: '#150f09', borderRadius: '12px', border: '1px solid #222' }}>
-      <div style={{ fontSize: '14px', fontWeight: 600, color: '#e5e5e5', marginBottom: '4px' }}>Yedekle &amp; Geri Yükle</div>
+      <div style={{ fontSize: '14px', fontWeight: 600, color: '#e5e5e5', marginBottom: '4px' }}>{t.settings.backup?.title ?? 'Backup & Restore'}</div>
       <div style={{ fontSize: '12px', color: '#555', marginBottom: '14px' }}>
-        Tüm oturumlarını tek bir dosyaya yedekle veya eski yedekten geri yükle.
+        {t.settings.backup?.desc ?? 'Export all sessions to a single file or restore from a previous backup.'}
       </div>
       <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
         <button
@@ -573,7 +581,7 @@ function BackupSection() {
             opacity: exportStatus === 'busy' ? 0.6 : 1,
           }}
         >
-          {exportStatus === 'busy' ? '...' : exportStatus === 'done' ? '✅ Yedeklendi' : '⬇ Yedek Al'}
+          {exportStatus === 'busy' ? '...' : exportStatus === 'done' ? (t.settings.backup?.exported ?? '✅ Exported') : (t.settings.backup?.exportBtn ?? '⬇ Export')}
         </button>
         <button
           onClick={doImport}

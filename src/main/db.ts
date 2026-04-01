@@ -63,7 +63,6 @@ export function insertSession(session: NewSession): Session {
     path.join(getSessionsDir(), `${id}.json`),
     JSON.stringify(s),
   );
-  invalidateCache();
   return s;
 }
 
@@ -113,7 +112,6 @@ export function updateSession(session: Session): Session {
     path.join(getSessionsDir(), `${session.id}.json`),
     JSON.stringify(session),
   );
-  invalidateCache();
   return session;
 }
 
@@ -124,5 +122,4 @@ export function deleteSession(id: string): void {
   try {
     fs.unlinkSync(path.join(getSessionsDir(), `${id}.webm`));
   } catch { /* ses dosyası yoksa sessiz geç */ }
-  invalidateCache();
 }

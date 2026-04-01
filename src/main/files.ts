@@ -1,9 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-import zlib from 'node:zlib';
 import type { BrowserWindow } from 'electron';
-import { dialog } from 'electron';
 
 export interface NoteData {
   title: string;
@@ -148,80 +146,4 @@ function escapeHtml(str: string): string {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
-}
-
-// ── Backup / Restore ──────────────────────────────────────────────────────────
-
-interface BackupData {
-  version: 1;
-  created_at: number;
-  sessions: object[];
-  audio: Record<string, string>; // sessionId → base64 webm
-}
-
-export async function exportBackup(sessionsDir: string): Promise<string> {
-  const sessions: object[] = [];
-  const audio: Record<string, string> = {};
-
-  const files = fs.readdirSync(sessionsDir);
-  for (const f of files) {
-    if (f.endsWith('.json')) {
-      try {
-        sessions.push(JSON.parse(fs.readFileSync(path.join(sessionsDir, f), 'utf8')));
-      } catch { /* skip */ }
-    } else if (f.endsWith('.webm')) {
-      try {
-        const data = fs.readFileSync(path.join(sessionsDir, f));
-        audio[f.replace('.webm', '')] = data.toString('base64');
-      } catch { /* skip */ }
-    }
-  }
-
-  const backup: BackupData = { version: 1, created_at: Date.now(), sessions, audio };
-  const compressed = zlib.gzipSync(JSON.stringify(backup));
-
-  const dateStr = new Date().toISOString().slice(0, 10);
-  const defaultPath = path.join(os.homedir(), 'Documents', `velnot-backup-${dateStr}.velnotbackup`);
-
-  const { filePath } = await dialog.showSaveDialog({
-    defaultPath,
-    filters: [{ name: 'Velnot Backup', extensions: ['velnotbackup'] }],
-    title: 'Yedek Dosyasını Kaydet',
-  });
-
-  if (!filePath) return '';
-  fs.writeFileSync(filePath, compressed);
-  return filePath;
-}
-
-export async function importBackup(sessionsDir: string): Promise<number> {
-  const { filePaths } = await dialog.showOpenDialog({
-    filters: [{ name: 'Velnot Backup', extensions: ['velnotbackup'] }],
-    title: 'Yedek Dosyasını Seç',
-    properties: ['openFile'],
-  });
-
-  if (!filePaths || filePaths.length === 0) return -1; // cancelled
-
-  const compressed = fs.readFileSync(filePaths[0]);
-  const json = zlib.gunzipSync(compressed).toString('utf8');
-  const backup = JSON.parse(json) as BackupData;
-
-  if (backup.version !== 1) throw new Error('Desteklenmeyen yedek versiyonu');
-
-  fs.mkdirSync(sessionsDir, { recursive: true });
-
-  let restored = 0;
-  for (const session of backup.sessions) {
-    const s = session as { id?: string };
-    if (!s.id) continue;
-    fs.writeFileSync(path.join(sessionsDir, `${s.id}.json`), JSON.stringify(session));
-    restored++;
-  }
-
-  for (const [sessionId, base64] of Object.entries(backup.audio)) {
-    fs.writeFileSync(path.join(sessionsDir, `${sessionId}.webm`), Buffer.from(base64, 'base64'));
-  }
-
-  return restored;
 }

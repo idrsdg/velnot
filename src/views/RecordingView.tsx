@@ -40,7 +40,6 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
   const [exportingFormat, setExportingFormat] = useState<ExportFormat | null>(null);
   const [exportPath, setExportPath] = useState('');
   const [copyMenu, setCopyMenu] = useState<{ x: number; y: number; source: 'preview' | 'editor'; allText: string } | null>(null);
-  const [isPaused, setIsPaused] = useState(false);
 
   const timerRef    = useRef<ReturnType<typeof setInterval> | null>(null);
   const liveTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -66,7 +65,6 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
   const isSessionFinalizedRef = useRef(false);
   const previewTranscriptRef = useRef<HTMLTextAreaElement | null>(null);
   const editorTranscriptRef = useRef<HTMLTextAreaElement | null>(null);
-  const analyserRef = useRef<AnalyserNode | null>(null);
 
   useEffect(() => {
     window.api.getSetting('recording_consent_given').then(val => {
@@ -75,20 +73,6 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
     window.api.getSetting('language').then(val => {
       if (val) setRecordingLang(val);
     });
-  }, []);
-
-  // Latest handler ref — always points to current closure (avoids stale state)
-  const hotkeyHandlerRef = useRef<() => void>(() => {});
-  useEffect(() => {
-    hotkeyHandlerRef.current = () => {
-      if (stateRef.current === 'idle') handleStartClick();
-      else if (stateRef.current === 'recording') stopRecording();
-    };
-  });
-
-  useEffect(() => {
-    const unsub = (window.api as any).onRecordingHotkey?.(() => hotkeyHandlerRef.current());
-    return () => unsub?.();
   }, []);
 
   useEffect(() => {
@@ -286,7 +270,6 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
       const dest = ctx.createMediaStreamDestination();
       const analyser = ctx.createAnalyser();
       analyser.fftSize = 64;
-      analyserRef.current = analyser;
       const micSrc = ctx.createMediaStreamSource(micStream);
       micSrc.connect(analyser);
       micSrc.connect(dest);
@@ -358,54 +341,6 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
     } catch {
       // Speaker timing enrichment is best-effort.
     }
-  };
-
-  const pauseRecording = () => {
-    recorderRef.current?.pause();
-    timerRef.current && clearInterval(timerRef.current);
-    timerRef.current = null;
-    liveTimerRef.current && clearInterval(liveTimerRef.current);
-    liveTimerRef.current = null;
-    rafRef.current && cancelAnimationFrame(rafRef.current);
-    rafRef.current = null;
-    setBars(Array(20).fill(4));
-    setIsPaused(true);
-  };
-
-  const resumeRecording = () => {
-    recorderRef.current?.resume();
-    timerRef.current = setInterval(() => setElapsed(s => s + 1), 1000);
-
-    const lang = recordingLang || 'auto';
-    liveTimerRef.current = setInterval(async () => {
-      const from = lastLiveChunkRef.current;
-      const newChunks = chunksRef.current.slice(from);
-      if (newChunks.length === 0) return;
-      lastLiveChunkRef.current = chunksRef.current.length;
-      try {
-        const snapshot = new Blob(newChunks, { type: 'audio/webm' });
-        const buf = await snapshot.arrayBuffer();
-        const partial = await window.api.transcribeChunk(buf, lang);
-        if (partial) setLiveTranscript(prev => prev ? `${prev} ${partial}` : partial);
-      } catch { /* silent */ }
-    }, 10000);
-
-    if (analyserRef.current) {
-      const analyser = analyserRef.current;
-      const dataArray = new Uint8Array(analyser.frequencyBinCount);
-      const animate = () => {
-        analyser.getByteFrequencyData(dataArray);
-        const newBars = Array.from({ length: 20 }, (_, i) => {
-          const v = dataArray[Math.floor(i * dataArray.length / 20)] / 255;
-          return Math.max(4, Math.round(v * 40));
-        });
-        setBars(newBars);
-        rafRef.current = requestAnimationFrame(animate);
-      };
-      animate();
-    }
-
-    setIsPaused(false);
   };
 
   const stopRecording = async () => {
@@ -663,7 +598,6 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
     isSessionFinalizedRef.current = false;
     latestDiarizationRef.current = null;
     setIsSessionFinalized(false);
-    setIsPaused(false);
     setSaveBusy(false);
     setExportingFormat(null);
     setExportPath('');
@@ -791,7 +725,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
       {!isExpired && (
         <div style={{
           background: '#150f09', borderRadius: '14px', padding: '28px',
-          border: `1px solid ${state === 'recording' ? (isPaused ? '#facc15' : '#f97316') : '#222'}`,
+          border: `1px solid ${state === 'recording' ? '#f97316' : '#222'}`,
           transition: 'border-color 0.3s',
         }}>
           {state === 'recording' && (
@@ -807,13 +741,13 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
           {/* Waveform */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '3px', height: '44px', marginBottom: '20px' }}>
             {bars.map((h, i) => (
-              <div key={i} style={{ width: '3px', height: `${h}px`, borderRadius: '2px', background: state === 'recording' ? (isPaused ? '#facc15' : '#f97316') : '#2a2a2a' }} />
+              <div key={i} style={{ width: '3px', height: `${h}px`, borderRadius: '2px', background: state === 'recording' ? '#f97316' : '#2a2a2a' }} />
             ))}
           </div>
 
           {/* Timer */}
           <div style={{ textAlign: 'center', marginBottom: '22px' }}>
-            <div style={{ fontSize: '38px', fontWeight: 700, fontVariantNumeric: 'tabular-nums', color: state === 'recording' ? (isPaused ? '#fde68a' : '#fdba74') : '#333', letterSpacing: '-1px' }}>
+            <div style={{ fontSize: '38px', fontWeight: 700, fontVariantNumeric: 'tabular-nums', color: state === 'recording' ? '#fdba74' : '#333', letterSpacing: '-1px' }}>
               {fmt(elapsed)}
             </div>
             <div style={{ fontSize: '12px', color: '#444', marginTop: '6px' }}>
@@ -835,18 +769,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
           {/* Buttons */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
             {state === 'idle' && <Btn color="#f97316" onClick={handleStartClick}>{t.record.start}</Btn>}
-            {state === 'recording' && !isPaused && (
-              <>
-                <Btn color="#f59e0b" onClick={pauseRecording}>⏸ {(t.record as any).pause ?? 'Duraklat'}</Btn>
-                <Btn color="#ef4444" onClick={stopRecording}>{t.record.stop}</Btn>
-              </>
-            )}
-            {state === 'recording' && isPaused && (
-              <>
-                <Btn color="#10b981" onClick={resumeRecording}>▶ {(t.record as any).resume ?? 'Devam Et'}</Btn>
-                <Btn color="#ef4444" onClick={stopRecording}>{t.record.stop}</Btn>
-              </>
-            )}
+            {state === 'recording' && <Btn color="#ef4444" onClick={stopRecording}>{t.record.stop}</Btn>}
             {isProcessing && <Btn color="#333" onClick={() => {}} disabled>{t.record.processing}</Btn>}
             {(state === 'done' || (state === 'transcribed' && error)) && (
               <Btn color="#374151" onClick={() => reset()}>{t.record.newRecord}</Btn>

@@ -147,15 +147,6 @@ export function registerIpcHandlers() {
     setSetting('account_expires', '');
   });
 
-  // ── Windows Startup ───────────────────────────────────────
-  ipcMain.handle('app:getStartup', () => {
-    return app.getLoginItemSettings().openAtLogin;
-  });
-
-  ipcMain.handle('app:setStartup', (_e, enabled: boolean) => {
-    app.setLoginItemSettings({ openAtLogin: enabled });
-  });
-
   // ── Backup / Restore ──────────────────────────────────────
   ipcMain.handle('db:exportBackup', async () => {
     return exportBackup(getSessionsDir());

@@ -110,10 +110,10 @@ export async function getUsage(): Promise<{ used: number; limit: number; remaini
     if (licenseKey) params.set('license_key', licenseKey);
 
     const res = await fetch(`${BACKEND_URL}/usage?${params}`);
-    if (!res.ok) return { used: 0, limit: -1, remaining: 999 };
+    if (!res.ok) return { used: 0, limit: 0, remaining: 0 };
     return await res.json() as { used: number; limit: number; remaining: number };
   } catch {
-    return { used: 0, limit: -1, remaining: 999 };
+    return { used: 0, limit: 0, remaining: 0 };
   }
 }
 
