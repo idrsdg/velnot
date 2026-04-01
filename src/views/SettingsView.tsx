@@ -594,7 +594,7 @@ function BackupSection({ t }: { t: any }) {
             opacity: importStatus === 'busy' ? 0.6 : 1,
           }}
         >
-          {importStatus === 'busy' ? '...' : importStatus === 'done' ? '✅ Geri Yüklendi' : '⬆ Geri Yükle'}
+          {importStatus === 'busy' ? '...' : importStatus === 'done' ? (t.settings.backup?.imported ?? '✅ Restored') : (t.settings.backup?.importBtn ?? '⬆ Restore')}
         </button>
       </div>
       {exportMsg && (
