@@ -1,4 +1,4 @@
-import { app, BrowserWindow, session, Tray, Menu, nativeImage, protocol, net, globalShortcut } from 'electron';
+import { app, BrowserWindow, session, Tray, Menu, nativeImage, protocol, net, globalShortcut, desktopCapturer } from 'electron';
 import path from 'node:path';
 import fs from 'node:fs';
 import started from 'electron-squirrel-startup';
@@ -170,6 +170,13 @@ app.on('ready', async () => {
 
   session.defaultSession.setPermissionRequestHandler((_wc, permission, callback) => {
     callback(permission === 'media' || permission === 'display-capture');
+  });
+
+  // Handle getDisplayMedia at main process level — suppresses Chromium sharing banner
+  session.defaultSession.setDisplayMediaRequestHandler((_request, callback) => {
+    desktopCapturer.getSources({ types: ['screen'] }).then(sources => {
+      callback({ video: sources[0], audio: 'loopback' as any });
+    }).catch(() => callback({}));
   });
   registerIpcHandlers();
   const uiLang = getSetting('ui_language') || 'en';
