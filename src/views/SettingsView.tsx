@@ -297,7 +297,11 @@ function PlanCard({ status, t, onGetLicense }: { status: { type: string; session
           </button>
           <button
             onClick={onGetLicense}
-            style={{ background: 'none', border: 'none', color: '#555', fontSize: '11px', cursor: 'pointer', textDecoration: 'underline', padding: 0 }}
+            style={{
+              padding: '7px 16px', borderRadius: '8px', border: '1px solid #2a2a2a',
+              background: '#1a1a1a', color: '#aaa', fontSize: '12px', fontWeight: 600,
+              cursor: 'pointer',
+            }}
           >
             {t.settings.plan.changeKey ?? 'Enter license key'}
           </button>
