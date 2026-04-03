@@ -256,13 +256,52 @@
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--text); }
 
-    @media (max-width: 640px) {
-      nav { padding: 14px 20px; }
+    @media (max-width: 768px) {
+      /* Nav */
+      nav { padding: 12px 16px; }
       .nav-links { display: none; }
-      .privacy-box { flex-direction: column; padding: 28px; }
+
+      /* Hero */
+      .hero { padding: 100px 16px 60px; }
+      .hero-btns { flex-direction: column; align-items: center; }
+      .btn-primary, .btn-secondary { width: 100%; max-width: 320px; justify-content: center; }
+
+      /* App preview */
+      .app-sidebar { display: none; }
+      .app-preview { margin: 0 8px; }
+      .app-content { padding: 16px; }
       .app-results { grid-template-columns: 1fr; }
+
+      /* Stats */
+      .stats-bar { padding: 24px 16px; }
       .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+
+      /* Sections */
+      section { padding: 60px 16px; }
+      .section-sub { font-size: 15px; }
+
+      /* Comparison table — horizontal scroll */
+      .compare-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; font-size: 13px; }
+      .compare-table th, .compare-table td { padding: 10px 14px; white-space: nowrap; }
+      .compare-table th:first-child { width: 140px; }
+
+      /* Pricing */
+      .pricing-grid { max-width: 100%; grid-template-columns: 1fr; }
+
+      /* Privacy */
+      .privacy-box { flex-direction: column; padding: 24px; gap: 20px; }
+      .privacy-icon { font-size: 36px; }
+
+      /* Email */
+      .email-box { padding: 28px 20px; }
       .email-form { flex-direction: column; }
+      .email-input, .email-submit { width: 100%; }
+
+      /* Footer */
+      footer { flex-direction: column; text-align: center; padding: 24px 16px; gap: 16px; }
+
+      /* Download modal */
+      .dl-modal { padding: 28px 20px; }
     }
 
     /* Lang selector */
