@@ -75,8 +75,8 @@ const createWindow = () => {
     backgroundColor: '#0f0f0f',
     titleBarStyle: 'hidden',
     titleBarOverlay: {
-      color: '#150f09',
-      symbolColor: '#6a5040',
+      color: '#120f0b',
+      symbolColor: '#71717a',
       height: 38,
     },
     icon: getIconPath(),
