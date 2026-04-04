@@ -208,7 +208,7 @@ export default function HistoryView() {
           style={{
             position: 'fixed', zIndex: 1000,
             top: contextMenu.y, left: contextMenu.x,
-            background: '#1a1a1a', border: '1px solid #2a2a2a',
+            background: '#18181b', border: '1px solid #27272a',
             borderRadius: '8px', padding: '4px',
             boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
             minWidth: '140px',
@@ -220,7 +220,7 @@ export default function HistoryView() {
           >
             Aç
           </button>
-          <div style={{ height: '1px', background: '#2a2a2a', margin: '2px 0' }} />
+          <div style={{ height: '1px', background: '#27272a', margin: '2px 0' }} />
           <button
             onClick={() => { handleDelete(contextMenu.session.id); setContextMenu(null); }}
             style={{ ...ctxMenuItemStyle, color: '#ef4444' }}
@@ -235,7 +235,7 @@ export default function HistoryView() {
         borderRight: selectedSession ? '1px solid #222' : 'none',
         display: 'flex', flexDirection: 'column', flexShrink: 0,
       }}>
-        <div style={{ padding: '28px 24px 16px', borderBottom: '1px solid #1a1a1a' }}>
+        <div style={{ padding: '28px 24px 16px', borderBottom: '1px solid #27272a' }}>
           <h1 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>{t.history.title}</h1>
           <input
             value={search}
@@ -243,7 +243,7 @@ export default function HistoryView() {
             placeholder={t.history.search}
             style={{
               width: '100%', padding: '8px 12px', borderRadius: '8px',
-              background: '#1a1a1a', border: '1px solid #2a2a2a',
+              background: '#18181b', border: '1px solid #27272a',
               color: '#f0f0f0', fontSize: '13px', outline: 'none',
             }}
           />
@@ -270,14 +270,14 @@ export default function HistoryView() {
                   setContextMenu({ x: e.clientX, y: e.clientY, session: s });
                 }}
                 style={{
-                  padding: '16px 24px', borderBottom: '1px solid #1a1a1a',
+                  padding: '16px 24px', borderBottom: '1px solid #27272a',
                   cursor: 'pointer',
-                  background: selected === s.id ? '#1a0e05' : 'transparent',
-                  borderLeft: selected === s.id ? '3px solid #f97316' : '3px solid transparent',
+                  background: selected === s.id ? 'rgba(99,102,241,0.08)' : 'transparent',
+                  borderLeft: selected === s.id ? '3px solid #6366f1' : '3px solid transparent',
                   transition: 'all 0.15s',
                 }}
               >
-                <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '4px', color: selected === s.id ? '#fdba74' : '#e5e5e5' }}>
+                <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '4px', color: selected === s.id ? '#a5b4fc' : '#e5e5e5' }}>
                   {s.title || t.history.untitled}
                 </div>
                 <div style={{ fontSize: '12px', color: '#444', display: 'flex', gap: '8px' }}>
@@ -317,7 +317,7 @@ export default function HistoryView() {
                 onBlur={handleTitleBlur}
                 style={{
                   width: '100%', fontSize: '18px', fontWeight: 700,
-                  background: 'transparent', border: 'none', borderBottom: '1px solid #2a2a2a',
+                  background: 'transparent', border: 'none', borderBottom: '1px solid #27272a',
                   color: '#f0f0f0', outline: 'none', padding: '4px 0',
                 }}
               />
@@ -332,7 +332,7 @@ export default function HistoryView() {
                 ref={audioRef}
                 src={audioSrc}
                 controls
-                style={{ width: '100%', height: '32px', accentColor: '#f97316' }}
+                style={{ width: '100%', height: '32px', accentColor: '#6366f1' }}
                 onError={() => {/* silently hide if no audio */}}
               />
             </Section>
@@ -347,11 +347,11 @@ export default function HistoryView() {
                       <div
                         key={i}
                         onClick={() => { if (audioRef.current) audioRef.current.currentTime = u.start / 1000; }}
-                        style={{ fontSize: '12px', color: '#aaa', padding: '5px 0', cursor: 'pointer', lineHeight: '1.5', borderBottom: '1px solid #1a1a1a', display: 'flex', gap: '8px' }}
-                        onMouseEnter={e => (e.currentTarget.style.color = '#fdba74')}
+                        style={{ fontSize: '12px', color: '#aaa', padding: '5px 0', cursor: 'pointer', lineHeight: '1.5', borderBottom: '1px solid #27272a', display: 'flex', gap: '8px' }}
+                        onMouseEnter={e => (e.currentTarget.style.color = '#a5b4fc')}
                         onMouseLeave={e => (e.currentTarget.style.color = '#aaa')}
                       >
-                        <span style={{ color: '#f97316', fontWeight: 600, flexShrink: 0 }}>{displayName}:</span>
+                        <span style={{ color: '#6366f1', fontWeight: 600, flexShrink: 0 }}>{displayName}:</span>
                         <span>{u.text}</span>
                       </div>
                     );
@@ -366,7 +366,7 @@ export default function HistoryView() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {speakers.map(code => (
                     <div key={code} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <span style={{ fontSize: '12px', color: '#f97316', fontWeight: 600, minWidth: '80px' }}>
+                      <span style={{ fontSize: '12px', color: '#6366f1', fontWeight: 600, minWidth: '80px' }}>
                         {(t.history.speakerLabel ?? ((c: string) => `Speaker ${c}`))(code)}
                       </span>
                       <input
@@ -376,7 +376,7 @@ export default function HistoryView() {
                         onBlur={handleSpeakerNameBlur}
                         style={{
                           flex: 1, padding: '5px 10px', borderRadius: '6px',
-                          background: '#1a1a1a', border: '1px solid #2a2a2a',
+                          background: '#18181b', border: '1px solid #27272a',
                           color: '#f0f0f0', fontSize: '12px', outline: 'none',
                         }}
                       />
@@ -391,7 +391,7 @@ export default function HistoryView() {
                 <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '7px' }}>
                   {summaryArr.map((item, i) => (
                     <li key={i} style={{ fontSize: '13px', color: '#ccc', display: 'flex', gap: '8px', lineHeight: '1.5' }}>
-                      <span style={{ color: '#f97316', flexShrink: 0 }}>•</span>
+                      <span style={{ color: '#6366f1', flexShrink: 0 }}>•</span>
                       {item}
                     </li>
                   ))}
@@ -403,9 +403,9 @@ export default function HistoryView() {
               <Section title={t.history.actions}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {actionsArr.map((a, i) => (
-                    <div key={i} style={{ background: '#0e0a07', borderRadius: '8px', padding: '10px 12px', border: '1px solid #1e1e1e', fontSize: '12px' }}>
+                    <div key={i} style={{ background: '#09090b', borderRadius: '8px', padding: '10px 12px', border: '1px solid #1e1e1e', fontSize: '12px' }}>
                       <div style={{ color: '#e5e5e5', fontWeight: 500, marginBottom: '3px' }}>{a.task}</div>
-                      <span style={{ color: '#ec4899' }}>{a.owner}</span>
+                      <span style={{ color: '#8b5cf6' }}>{a.owner}</span>
                       <span style={{ color: '#444' }}> · </span>
                       <span style={{ color: '#555' }}>{a.deadline}</span>
                     </div>
@@ -438,9 +438,9 @@ export default function HistoryView() {
                     onClick={() => setExportFormat(fmt)}
                     style={{
                       padding: '5px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 600,
-                      border: `1px solid ${exportFormat === fmt ? '#f97316' : '#2a2a2a'}`,
+                      border: `1px solid ${exportFormat === fmt ? '#6366f1' : '#27272a'}`,
                       background: exportFormat === fmt ? 'rgba(99,102,241,0.15)' : 'transparent',
-                      color: exportFormat === fmt ? '#fdba74' : '#666',
+                      color: exportFormat === fmt ? '#a5b4fc' : '#666',
                       cursor: 'pointer', textTransform: 'uppercase',
                     }}
                   >
@@ -452,7 +452,7 @@ export default function HistoryView() {
                   disabled={exporting}
                   style={{
                     padding: '5px 14px', borderRadius: '6px', fontSize: '12px', fontWeight: 600,
-                    border: 'none', background: '#f97316', color: '#fff',
+                    border: 'none', background: '#6366f1', color: '#fff',
                     cursor: exporting ? 'not-allowed' : 'pointer', opacity: exporting ? 0.6 : 1,
                   }}
                 >
@@ -460,20 +460,20 @@ export default function HistoryView() {
                 </button>
               </div>
               {exportPath && (
-                <div style={{ fontSize: '11px', color: '#4a7c59', marginTop: '8px', wordBreak: 'break-all' }}>
+                <div style={{ fontSize: '11px', color: '#6366f1', marginTop: '8px', wordBreak: 'break-all' }}>
                   ✅ {exportPath}
                 </div>
               )}
             </Section>
 
             {/* Action buttons — bottom */}
-            <div style={{ display: 'flex', gap: '12px', marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #1a1a1a' }}>
+            <div style={{ display: 'flex', gap: '12px', marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #27272a' }}>
               <button
                 onClick={handleSave}
                 disabled={saving}
                 style={{
                   padding: '8px 20px', borderRadius: '8px', border: 'none',
-                  background: saved ? '#059669' : '#f97316', color: '#fff',
+                  background: saved ? '#059669' : '#6366f1', color: '#fff',
                   fontSize: '13px', fontWeight: 600, cursor: saving ? 'not-allowed' : 'pointer',
                   opacity: saving ? 0.6 : 1, transition: 'background 0.3s',
                 }}
@@ -485,7 +485,7 @@ export default function HistoryView() {
                 onClick={() => setSelected(null)}
                 style={{
                   padding: '8px 16px', borderRadius: '8px',
-                  background: 'none', border: '1px solid #2a2a2a', color: '#888',
+                  background: 'none', border: '1px solid #27272a', color: '#a1a1aa',
                   cursor: 'pointer', fontSize: '13px',
                 }}
               >
@@ -523,7 +523,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
       <div style={{ fontSize: '11px', fontWeight: 600, color: '#444', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px' }}>
         {title}
       </div>
-      <div style={{ background: '#150f09', borderRadius: '10px', padding: '16px', border: '1px solid #222' }}>
+      <div style={{ background: '#111113', borderRadius: '10px', padding: '16px', border: '1px solid #222' }}>
         {children}
       </div>
     </div>

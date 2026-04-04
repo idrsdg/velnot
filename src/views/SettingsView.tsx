@@ -81,7 +81,7 @@ export default function SettingsView({ onSaved, licenseStatus, onGetLicense }: {
           }}
           style={{
             width: '44px', height: '24px', borderRadius: '12px',
-            background: startupEnabled ? '#f97316' : '#333',
+            background: startupEnabled ? '#6366f1' : '#333',
             cursor: 'pointer', position: 'relative', transition: 'background 0.2s',
           }}
         >
@@ -100,7 +100,7 @@ export default function SettingsView({ onSaved, licenseStatus, onGetLicense }: {
           onClick={() => setAutoDelete(!autoDelete)}
           style={{
             width: '44px', height: '24px', borderRadius: '12px',
-            background: autoDelete ? '#f97316' : '#333',
+            background: autoDelete ? '#6366f1' : '#333',
             cursor: 'pointer', position: 'relative', transition: 'background 0.2s',
           }}
         >
@@ -126,7 +126,7 @@ export default function SettingsView({ onSaved, licenseStatus, onGetLicense }: {
         disabled={status === 'saving'}
         style={{
           marginTop: '8px', padding: '10px 24px', borderRadius: '9px', border: 'none',
-          background: status === 'saved' ? '#059669' : '#f97316', color: '#fff',
+          background: status === 'saved' ? '#059669' : '#6366f1', color: '#fff',
           fontSize: '14px', fontWeight: 600,
           cursor: status === 'saving' ? 'not-allowed' : 'pointer',
           opacity: status === 'saving' ? 0.6 : 1,
@@ -139,24 +139,24 @@ export default function SettingsView({ onSaved, licenseStatus, onGetLicense }: {
       {/* Privacy & Legal */}
       <div style={{
         marginTop: '32px', padding: '16px', borderRadius: '10px',
-        background: '#0d1117', border: '1px solid #1e2a1e',
-        fontSize: '12px', color: '#4a7c59', lineHeight: '1.6',
+        background: '#111113', border: '1px solid #27272a',
+        fontSize: '12px', color: '#71717a', lineHeight: '1.6',
       }}>
-        <div style={{ fontWeight: 600, marginBottom: '6px', color: '#6ee77a' }}>{t.settings.privacy.title}</div>
+        <div style={{ fontWeight: 600, marginBottom: '6px', color: '#a5b4fc' }}>{t.settings.privacy.title}</div>
         <div style={{ marginBottom: '8px' }}>{t.settings.privacy.text}</div>
-        <div style={{ color: '#3a5c3a', marginBottom: '10px' }}>
+        <div style={{ color: '#71717a', marginBottom: '10px' }}>
           {t.settings.privacy.processors}
         </div>
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
           <button
             onClick={() => window.api.openExternal('https://velnot.com/privacy')}
-            style={{ padding: '4px 10px', borderRadius: '6px', border: '1px solid #1e3a1e', background: 'transparent', color: '#6ee77a', fontSize: '11px', cursor: 'pointer' }}
+            style={{ padding: '4px 10px', borderRadius: '6px', border: '1px solid #27272a', background: 'transparent', color: '#a5b4fc', fontSize: '11px', cursor: 'pointer' }}
           >
             {t.settings.privacy.policyLink}
           </button>
           <button
             onClick={() => window.api.openExternal('https://velnot.com/terms')}
-            style={{ padding: '4px 10px', borderRadius: '6px', border: '1px solid #1e3a1e', background: 'transparent', color: '#6ee77a', fontSize: '11px', cursor: 'pointer' }}
+            style={{ padding: '4px 10px', borderRadius: '6px', border: '1px solid #27272a', background: 'transparent', color: '#a5b4fc', fontSize: '11px', cursor: 'pointer' }}
           >
             {t.settings.privacy.termsLink}
           </button>
@@ -174,12 +174,12 @@ function UsageCard({ usage, t, onGetLicense, licenseStatus }: { usage: UsageInfo
   const isWarning = !isUnlimited && pct >= 80;
   const isDanger  = !isUnlimited && pct >= 100;
 
-  const barColor = isDanger ? '#ef4444' : isWarning ? '#f59e0b' : '#f97316';
+  const barColor = isDanger ? '#ef4444' : isWarning ? '#f59e0b' : '#6366f1';
   const tier = licenseStatus?.type ?? '';
   const showUpgrade = tier === 'starter' || tier === 'monthly';
 
   return (
-    <div style={{ marginBottom: '20px', padding: '18px 20px', background: '#150f09', borderRadius: '12px', border: '1px solid #222' }}>
+    <div style={{ marginBottom: '20px', padding: '18px 20px', background: '#111113', borderRadius: '12px', border: '1px solid #222' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
         <div style={{ fontSize: '14px', fontWeight: 600, color: '#e5e5e5' }}>{t.settings.usage?.title ?? 'Kullanım'}</div>
         {isUnlimited
@@ -206,7 +206,7 @@ function UsageCard({ usage, t, onGetLicense, licenseStatus }: { usage: UsageInfo
           onClick={() => window.api.openExternal(BILLING_URL)}
           style={{
             padding: '7px 16px', borderRadius: '8px', border: 'none',
-            background: '#f97316', color: '#fff', fontSize: '12px', fontWeight: 600,
+            background: '#6366f1', color: '#fff', fontSize: '12px', fontWeight: 600,
             cursor: 'pointer',
           }}
         >
@@ -234,9 +234,9 @@ function PlanCard({ status, t, onGetLicense }: { status: { type: string; session
     ? t.settings.plan.unlimited ?? t.settings.plan.lifetime
     : t.settings.plan.active;
 
-  const badgeColor = isExpired ? '#ef4444' : isTrial ? '#f97316' : '#22c55e';
-  const bgColor = isExpired ? 'rgba(239,68,68,0.08)' : isTrial ? 'rgba(249,115,22,0.08)' : 'rgba(34,197,94,0.08)';
-  const borderColor = isExpired ? '#3a1a1a' : isTrial ? '#3a2010' : '#1a3a1a';
+  const badgeColor = isExpired ? '#ef4444' : isTrial ? '#6366f1' : '#22c55e';
+  const bgColor = isExpired ? 'rgba(239,68,68,0.08)' : isTrial ? 'rgba(99,102,241,0.08)' : 'rgba(34,197,94,0.08)';
+  const borderColor = isExpired ? '#3a1a1a' : isTrial ? '#27272a' : '#1a3a1a';
 
   return (
     <div style={{ marginBottom: '20px', padding: '18px 20px', background: bgColor, borderRadius: '12px', border: `1px solid ${borderColor}` }}>
@@ -275,7 +275,7 @@ function PlanCard({ status, t, onGetLicense }: { status: { type: string; session
           onClick={onGetLicense}
           style={{
             padding: '7px 16px', borderRadius: '8px', border: 'none',
-            background: '#f97316', color: '#fff', fontSize: '12px', fontWeight: 600,
+            background: '#6366f1', color: '#fff', fontSize: '12px', fontWeight: 600,
             cursor: 'pointer',
           }}
         >
@@ -298,8 +298,8 @@ function PlanCard({ status, t, onGetLicense }: { status: { type: string; session
           <button
             onClick={onGetLicense}
             style={{
-              padding: '7px 16px', borderRadius: '8px', border: '1px solid #2a2a2a',
-              background: '#1a1a1a', color: '#aaa', fontSize: '12px', fontWeight: 600,
+              padding: '7px 16px', borderRadius: '8px', border: '1px solid #27272a',
+              background: '#18181b', color: '#a1a1aa', fontSize: '12px', fontWeight: 600,
               cursor: 'pointer',
             }}
           >
@@ -379,13 +379,13 @@ function AccountSection({ t }: { t: any }) {
     : null;
 
   return (
-    <div style={{ marginBottom: '20px', padding: '18px 20px', background: '#150f09', borderRadius: '12px', border: '1px solid #222' }}>
+    <div style={{ marginBottom: '20px', padding: '18px 20px', background: '#111113', borderRadius: '12px', border: '1px solid #222' }}>
       <div style={{ fontSize: '14px', fontWeight: 600, color: '#e5e5e5', marginBottom: '12px' }}>{at.title}</div>
 
       {state === 'loggedIn' ? (
         <>
           <div style={{ fontSize: '13px', color: '#888', marginBottom: '4px' }}>{at.loggedInAs}</div>
-          <div style={{ fontSize: '14px', color: '#f97316', fontWeight: 600, marginBottom: '8px' }}>{accountEmail}</div>
+          <div style={{ fontSize: '14px', color: '#6366f1', fontWeight: 600, marginBottom: '8px' }}>{accountEmail}</div>
           {accountPlan && (
             <div style={{ fontSize: '12px', color: '#22c55e', marginBottom: '4px' }}>
               {accountPlan}{expiresLabel ? ` · ${expiresLabel}` : ''}
@@ -394,20 +394,20 @@ function AccountSection({ t }: { t: any }) {
           <div style={{ display: 'flex', gap: '8px', marginTop: '12px', flexWrap: 'wrap' }}>
             <button
               onClick={() => window.api.openExternal('https://velnot.lemonsqueezy.com/billing')}
-              style={{ padding: '6px 14px', borderRadius: '8px', border: '1px solid #2a2a2a', background: 'transparent', color: '#f97316', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}
+              style={{ padding: '6px 14px', borderRadius: '8px', border: '1px solid #27272a', background: 'transparent', color: '#6366f1', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}
             >
               {at.manage}
             </button>
             <button
               onClick={logout}
-              style={{ padding: '6px 14px', borderRadius: '8px', border: '1px solid #2a2a2a', background: 'transparent', color: '#888', fontSize: '12px', cursor: 'pointer' }}
+              style={{ padding: '6px 14px', borderRadius: '8px', border: '1px solid #27272a', background: 'transparent', color: '#888', fontSize: '12px', cursor: 'pointer' }}
             >
               {at.logout}
             </button>
           </div>
         </>
       ) : state === 'sent' ? (
-        <div style={{ fontSize: '13px', color: '#fdba74', lineHeight: '1.6' }}>{at.checkEmail}</div>
+        <div style={{ fontSize: '13px', color: '#a5b4fc', lineHeight: '1.6' }}>{at.checkEmail}</div>
       ) : (
         <>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -419,7 +419,7 @@ function AccountSection({ t }: { t: any }) {
               placeholder={at.emailPlaceholder}
               style={{
                 flex: 1, padding: '8px 12px', borderRadius: '8px',
-                background: '#0e0a07', border: '1px solid #2a2a2a',
+                background: '#09090b', border: '1px solid #27272a',
                 color: '#f0f0f0', fontSize: '13px', outline: 'none',
               }}
             />
@@ -428,7 +428,7 @@ function AccountSection({ t }: { t: any }) {
               disabled={state === 'sending'}
               style={{
                 padding: '8px 14px', borderRadius: '8px', border: 'none',
-                background: '#f97316', color: '#fff', fontSize: '12px', fontWeight: 600,
+                background: '#6366f1', color: '#fff', fontSize: '12px', fontWeight: 600,
                 cursor: state === 'sending' ? 'not-allowed' : 'pointer',
                 opacity: state === 'sending' ? 0.6 : 1, whiteSpace: 'nowrap',
               }}
@@ -484,7 +484,7 @@ function LangDropdown({ value, onChange }: { value: string; onChange: (v: string
         style={{
           display: 'flex', alignItems: 'center', gap: '8px',
           padding: '8px 12px', borderRadius: '8px',
-          background: '#0e0a07', border: `1px solid ${open ? '#f97316' : '#2a2a2a'}`,
+          background: '#09090b', border: `1px solid ${open ? '#6366f1' : '#27272a'}`,
           color: '#f0f0f0', fontSize: '13px', cursor: 'pointer',
           minWidth: '160px', justifyContent: 'space-between',
           transition: 'border-color 0.15s',
@@ -500,7 +500,7 @@ function LangDropdown({ value, onChange }: { value: string; onChange: (v: string
       {open && (
         <div style={{
           position: 'absolute', top: 'calc(100% + 4px)', left: 0,
-          background: '#1a1109', border: '1px solid #2a1e14', borderRadius: '10px',
+          background: '#111113', border: '1px solid #27272a', borderRadius: '10px',
           padding: '4px', minWidth: '160px', zIndex: 200,
           boxShadow: '0 8px 24px rgba(0,0,0,0.7)',
         }}>
@@ -511,14 +511,14 @@ function LangDropdown({ value, onChange }: { value: string; onChange: (v: string
               style={{
                 display: 'flex', alignItems: 'center', gap: '8px',
                 width: '100%', padding: '7px 10px', borderRadius: '7px', border: 'none',
-                background: opt.value === value ? 'rgba(249,115,22,0.18)' : 'transparent',
-                color: opt.value === value ? '#fdba74' : '#c4b09a',
+                background: opt.value === value ? 'rgba(99,102,241,0.15)' : 'transparent',
+                color: opt.value === value ? '#a5b4fc' : '#a1a1aa',
                 fontSize: '13px', cursor: 'pointer', textAlign: 'left',
               }}
             >
               <span style={{ fontSize: '15px' }}>{opt.flag}</span>
               <span>{opt.label}</span>
-              {opt.value === value && <span style={{ marginLeft: 'auto', color: '#f97316', fontSize: '11px' }}>✓</span>}
+              {opt.value === value && <span style={{ marginLeft: 'auto', color: '#6366f1', fontSize: '11px' }}>✓</span>}
             </button>
           ))}
         </div>
@@ -568,7 +568,7 @@ function BackupSection({ t }: { t: any }) {
   };
 
   return (
-    <div style={{ marginBottom: '20px', padding: '18px 20px', background: '#150f09', borderRadius: '12px', border: '1px solid #222' }}>
+    <div style={{ marginBottom: '20px', padding: '18px 20px', background: '#111113', borderRadius: '12px', border: '1px solid #222' }}>
       <div style={{ fontSize: '14px', fontWeight: 600, color: '#e5e5e5', marginBottom: '4px' }}>{t.settings.backup?.title ?? 'Backup & Restore'}</div>
       <div style={{ fontSize: '12px', color: '#555', marginBottom: '14px' }}>
         {t.settings.backup?.desc ?? 'Export all sessions to a single file or restore from a previous backup.'}
@@ -579,7 +579,7 @@ function BackupSection({ t }: { t: any }) {
           disabled={exportStatus === 'busy'}
           style={{
             padding: '8px 16px', borderRadius: '8px', border: 'none',
-            background: exportStatus === 'done' ? '#059669' : '#f97316',
+            background: exportStatus === 'done' ? '#059669' : '#6366f1',
             color: '#fff', fontSize: '12px', fontWeight: 600,
             cursor: exportStatus === 'busy' ? 'not-allowed' : 'pointer',
             opacity: exportStatus === 'busy' ? 0.6 : 1,
@@ -591,8 +591,8 @@ function BackupSection({ t }: { t: any }) {
           onClick={doImport}
           disabled={importStatus === 'busy'}
           style={{
-            padding: '8px 16px', borderRadius: '8px', border: '1px solid #2a2a2a',
-            background: 'transparent', color: importStatus === 'done' ? '#22c55e' : '#f97316',
+            padding: '8px 16px', borderRadius: '8px', border: '1px solid #27272a',
+            background: 'transparent', color: importStatus === 'done' ? '#22c55e' : '#6366f1',
             fontSize: '12px', fontWeight: 600,
             cursor: importStatus === 'busy' ? 'not-allowed' : 'pointer',
             opacity: importStatus === 'busy' ? 0.6 : 1,
@@ -602,12 +602,12 @@ function BackupSection({ t }: { t: any }) {
         </button>
       </div>
       {exportMsg && (
-        <div style={{ fontSize: '11px', marginTop: '8px', color: exportStatus === 'error' ? '#f87171' : '#4a7c59', wordBreak: 'break-all' }}>
+        <div style={{ fontSize: '11px', marginTop: '8px', color: exportStatus === 'error' ? '#f87171' : '#6366f1', wordBreak: 'break-all' }}>
           {exportStatus === 'error' ? `❌ ${exportMsg}` : `✅ ${exportMsg}`}
         </div>
       )}
       {importMsg && (
-        <div style={{ fontSize: '11px', marginTop: '8px', color: importStatus === 'error' ? '#f87171' : '#4a7c59' }}>
+        <div style={{ fontSize: '11px', marginTop: '8px', color: importStatus === 'error' ? '#f87171' : '#6366f1' }}>
           {importStatus === 'error' ? `❌ ${importMsg}` : `ℹ ${importMsg}`}
         </div>
       )}
@@ -617,7 +617,7 @@ function BackupSection({ t }: { t: any }) {
 
 function SettingCard({ title, desc, children }: { title: string; desc: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: '20px', padding: '18px 20px', background: '#150f09', borderRadius: '12px', border: '1px solid #222' }}>
+    <div style={{ marginBottom: '20px', padding: '18px 20px', background: '#111113', borderRadius: '12px', border: '1px solid #222' }}>
       <div style={{ marginBottom: '10px' }}>
         <div style={{ fontSize: '14px', fontWeight: 600, color: '#e5e5e5', marginBottom: '2px' }}>{title}</div>
         <div style={{ fontSize: '12px', color: '#555' }}>{desc}</div>

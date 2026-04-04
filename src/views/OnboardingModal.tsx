@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useT } from '../LanguageContext';
 
 const FEATURE_STEPS = [
-  { icon: '🎙', accentColor: '#f97316', bgColor: 'rgba(249,115,22,0.12)' },
+  { icon: '🎙', accentColor: '#6366f1', bgColor: 'rgba(99,102,241,0.12)' },
   { icon: '✨', accentColor: '#a855f7', bgColor: 'rgba(168,85,247,0.12)' },
   { icon: '📑', accentColor: '#22c55e', bgColor: 'rgba(34,197,94,0.12)' },
 ];
@@ -47,9 +47,9 @@ export default function OnboardingModal({ onDone }: { onDone: () => void }) {
       <div style={{
         position: 'relative',
         width: '460px',
-        background: '#1a1109',
+        background: '#111113',
         borderRadius: '20px',
-        border: '1px solid #2a1e14',
+        border: '1px solid #27272a',
         boxShadow: '0 32px 80px rgba(0,0,0,0.85)',
         padding: '44px 44px 36px',
         display: 'flex',
@@ -68,12 +68,12 @@ export default function OnboardingModal({ onDone }: { onDone: () => void }) {
             style={{
               position: 'absolute', top: '16px', right: '18px',
               background: 'transparent', border: 'none',
-              color: '#3a2a1c', fontSize: '12px', cursor: 'pointer',
+              color: '#52525b', fontSize: '12px', cursor: 'pointer',
               padding: '5px 10px', borderRadius: '6px',
               transition: 'color 0.15s',
             }}
-            onMouseEnter={e => (e.currentTarget.style.color = '#7a5a40')}
-            onMouseLeave={e => (e.currentTarget.style.color = '#3a2a1c')}
+            onMouseEnter={e => (e.currentTarget.style.color = '#a1a1aa')}
+            onMouseLeave={e => (e.currentTarget.style.color = '#52525b')}
           >
             {ob.skip}
           </button>
@@ -83,10 +83,10 @@ export default function OnboardingModal({ onDone }: { onDone: () => void }) {
         {isWelcome && (
           <div style={{
             width: '68px', height: '68px', borderRadius: '18px',
-            background: 'linear-gradient(135deg, #f97316, #ec4899)',
+            background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '30px', marginBottom: '24px',
-            boxShadow: '0 8px 24px rgba(249,115,22,0.35)',
+            boxShadow: '0 8px 24px rgba(99,102,241,0.35)',
           }}>
             🎙
           </div>
@@ -115,7 +115,7 @@ export default function OnboardingModal({ onDone }: { onDone: () => void }) {
           margin: '0 0 12px',
           fontSize: isWelcome || isFinish ? '22px' : '20px',
           fontWeight: 700,
-          color: '#f5f0eb',
+          color: '#fafafa',
           textAlign: 'center',
           lineHeight: 1.3,
         }}>
@@ -126,7 +126,7 @@ export default function OnboardingModal({ onDone }: { onDone: () => void }) {
         <p style={{
           margin: '0 0 32px',
           fontSize: '14px',
-          color: '#8a7060',
+          color: '#71717a',
           lineHeight: '1.65',
           textAlign: 'center',
           maxWidth: '340px',
@@ -143,7 +143,7 @@ export default function OnboardingModal({ onDone }: { onDone: () => void }) {
                 height: '6px',
                 width: i === step ? '22px' : '6px',
                 borderRadius: '3px',
-                background: i === step ? '#f97316' : '#2e1f12',
+                background: i === step ? '#6366f1' : '#27272a',
                 transition: 'all 0.25s ease',
               }}
             />
@@ -157,12 +157,12 @@ export default function OnboardingModal({ onDone }: { onDone: () => void }) {
             padding: '13px 48px',
             borderRadius: '12px',
             border: 'none',
-            background: 'linear-gradient(135deg, #f97316, #ea580c)',
+            background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
             color: '#fff',
             fontSize: '15px',
             fontWeight: 600,
             cursor: 'pointer',
-            boxShadow: '0 6px 20px rgba(249,115,22,0.35)',
+            boxShadow: '0 6px 20px rgba(99,102,241,0.35)',
             transition: 'opacity 0.15s, transform 0.12s',
           }}
           onMouseEnter={e => {

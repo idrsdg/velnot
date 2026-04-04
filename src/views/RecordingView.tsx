@@ -674,8 +674,8 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
               style={{
                 padding: '6px 10px',
                 borderRadius: '8px',
-                background: '#120d09',
-                border: '1px solid #2a2a2a',
+                background: '#09090b',
+                border: '1px solid #27272a',
                 color: '#e5e5e5',
                 fontSize: '12px',
                 outline: 'none',
@@ -704,12 +704,12 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
       </div>
 
       {isExpired && (
-        <div style={{ padding: '24px', borderRadius: '14px', textAlign: 'center', background: '#150f09', border: '1px solid #3a2a00' }}>
+        <div style={{ padding: '24px', borderRadius: '14px', textAlign: 'center', background: '#111113', border: '1px solid #3a2a00' }}>
           <div style={{ fontSize: '32px', marginBottom: '10px' }}>🔒</div>
           <div style={{ fontSize: '16px', fontWeight: 700, marginBottom: '6px' }}>{t.record.trialEnded}</div>
           <button
             onClick={() => onGetLicense?.()}
-            style={{ padding: '9px 22px', borderRadius: '9px', border: 'none', background: '#f97316', color: '#fff', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
+            style={{ padding: '9px 22px', borderRadius: '9px', border: 'none', background: '#6366f1', color: '#fff', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
           >
             {t.record.getLicense}
           </button>
@@ -724,16 +724,16 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
 
       {!isExpired && (
         <div style={{
-          background: '#150f09', borderRadius: '14px', padding: '28px',
-          border: `1px solid ${state === 'recording' ? '#f97316' : '#222'}`,
+          background: '#111113', borderRadius: '14px', padding: '28px',
+          border: `1px solid ${state === 'recording' ? '#6366f1' : '#222'}`,
           transition: 'border-color 0.3s',
         }}>
           {state === 'recording' && (
             <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', justifyContent: 'center' }}>
-              <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: '#1a0e05', border: '1px solid #f97316', color: '#fdba74' }}>{t.record.mic}</span>
+              <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: 'rgba(99,102,241,0.08)', border: '1px solid #6366f1', color: '#a5b4fc' }}>{t.record.mic}</span>
               {hasSysAudio
-                ? <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: '#0d1a0d', border: '1px solid #059669', color: '#6ee77a' }}>{t.record.sysAudio}</span>
-                : <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: '#1a1a1a', border: '1px solid #333', color: '#555' }}>{t.record.noSysAudio}</span>
+                ? <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: 'rgba(5,150,105,0.1)', border: '1px solid rgba(5,150,105,0.3)', color: '#34d399' }}>{t.record.sysAudio}</span>
+                : <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: '#18181b', border: '1px solid #27272a', color: '#52525b' }}>{t.record.noSysAudio}</span>
               }
             </div>
           )}
@@ -741,13 +741,13 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
           {/* Waveform */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '3px', height: '44px', marginBottom: '20px' }}>
             {bars.map((h, i) => (
-              <div key={i} style={{ width: '3px', height: `${h}px`, borderRadius: '2px', background: state === 'recording' ? '#f97316' : '#2a2a2a' }} />
+              <div key={i} style={{ width: '3px', height: `${h}px`, borderRadius: '2px', background: state === 'recording' ? '#6366f1' : '#27272a' }} />
             ))}
           </div>
 
           {/* Timer */}
           <div style={{ textAlign: 'center', marginBottom: '22px' }}>
-            <div style={{ fontSize: '38px', fontWeight: 700, fontVariantNumeric: 'tabular-nums', color: state === 'recording' ? '#fdba74' : '#333', letterSpacing: '-1px' }}>
+            <div style={{ fontSize: '38px', fontWeight: 700, fontVariantNumeric: 'tabular-nums', color: state === 'recording' ? '#a5b4fc' : '#333', letterSpacing: '-1px' }}>
               {fmt(elapsed)}
             </div>
             <div style={{ fontSize: '12px', color: '#444', marginTop: '6px' }}>
@@ -768,7 +768,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
 
           {/* Buttons */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
-            {state === 'idle' && <Btn color="#f97316" onClick={handleStartClick}>{t.record.start}</Btn>}
+            {state === 'idle' && <Btn color="#6366f1" onClick={handleStartClick}>{t.record.start}</Btn>}
             {state === 'recording' && <Btn color="#ef4444" onClick={stopRecording}>{t.record.stop}</Btn>}
             {isProcessing && <Btn color="#333" onClick={() => {}} disabled>{t.record.processing}</Btn>}
             {(state === 'done' || (state === 'transcribed' && error)) && (
@@ -796,7 +796,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
             <div style={{ fontSize: '11px', color: '#555', marginTop: '6px' }}>{copyHint}</div>
           </Card>
 
-          <div style={{ background: '#150f09', borderRadius: '14px', padding: '20px', border: '1px solid #2a1a0a' }}>
+          <div style={{ background: '#111113', borderRadius: '14px', padding: '20px', border: '1px solid #2a1a0a' }}>
             <div style={{ fontSize: '12px', color: '#fb923c', fontWeight: 600, marginBottom: '14px', letterSpacing: '0.06em' }}>
               {t.record.transcriptReady}
             </div>
@@ -806,13 +806,13 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
                   key={m.key}
                   onClick={() => void processTranscript(m.key)}
                   style={{
-                    padding: '14px 10px', borderRadius: '10px', border: '1px solid #2a2a2a',
-                    background: '#0e0a07', color: '#e5e5e5', cursor: 'pointer',
+                    padding: '14px 10px', borderRadius: '10px', border: '1px solid #27272a',
+                    background: '#09090b', color: '#e5e5e5', cursor: 'pointer',
                     display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px',
                     transition: 'border-color 0.15s, background 0.15s',
                   }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#f97316'; (e.currentTarget as HTMLButtonElement).style.background = '#111'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#2a2a2a'; (e.currentTarget as HTMLButtonElement).style.background = '#0e0a07'; }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#6366f1'; (e.currentTarget as HTMLButtonElement).style.background = '#111'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#27272a'; (e.currentTarget as HTMLButtonElement).style.background = '#09090b'; }}
                 >
                   <span style={{ fontSize: '22px' }}>{m.icon}</span>
                   <span style={{ fontSize: '13px', fontWeight: 600 }}>{t.record.modes[m.key].label}</span>
@@ -822,7 +822,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
             </div>
             <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '14px', flexWrap: 'wrap' }}>
               <Btn
-                color="#f97316"
+                color="#6366f1"
                 onClick={() => {
                   void (async () => {
                     const saved = await finalizeSession();
@@ -864,7 +864,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
 
             {/* Audio player */}
             {audioSrc && (
-              <div style={{ background: '#150f09', borderRadius: '10px', padding: '12px 14px', border: '1px solid #222' }}>
+              <div style={{ background: '#111113', borderRadius: '10px', padding: '12px 14px', border: '1px solid #222' }}>
                 <div style={{ fontSize: '11px', color: '#555', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '8px' }}>
                   {t.history.audioRecording}
                 </div>
@@ -872,14 +872,14 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
                   ref={audioRef}
                   src={audioSrc}
                   controls
-                  style={{ width: '100%', height: '32px', accentColor: '#f97316' }}
+                  style={{ width: '100%', height: '32px', accentColor: '#6366f1' }}
                 />
               </div>
             )}
 
             {/* Utterances for seeking */}
             {utterances.length > 0 && audioRef.current && (
-              <div style={{ background: '#150f09', borderRadius: '10px', padding: '12px 14px', border: '1px solid #222', maxHeight: '160px', overflowY: 'auto' }}>
+              <div style={{ background: '#111113', borderRadius: '10px', padding: '12px 14px', border: '1px solid #222', maxHeight: '160px', overflowY: 'auto' }}>
                 <div style={{ fontSize: '11px', color: '#555', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '8px' }}>
                   {t.history.speakerTimeline}
                 </div>
@@ -887,11 +887,11 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
                   <div
                     key={i}
                     onClick={() => { if (audioRef.current) audioRef.current.currentTime = u.start / 1000; }}
-                    style={{ fontSize: '12px', color: '#aaa', padding: '4px 0', cursor: 'pointer', lineHeight: '1.5', borderBottom: '1px solid #1a1a1a' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = '#fdba74')}
+                    style={{ fontSize: '12px', color: '#aaa', padding: '4px 0', cursor: 'pointer', lineHeight: '1.5', borderBottom: '1px solid #27272a' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#a5b4fc')}
                     onMouseLeave={e => (e.currentTarget.style.color = '#aaa')}
                   >
-                    <span style={{ color: '#f97316', fontWeight: 600 }}>{u.speaker}:</span> {u.text}
+                    <span style={{ color: '#6366f1', fontWeight: 600 }}>{u.speaker}:</span> {u.text}
                   </div>
                 ))}
               </div>
@@ -907,7 +907,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
                 <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '7px' }}>
                   {summary.map((item, i) => (
                     <li key={i} style={{ fontSize: '13px', color: '#ccc', display: 'flex', gap: '8px', lineHeight: '1.5' }}>
-                      <span style={{ color: '#f97316', flexShrink: 0, marginTop: '2px' }}>•</span>
+                      <span style={{ color: '#6366f1', flexShrink: 0, marginTop: '2px' }}>•</span>
                       {item}
                     </li>
                   ))}
@@ -918,9 +918,9 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
               <Card title={t.record.results.actions}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {actions.map((a, i) => (
-                    <div key={i} style={{ background: '#0e0a07', borderRadius: '8px', padding: '10px 12px', border: '1px solid #1e1e1e', fontSize: '12px' }}>
+                    <div key={i} style={{ background: '#09090b', borderRadius: '8px', padding: '10px 12px', border: '1px solid #1e1e1e', fontSize: '12px' }}>
                       <div style={{ color: '#e5e5e5', marginBottom: '4px', fontWeight: 500 }}>{a.task}</div>
-                      <span style={{ color: '#ec4899' }}>{a.owner}</span>
+                      <span style={{ color: '#8b5cf6' }}>{a.owner}</span>
                       <span style={{ color: '#444' }}> · </span>
                       <span style={{ color: '#555' }}>{a.deadline}</span>
                     </div>
@@ -938,8 +938,8 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
                       onClick={() => void handleExport(format)}
                       disabled={exportingFormat !== null}
                       style={{
-                        padding: '8px 12px', borderRadius: '8px', border: '1px solid #2a2a2a',
-                        background: '#0e0a07', color: '#ddd', fontSize: '12px', cursor: exportingFormat ? 'not-allowed' : 'pointer',
+                        padding: '8px 12px', borderRadius: '8px', border: '1px solid #27272a',
+                        background: '#09090b', color: '#ddd', fontSize: '12px', cursor: exportingFormat ? 'not-allowed' : 'pointer',
                         opacity: exportingFormat && exportingFormat !== format ? 0.5 : 1,
                       }}
                     >
@@ -948,7 +948,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
                   ))}
                 </div>
                 {exportPath && (
-                  <div style={{ fontSize: '11px', color: '#4a7c59', marginTop: '12px', lineHeight: '1.6', wordBreak: 'break-all' }}>
+                  <div style={{ fontSize: '11px', color: '#6366f1', marginTop: '12px', lineHeight: '1.6', wordBreak: 'break-all' }}>
                     {exportReadyLabel} {exportPath}
                   </div>
                 )}
@@ -956,7 +956,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
             )}
             {state === 'done' && (
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                <Btn color="#f97316" onClick={() => void finalizeSession()} disabled={saveBusy || isSessionFinalized}>
+                <Btn color="#6366f1" onClick={() => void finalizeSession()} disabled={saveBusy || isSessionFinalized}>
                   {isSessionFinalized ? t.record.savedToHistory : saveLabel}
                 </Btn>
                 <Btn color="#374151" onClick={() => void handleDiscard()} disabled={saveBusy}>
@@ -965,7 +965,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
               </div>
             )}
             {state === 'done' && isSessionFinalized && (
-              <div style={{ fontSize: '12px', color: '#4a7c59', padding: '8px 12px', background: '#0d1a0d', borderRadius: '8px', border: '1px solid #1e3a1e' }}>
+              <div style={{ fontSize: '12px', color: '#a5b4fc', padding: '8px 12px', background: 'rgba(99,102,241,0.08)', borderRadius: '8px', border: '1px solid rgba(99,102,241,0.2)' }}>
                 {t.record.savedToHistory}
               </div>
             )}
@@ -981,8 +981,8 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
             zIndex: 1000,
             top: copyMenu.y,
             left: copyMenu.x,
-            background: '#1a1a1a',
-            border: '1px solid #2a2a2a',
+            background: '#18181b',
+            border: '1px solid #27272a',
             borderRadius: '8px',
             padding: '4px',
             boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
@@ -1009,7 +1009,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
             background: '#1a1108', border: '1px solid #3a2a14', borderRadius: '16px',
             padding: '28px 32px', maxWidth: '480px', width: '90%',
           }}>
-            <div style={{ fontSize: '18px', fontWeight: 700, marginBottom: '14px', color: '#f5f0eb' }}>
+            <div style={{ fontSize: '18px', fontWeight: 700, marginBottom: '14px', color: '#fafafa' }}>
               ⚠️ {(t as any).consent.title}
             </div>
             <p style={{ fontSize: '13px', color: '#aaa', lineHeight: '1.75', marginBottom: '20px' }}>
@@ -1020,7 +1020,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
                 type="checkbox"
                 checked={consentChecked}
                 onChange={e => setConsentChecked(e.target.checked)}
-                style={{ marginTop: '2px', accentColor: '#f97316', width: '16px', height: '16px', flexShrink: 0 }}
+                style={{ marginTop: '2px', accentColor: '#6366f1', width: '16px', height: '16px', flexShrink: 0 }}
               />
               <span style={{ fontSize: '13px', color: '#e5e5e5', lineHeight: '1.6' }}>
                 {(t as any).consent.checkbox}
@@ -1038,7 +1038,7 @@ export default function RecordingView({ licenseStatus, onSessionSaved, onGetLice
                 disabled={!consentChecked}
                 style={{
                   padding: '8px 18px', borderRadius: '8px', border: 'none',
-                  background: consentChecked ? '#f97316' : '#444', color: '#fff',
+                  background: consentChecked ? '#6366f1' : '#444', color: '#fff',
                   fontSize: '13px', fontWeight: 600,
                   cursor: consentChecked ? 'pointer' : 'not-allowed',
                   opacity: consentChecked ? 1 : 0.5,
@@ -1070,7 +1070,7 @@ function Btn({ children, color, onClick, disabled }: {
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ background: '#150f09', borderRadius: '12px', padding: '18px 20px', border: '1px solid #222' }}>
+    <div style={{ background: '#111113', borderRadius: '12px', padding: '18px 20px', border: '1px solid #222' }}>
       <div style={{ fontSize: '11px', fontWeight: 600, color: '#555', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '12px' }}>
         {title}
       </div>
