@@ -20,6 +20,7 @@ function AppInner() {
     const status = await window.api.getLicenseStatus();
     setLicenseStatus(status);
     if (status.type === 'expired') setActiveView('license');
+    return status;
   };
 
   useEffect(() => {
@@ -35,6 +36,15 @@ function AppInner() {
         setActiveView(view as View);
       }
     });
+  }, []);
+
+  useEffect(() => {
+    const unsub = window.api.onAuthLogin?.(() => {
+      refreshLicense().then((status: any) => {
+        if (status && status.type !== 'expired') setActiveView('recording');
+      });
+    });
+    return () => { unsub?.(); };
   }, []);
 
   // close lang menu on outside click
@@ -70,9 +80,13 @@ function AppInner() {
             width: '26px', height: '26px', borderRadius: '7px',
             background: 'linear-gradient(135deg, #f59e0b, #fb923c)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '13px',
           }}>
-            🎙
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <rect x="8" y="1" width="8" height="13" rx="4" fill="white"/>
+              <path d="M5 12C5 15.866 8.134 19 12 19C15.866 19 19 15.866 19 12" stroke="white" strokeWidth="2" strokeLinecap="round" fill="none"/>
+              <line x1="12" y1="19" x2="12" y2="23" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="8" y1="23" x2="16" y2="23" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
           </div>
         </div>
         {/* App name + draggable area */}

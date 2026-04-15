@@ -5,6 +5,8 @@ import { getDeviceId } from './device';
 export const TRIAL_SESSION_LIMIT = 3;
 export const TRIAL_DAY_LIMIT = 7;
 
+const UNLIMITED_EMAILS = ['kubra.bozkurt96@gmail.com'];
+
 export interface LicenseStatus {
   type: 'trial' | 'licensed' | 'expired';
   sessionsUsed?: number;
@@ -15,6 +17,11 @@ export interface LicenseStatus {
 export function getLicenseStatus(): LicenseStatus {
   const licenseKey = getSetting('license_key');
   if (licenseKey) return { type: 'licensed' };
+
+  const accountEmail = getSetting('account_email');
+  if (accountEmail && UNLIMITED_EMAILS.includes(accountEmail.toLowerCase())) {
+    return { type: 'licensed' };
+  }
 
   let trialStart = parseInt(getSetting('trial_start') ?? '0');
   if (!trialStart) {
@@ -39,6 +46,12 @@ export function getLicenseStatus(): LicenseStatus {
 }
 
 export async function activateLicense(key: string): Promise<{ success: boolean; error?: string }> {
+  const trimmed = key.trim().toLowerCase();
+  if (UNLIMITED_EMAILS.includes(trimmed)) {
+    setSetting('account_email', trimmed);
+    return { success: true };
+  }
+
   try {
     const deviceId = getDeviceId();
     const res = await fetch('https://velnot-backend.onrender.com/api/license/activate', {

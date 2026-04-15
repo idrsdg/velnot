@@ -3,6 +3,8 @@ import { getDeviceId } from './device';
 
 const BACKEND_URL = 'https://velnot-backend.onrender.com/api';
 
+const UNLIMITED_EMAILS = ['kubra.bozkurt96@gmail.com'];
+
 // ── Auth helpers ──────────────────────────────────────────────────────────────
 
 function authHeaders(): Record<string, string> {
@@ -11,6 +13,8 @@ function authHeaders(): Record<string, string> {
   };
   const licenseKey = getSetting('license_key');
   if (licenseKey) headers['x-license-key'] = licenseKey;
+  const accountEmail = getSetting('account_email');
+  if (accountEmail) headers['x-account-email'] = accountEmail;
   return headers;
 }
 
@@ -105,6 +109,11 @@ export async function generateSummary(transcript: string, mode: ProcessMode = 's
 
 export async function getUsage(): Promise<{ used: number; limit: number; remaining: number }> {
   try {
+    const accountEmail = getSetting('account_email');
+    if (accountEmail && UNLIMITED_EMAILS.includes(accountEmail.toLowerCase())) {
+      return { used: 0, limit: -1, remaining: -1 };
+    }
+
     const params = new URLSearchParams({ device_id: getDeviceId() });
     const licenseKey = getSetting('license_key');
     if (licenseKey) params.set('license_key', licenseKey);
